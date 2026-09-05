@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-cream: #FDFBF7;
+    --bg-surface: #F4EFE6;
+    --bg-surface-elevated: #FFFFFF;
+    --border-neutral: #E6DFD3;
+    
+    --primary-forest: #1B3B2B;
+    --primary-forest-dark: #11281D;
+    --primary-forest-light: #2D5640;
+    
+    --accent-gold: #C5A059;
+    --accent-gold-dark: #A37F3A;
+    --accent-sage: #EBF2EE;
+    
+    --text-charcoal: #2C3531;
+    --text-muted: #586962;
+    --text-light: #809189;
+  }
+
+  body {
+    background-color: var(--bg-cream);
+    color: var(--text-charcoal);
+    font-family: var(--font-sans), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Custom Typography & Utility Classes */
+.font-serif-heading {
+  font-family: var(--font-serif), Georgia, Cambria, "Times New Roman", Times, serif;
+}
+
+.bg-cream-surface {
+  background-color: #F8F4EC;
+}
+
+.bg-forest {
+  background-color: #1B3B2B;
+}
+
+.text-forest {
+  color: #1B3B2B;
+}
+
+.text-gold {
+  color: #C5A059;
+}
+
+.border-cream-dark {
+  border-color: #E6DFD3;
+}
+
+/* Smooth Focus Ring for Accessibility */
+*:focus-visible {
+  outline: 2px solid #C5A059;
+  outline-offset: 2px;
+}
+
+/* Hide scrollbar for clean horizontal mobile sliders */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
