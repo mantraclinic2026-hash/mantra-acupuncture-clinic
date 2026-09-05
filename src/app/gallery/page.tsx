@@ -8,13 +8,14 @@ import Link from 'next/link';
 
 export async function generateMetadata(): Promise<Metadata> {
   const seo = await getSEOMetadata('/gallery');
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
   return {
     title: seo?.title || 'Clinic Gallery | Mantra Acupuncture Clinic',
     description:
       seo?.description ||
       'Explore photos of Mantra Acupuncture Clinic in Changanacherry, Kerala. View our serene treatment rooms, clinical environment, and care facilities.',
     alternates: {
-      canonical: seo?.canonical_url || 'https://mantraacupuncture.com/gallery',
+      canonical: seo?.canonical_url || (baseUrl ? `${baseUrl}/gallery` : '/gallery'),
     },
   };
 }

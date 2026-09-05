@@ -1,4 +1,3 @@
-'use me';
 'use server';
 
 import { z } from 'zod';
@@ -56,13 +55,14 @@ export async function submitConsultationInquiry(formData: FormData): Promise<Inq
     const data = validated.data;
     const supabase = await createServerSupabaseClient();
 
+    // Minimal write surface: Pass only public user inputs.
+    // Database schema defaults control id, status ('new'), created_at, updated_at.
     const { error } = await supabase.from('consultation_inquiries').insert({
       full_name: data.fullName.trim(),
       phone: data.phone.trim(),
       email: data.email ? data.email.trim() : null,
       preferred_date: data.preferredDate ? data.preferredDate : null,
       message: data.message ? data.message.trim() : null,
-      status: 'new',
     });
 
     if (error) {

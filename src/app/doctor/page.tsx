@@ -11,7 +11,7 @@ export async function generateMetadata() {
   return generateSiteMetadata({
     route: '/doctor',
     fallbackTitle: 'Dr. Nikku Thomas | BNYS, MD, Master in Acupuncture | Changanacherry',
-    fallbackDescription: 'Meet Dr. Nikku Thomas, leading practitioner holding BNYS, MD in Naturopathy, and Master Degree in Acupuncture at Mantra Acupuncture Clinic.',
+    fallbackDescription: 'Meet Dr. Nikku Thomas, Naturopathy & Acupuncture practitioner holding BNYS, MD in Naturopathy, and Master Degree in Acupuncture at Mantra Acupuncture Clinic.',
   });
 }
 

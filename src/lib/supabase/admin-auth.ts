@@ -8,11 +8,9 @@ export async function verifyAdminUser() {
     return { isAdmin: false, user: null };
   }
 
-  // Check app_metadata or user_metadata for role === 'admin'
+  // Check trusted server-controlled app_metadata claim for role === 'admin'
   const appRole = user.app_metadata?.role;
-  const userRole = user.user_metadata?.role;
-
-  const isAdmin = appRole === 'admin' || userRole === 'admin';
+  const isAdmin = appRole === 'admin';
 
   return { isAdmin, user };
 }

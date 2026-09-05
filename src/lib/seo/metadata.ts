@@ -93,17 +93,17 @@ export function buildClinicJsonLd(siteSettings: {
       {
         '@type': 'MedicalProcedure',
         name: 'Acupuncture Treatment',
-        description: 'Needle insertion therapy for pain management and nervous system balance.',
+        description: 'Acupuncture needle therapy focused on relaxation and physical comfort.',
       },
       {
         '@type': 'MedicalProcedure',
         name: 'Electro Acupuncture Treatment',
-        description: 'Micro-current electrical acupuncture for targeted nerve and muscle stimulation.',
+        description: 'Micro-current acupuncture therapy for muscle relaxation.',
       },
       {
         '@type': 'MedicalProcedure',
         name: 'Cupping / Hijama',
-        description: 'Vacuum cupping therapy for myofascial tension relief and improved local circulation.',
+        description: 'Therapeutic vacuum cupping for muscle tension relief and relaxation.',
       },
     ],
     openingHours: 'Mo-Sa 09:00-19:00',

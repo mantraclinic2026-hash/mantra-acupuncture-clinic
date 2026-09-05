@@ -15,19 +15,33 @@ BEGIN
     NEW.updated_at = NOW();
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SET search_path = public, pg_temp;
 
--- Admin authorization function checking JWT app_metadata claim
+-- BEFORE INSERT trigger function for consultation_inquiries
+-- Forces database control over status, admin_notes, created_at, and updated_at for non-admin insertions
+CREATE OR REPLACE FUNCTION sanitize_consultation_inquiry_insert()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NOT is_admin() THEN
+        NEW.status := 'new';
+        NEW.admin_notes := NULL;
+        NEW.created_at := NOW();
+        NEW.updated_at := NOW();
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SET search_path = public, pg_temp;
+
+-- Admin authorization function checking JWT app_metadata claim (Hardened SECURITY DEFINER with search_path)
 CREATE OR REPLACE FUNCTION is_admin()
 RETURNS BOOLEAN AS $$
 BEGIN
     RETURN (
         auth.role() = 'authenticated' AND
-        (COALESCE(auth.jwt() -> 'app_metadata' ->> 'role', '') = 'admin' OR
-         COALESCE(auth.jwt() -> 'user_metadata' ->> 'role', '') = 'admin')
+        COALESCE(auth.jwt() -> 'app_metadata' ->> 'role', '') = 'admin'
     );
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp;
 
 -- 2. TABLES DEFINITION
 
@@ -39,7 +53,7 @@ CREATE TABLE IF NOT EXISTS site_settings (
     phone TEXT NOT NULL DEFAULT '+91 81296 27829',
     whatsapp_number TEXT NOT NULL DEFAULT '+91 81296 27829',
     default_whatsapp_message TEXT NOT NULL DEFAULT 'Hello, I would like to enquire about an acupuncture consultation at Mantra Acupuncture Clinic.',
-    email TEXT DEFAULT 'info@mantraacupuncture.com',
+    email TEXT,
     address TEXT NOT NULL DEFAULT 'Marette Building 5, Opp St. Anne''s Girls Higher Secondary School, Changanacherry, Kerala, 686101',
     working_hours TEXT NOT NULL DEFAULT 'Monday – Saturday: 9:00 AM – 7:00 PM | Sunday: Holiday / Closed',
     google_maps_url TEXT DEFAULT 'https://maps.google.com/?q=Marette+Building+5+Opp+St+Annes+Girls+Higher+Secondary+School+Changanacherry+Kerala+686101',
@@ -121,7 +135,7 @@ CREATE TABLE IF NOT EXISTS practitioners (
     full_name TEXT NOT NULL DEFAULT 'Dr. Nikku Thomas',
     title TEXT NOT NULL DEFAULT 'Lead Naturopathy & Acupuncture Specialist',
     qualifications JSONB NOT NULL DEFAULT '["Bachelor of Naturopathy and Yogic Sciences (BNYS)", "Master Degree in Naturopathy (MD)", "Master Degree in Acupuncture"]'::jsonb,
-    bio TEXT NOT NULL DEFAULT 'Dr. Nikku Thomas is an experienced practitioner dedicated to patient-centered holistic wellness. Holding advanced degrees in Naturopathy, Yogic Sciences, and Acupuncture, Dr. Thomas emphasizes thorough clinical assessments and individualized treatment recommendations tailored to each patient''s unique health journey.',
+    bio TEXT NOT NULL DEFAULT 'Dr. Nikku Thomas provides personalized assessments and acupuncture care tailored to each patient''s individual health needs.',
     profile_image_url TEXT,
     profile_image_alt TEXT DEFAULT 'Dr. Nikku Thomas',
     display_order INT DEFAULT 0,
@@ -222,18 +236,44 @@ CREATE INDEX IF NOT EXISTS idx_testimonials_published_order ON testimonials(is_p
 CREATE INDEX IF NOT EXISTS idx_inquiries_status_created ON consultation_inquiries(status, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_seo_route ON seo_metadata(route);
 
--- 4. TIMESTAMPTZ TRIGGERS
+-- 4. TIMESTAMPTZ & INQUIRY SANITIZATION TRIGGERS
+DROP TRIGGER IF EXISTS sanitize_inquiries_before_insert ON consultation_inquiries;
+CREATE TRIGGER sanitize_inquiries_before_insert BEFORE INSERT ON consultation_inquiries FOR EACH ROW EXECUTE FUNCTION sanitize_consultation_inquiry_insert();
+
+DROP TRIGGER IF EXISTS update_site_settings_updated_at ON site_settings;
 CREATE TRIGGER update_site_settings_updated_at BEFORE UPDATE ON site_settings FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_hero_sections_updated_at ON hero_sections;
 CREATE TRIGGER update_hero_sections_updated_at BEFORE UPDATE ON hero_sections FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_about_content_updated_at ON about_content;
 CREATE TRIGGER update_about_content_updated_at BEFORE UPDATE ON about_content FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_services_updated_at ON services;
 CREATE TRIGGER update_services_updated_at BEFORE UPDATE ON services FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_conditions_updated_at ON conditions;
 CREATE TRIGGER update_conditions_updated_at BEFORE UPDATE ON conditions FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_practitioners_updated_at ON practitioners;
 CREATE TRIGGER update_practitioners_updated_at BEFORE UPDATE ON practitioners FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_treatment_process_updated_at ON treatment_process;
 CREATE TRIGGER update_treatment_process_updated_at BEFORE UPDATE ON treatment_process FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_testimonials_updated_at ON testimonials;
 CREATE TRIGGER update_testimonials_updated_at BEFORE UPDATE ON testimonials FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_faqs_updated_at ON faqs;
 CREATE TRIGGER update_faqs_updated_at BEFORE UPDATE ON faqs FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_gallery_items_updated_at ON gallery_items;
 CREATE TRIGGER update_gallery_items_updated_at BEFORE UPDATE ON gallery_items FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_inquiries_updated_at ON consultation_inquiries;
 CREATE TRIGGER update_inquiries_updated_at BEFORE UPDATE ON consultation_inquiries FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_seo_metadata_updated_at ON seo_metadata;
 CREATE TRIGGER update_seo_metadata_updated_at BEFORE UPDATE ON seo_metadata FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- 5. ROW LEVEL SECURITY (RLS) POLICIES
@@ -253,40 +293,88 @@ ALTER TABLE consultation_inquiries ENABLE ROW LEVEL SECURITY;
 ALTER TABLE seo_metadata ENABLE ROW LEVEL SECURITY;
 
 -- 5.1 Public Read Policies for Active/Published CMS Data
+DROP POLICY IF EXISTS "Public Read Site Settings" ON site_settings;
 CREATE POLICY "Public Read Site Settings" ON site_settings FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public Read Hero Sections" ON hero_sections;
 CREATE POLICY "Public Read Hero Sections" ON hero_sections FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public Read About Content" ON about_content;
 CREATE POLICY "Public Read About Content" ON about_content FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public Read Services" ON services;
 CREATE POLICY "Public Read Services" ON services FOR SELECT USING (is_published = true);
+
+DROP POLICY IF EXISTS "Public Read Conditions" ON conditions;
 CREATE POLICY "Public Read Conditions" ON conditions FOR SELECT USING (is_published = true);
+
+DROP POLICY IF EXISTS "Public Read Practitioners" ON practitioners;
 CREATE POLICY "Public Read Practitioners" ON practitioners FOR SELECT USING (is_active = true);
+
+DROP POLICY IF EXISTS "Public Read Treatment Process" ON treatment_process;
 CREATE POLICY "Public Read Treatment Process" ON treatment_process FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public Read Testimonials" ON testimonials;
 CREATE POLICY "Public Read Testimonials" ON testimonials FOR SELECT USING (is_published = true);
+
+DROP POLICY IF EXISTS "Public Read FAQs" ON faqs;
 CREATE POLICY "Public Read FAQs" ON faqs FOR SELECT USING (is_published = true);
+
+DROP POLICY IF EXISTS "Public Read Gallery" ON gallery_items;
 CREATE POLICY "Public Read Gallery" ON gallery_items FOR SELECT USING (is_published = true);
+
+DROP POLICY IF EXISTS "Public Read SEO Metadata" ON seo_metadata;
 CREATE POLICY "Public Read SEO Metadata" ON seo_metadata FOR SELECT USING (true);
 
--- 5.2 Public Insert Policy for Inquiries (Strict check, status MUST be 'new')
+-- 5.2 Public Insert Policy for Inquiries (Strict minimal write surface: status MUST be 'new' and admin_notes MUST be NULL)
+DROP POLICY IF EXISTS "Public Insert Consultation Inquiries" ON consultation_inquiries;
 CREATE POLICY "Public Insert Consultation Inquiries" ON consultation_inquiries
     FOR INSERT WITH CHECK (
-        full_name IS NOT NULL AND
-        length(trim(full_name)) > 1 AND
-        phone IS NOT NULL AND
-        length(trim(phone)) >= 8 AND
-        status = 'new'
+        (is_admin()) OR (
+            full_name IS NOT NULL AND
+            length(trim(full_name)) > 1 AND
+            phone IS NOT NULL AND
+            length(trim(phone)) >= 8 AND
+            status = 'new' AND
+            admin_notes IS NULL
+        )
     );
 
 -- 5.3 Admin Full Control Policies (ALL operations allowed for is_admin())
+DROP POLICY IF EXISTS "Admin Full Site Settings" ON site_settings;
 CREATE POLICY "Admin Full Site Settings" ON site_settings FOR ALL USING (is_admin()) WITH CHECK (is_admin());
+
+DROP POLICY IF EXISTS "Admin Full Hero Sections" ON hero_sections;
 CREATE POLICY "Admin Full Hero Sections" ON hero_sections FOR ALL USING (is_admin()) WITH CHECK (is_admin());
+
+DROP POLICY IF EXISTS "Admin Full About Content" ON about_content;
 CREATE POLICY "Admin Full About Content" ON about_content FOR ALL USING (is_admin()) WITH CHECK (is_admin());
+
+DROP POLICY IF EXISTS "Admin Full Services" ON services;
 CREATE POLICY "Admin Full Services" ON services FOR ALL USING (is_admin()) WITH CHECK (is_admin());
+
+DROP POLICY IF EXISTS "Admin Full Conditions" ON conditions;
 CREATE POLICY "Admin Full Conditions" ON conditions FOR ALL USING (is_admin()) WITH CHECK (is_admin());
+
+DROP POLICY IF EXISTS "Admin Full Practitioners" ON practitioners;
 CREATE POLICY "Admin Full Practitioners" ON practitioners FOR ALL USING (is_admin()) WITH CHECK (is_admin());
+
+DROP POLICY IF EXISTS "Admin Full Treatment Process" ON treatment_process;
 CREATE POLICY "Admin Full Treatment Process" ON treatment_process FOR ALL USING (is_admin()) WITH CHECK (is_admin());
+
+DROP POLICY IF EXISTS "Admin Full Testimonials" ON testimonials;
 CREATE POLICY "Admin Full Testimonials" ON testimonials FOR ALL USING (is_admin()) WITH CHECK (is_admin());
+
+DROP POLICY IF EXISTS "Admin Full FAQs" ON faqs;
 CREATE POLICY "Admin Full FAQs" ON faqs FOR ALL USING (is_admin()) WITH CHECK (is_admin());
+
+DROP POLICY IF EXISTS "Admin Full Gallery" ON gallery_items;
 CREATE POLICY "Admin Full Gallery" ON gallery_items FOR ALL USING (is_admin()) WITH CHECK (is_admin());
+
+DROP POLICY IF EXISTS "Admin Full Consultation Inquiries" ON consultation_inquiries;
 CREATE POLICY "Admin Full Consultation Inquiries" ON consultation_inquiries FOR ALL USING (is_admin()) WITH CHECK (is_admin());
+
+DROP POLICY IF EXISTS "Admin Full SEO Metadata" ON seo_metadata;
 CREATE POLICY "Admin Full SEO Metadata" ON seo_metadata FOR ALL USING (is_admin()) WITH CHECK (is_admin());
 
 
@@ -305,7 +393,7 @@ INSERT INTO site_settings (
     '+91 81296 27829',
     '+91 81296 27829',
     'Hello, I would like to enquire about an acupuncture consultation at Mantra Acupuncture Clinic.',
-    'info@mantraacupuncture.com',
+    NULL,
     'Marette Building 5, Opp St. Anne''s Girls Higher Secondary School, Changanacherry, Kerala, 686101',
     'Monday – Saturday: 9:00 AM – 7:00 PM | Sunday: Holiday / Closed',
     'https://maps.google.com/?q=Marette+Building+5+Opp+St+Annes+Girls+Higher+Secondary+School+Changanacherry+Kerala+686101',
@@ -349,7 +437,7 @@ INSERT INTO practitioners (
     'Dr. Nikku Thomas',
     'Lead Naturopathy & Acupuncture Specialist',
     '["Bachelor of Naturopathy and Yogic Sciences (BNYS)", "Master Degree in Naturopathy (MD)", "Master Degree in Acupuncture"]'::jsonb,
-    'Dr. Nikku Thomas holds advanced clinical qualifications in Naturopathy, Yogic Sciences, and Acupuncture. Committed to high standards of patient care, Dr. Thomas provides personalized assessments and evidence-guided acupuncture therapies in a serene, supportive environment.',
+    'Dr. Nikku Thomas holds qualifications in Naturopathy, Yogic Sciences, and Acupuncture (BNYS, MD in Naturopathy, Master Degree in Acupuncture). Dedicated to patient-centered care, Dr. Thomas provides personalized assessments and acupuncture consultations in a calm, supportive environment.',
     1, true
 ) ON CONFLICT (id) DO NOTHING;
 
@@ -359,8 +447,8 @@ INSERT INTO services (id, title, slug, short_description, full_description, icon
     '55555555-5555-5555-5555-555555555501',
     'Acupuncture Treatment',
     'acupuncture-treatment',
-    'Traditional needle insertion techniques focused on stimulating natural self-healing pathways, promoting circulation, and easing functional tension.',
-    'Acupuncture Treatment at Mantra Acupuncture Clinic involves the precise insertion of sterile, ultra-fine single-use needles at specific acupuncture points. This practice is tailored to your unique consultation assessment, aiming to support nervous system balance, alleviate localized muscle tension, and encourage natural pain relief mechanisms.',
+    'Traditional acupuncture techniques focused on supporting body balance, relaxing muscle tension, and promoting general wellness.',
+    'Acupuncture Treatment at Mantra Acupuncture Clinic involves the gentle insertion of sterile, single-use needles at specific acupuncture points. Treatments are tailored to your consultation assessment to support overall relaxation and physical comfort.',
     'Activity',
     1, true
 ),
@@ -368,8 +456,8 @@ INSERT INTO services (id, title, slug, short_description, full_description, icon
     '55555555-5555-5555-5555-555555555502',
     'Electro Acupuncture Treatment',
     'electro-acupuncture-treatment',
-    'Enhanced therapeutic acupuncture applying mild, controlled micro-current impulses to targeted points for deeper muscle and nerve stimulation.',
-    'Electro Acupuncture combines traditional point selection with modern gentle electric micro-current stimulation. This therapeutic modality can be particularly useful for stubborn musculoskeletal discomfort, chronic joint tension, and targeted nerve pathways, providing a soothing continuous stimulation during your session.',
+    'Therapeutic acupuncture applying mild micro-current stimulation to selected points for deep muscular relaxation.',
+    'Electro Acupuncture combines traditional point selection with mild electric micro-current stimulation. This modality is used for targeted muscle relaxation and joint comfort during your session.',
     'Zap',
     2, true
 ),
@@ -377,33 +465,33 @@ INSERT INTO services (id, title, slug, short_description, full_description, icon
     '55555555-5555-5555-5555-555555555503',
     'Cupping / Hijama',
     'cupping-hijama',
-    'Therapeutic vacuum cupping designed to enhance localized blood flow, relieve deep myofascial tightness, and support tissue recovery.',
-    'Cupping and Hijama therapies utilize specialized vacuum cups placed on key areas of the back and body. By drawing gentle suction, cupping helps increase circulation, soothe tight muscle fascia, assist cellular detox pathways, and foster deep relaxation.',
+    'Therapeutic vacuum cupping designed to enhance localized comfort, relieve muscular tightness, and support relaxation.',
+    'Cupping and Hijama therapies utilize specialized cups placed on key areas of the back and body. By drawing gentle suction, cupping helps soothe tight muscle fascia, relieve muscular tension, and foster deep relaxation.',
     'Feather',
     3, true
 ) ON CONFLICT (id) DO NOTHING;
 
 -- Seed Initial Conditions Supported
 INSERT INTO conditions (id, title, slug, short_description, full_description, category, display_order, is_published) VALUES
-('66666666-6666-6666-6666-666666666601', 'Low Back Pain', 'low-back-pain', 'Supportive acupuncture care designed to relieve lumbar muscle strain and spinal tension.', 'Low back discomfort often stems from postural strain, muscle spasms, or structural stress. Acupuncture care focuses on reducing inflammation, relaxing surrounding musculature, and restoring lumbar mobility.', 'Musculoskeletal', 1, true),
-('66666666-6666-6666-6666-666666666602', 'Neck Pain', 'neck-pain', 'Targeted point stimulation to ease cervical stiffness, shoulder tightness, and tension posture.', 'Cervical stiffness from screen work or stress responds well to gentle acupuncture protocols that promote circulation and reduce upper trapezial tension.', 'Musculoskeletal', 2, true),
-('66666666-6666-6666-6666-666666666603', 'Knee Pain / Osteoarthritis', 'knee-pain-osteoarthritis', 'Supportive treatment focused on joint mobility, swelling reduction, and localized circulation.', 'Targeted point selection around the knee joint helps improve joint lubrication, reduce stiffness, and support weight-bearing comfort.', 'Joints & Mobility', 3, true),
-('66666666-6666-6666-6666-666666666604', 'Sciatica', 'sciatica', 'Gentle nerve pathway acupuncture for managing radiating leg discomfort and gluteal tightness.', 'Sciatic nerve discomfort can impair daily walking and resting. Electro and manual acupuncture help relax piriformis tightness and soothe nerve sensitivity.', 'Nerve & Spine', 4, true),
-('66666666-6666-6666-6666-666666666605', 'Migraine & Headache', 'migraine-headache', 'Relaxing head and neck acupuncture care aiming to reduce frequency and intensity of stress headaches.', 'Vascular and tension headaches benefit from acupuncture points that calm nervous system hyper-reactivity and ease cranial blood vessel constriction.', 'Neurological', 5, true),
-('66666666-6666-6666-6666-666666666606', 'Shoulder Pain', 'shoulder-pain', 'Care for rotator cuff tightness, frozen shoulder stiffness, and tendon discomfort.', 'Restores range of motion and alleviates deep deltoid and subscapular tightness through focused therapeutic point protocols.', 'Musculoskeletal', 6, true),
-('66666666-6666-6666-6666-666666666607', 'Tennis Elbow', 'tennis-elbow', 'Localized tendon care for lateral elbow inflammation and forearm grip soreness.', 'Supports micro-circulation to elbow tendon attachments to encourage tissue repair and ease repetitive strain soreness.', 'Musculoskeletal', 7, true),
-('66666666-6666-6666-6666-666666666608', 'Carpal Tunnel Syndrome', 'carpal-tunnel-syndrome', 'Wrist point therapy to ease median nerve pressure, finger numbness, and wrist strain.', 'Aims to reduce wrist flexor tendon swelling and support distal circulation into the fingers.', 'Nerve & Spine', 8, true),
-('66666666-6666-6666-6666-666666666609', 'Fibromyalgia', 'fibromyalgia', 'Whole-body soothing acupuncture targeting tender points, systemic fatigue, and sleep quality.', 'Provides gentle, low-intensity stimulation to calm centralized pain pathways and encourage restorative rest.', 'Functional Health', 9, true),
-('66666666-6666-6666-6666-666666666610', 'Stress & Sleep Problems', 'stress-sleep-problems', 'Calming parasympathetic acupuncture care to relieve mental fatigue, anxiety, and insomnia.', 'Acupuncture acts on parasympathetic nervous system pathways to lower stress hormone sensitivity and foster deeper sleep cycles.', 'Nervous System', 10, true),
-('66666666-6666-6666-6666-666666666611', 'Digestive Issues / IBS Symptoms', 'digestive-issues-ibs', 'Abdominal and distal point care supporting gut motility, bloating relief, and abdominal comfort.', 'Helps regulate gut-brain axis communication, soothing intestinal muscle cramps and functional bloating.', 'Digestive Health', 11, true),
-('66666666-6666-6666-6666-666666666612', 'Menstrual Pain', 'menstrual-pain', 'Pelvic circulation acupuncture assisting with dysmenorrhea, pelvic cramping, and cycle discomfort.', 'Promotes smooth blood flow through pelvic pathways to diminish spasmodic uterine cramping and associated lower back soreness.', 'Women''s Health', 12, true)
+('66666666-6666-6666-6666-666666666601', 'Low Back Pain', 'low-back-pain', 'Supportive acupuncture care designed to relieve lumbar muscle strain and spinal tension.', 'Low back discomfort often stems from postural strain, muscle tension, or daily physical stress. Acupuncture care focuses on relaxing surrounding musculature and supporting lumbar comfort and functional movement.', 'Musculoskeletal', 1, true),
+('66666666-6666-6666-6666-666666666602', 'Neck Pain', 'neck-pain', 'Targeted point stimulation to ease cervical stiffness, shoulder tightness, and tension posture.', 'Cervical stiffness from screen work or stress responds well to gentle acupuncture protocols that support localized comfort and ease upper trapezial tension.', 'Musculoskeletal', 2, true),
+('66666666-6666-6666-6666-666666666603', 'Knee Pain / Osteoarthritis', 'knee-pain-osteoarthritis', 'Supportive treatment focused on joint mobility, stiffness relief, and localized comfort.', 'Targeted point selection around the knee area helps ease stiffness, support joint comfort, and assist weight-bearing mobility as part of an individualized care plan.', 'Joints & Mobility', 3, true),
+('66666666-6666-6666-6666-666666666604', 'Sciatica', 'sciatica', 'Gentle acupuncture care for managing radiating leg discomfort and gluteal tightness.', 'Sciatic discomfort can impair daily movement and rest. Electro and manual acupuncture help relax piriformis muscle tightness and support leg comfort.', 'Nerve & Spine', 4, true),
+('66666666-6666-6666-6666-666666666605', 'Migraine & Headache', 'migraine-headache', 'Relaxing head and neck acupuncture care aiming to assist with tension headache discomfort.', 'Head and neck acupuncture points focus on promoting relaxation, easing muscular tightness, and supporting head comfort during periods of stress.', 'Neurological', 5, true),
+('66666666-6666-6666-6666-666666666606', 'Shoulder Pain', 'shoulder-pain', 'Care for rotator cuff tightness, frozen shoulder stiffness, and discomfort.', 'Aims to support shoulder mobility and alleviate deep shoulder and upper back muscular tightness through focused point protocols.', 'Musculoskeletal', 6, true),
+('66666666-6666-6666-6666-666666666607', 'Tennis Elbow', 'tennis-elbow', 'Localized acupuncture care for elbow area discomfort and forearm grip soreness.', 'Focuses on easing forearm muscle tension and supporting elbow joint comfort during daily activities.', 'Musculoskeletal', 7, true),
+('66666666-6666-6666-6666-666666666608', 'Carpal Tunnel Syndrome', 'carpal-tunnel-syndrome', 'Wrist and forearm point care to assist with wrist strain and finger discomfort.', 'Aims to support wrist flexor muscle relaxation and assist with localized comfort in the hand and wrist.', 'Nerve & Spine', 8, true),
+('66666666-6666-6666-6666-666666666609', 'Fibromyalgia', 'fibromyalgia', 'Whole-body soothing acupuncture targeting generalized tender points, fatigue, and sleep quality.', 'Provides gentle, low-intensity acupuncture stimulation tailored to ease body soreness and encourage restorative rest.', 'Functional Health', 9, true),
+('66666666-6666-6666-6666-666666666610', 'Stress & Sleep Problems', 'stress-sleep-problems', 'Calming acupuncture care to relieve mental fatigue, stress, and sleep disruption.', 'Gentle acupuncture protocols aim to foster deep relaxation, relieve daily stress tension, and support healthy sleep habits.', 'Nervous System', 10, true),
+('66666666-6666-6666-6666-666666666611', 'Digestive Issues / IBS Symptoms', 'digestive-issues-ibs', 'Abdominal and distal point care supporting digestive comfort, bloating relief, and abdominal relaxation.', 'Focuses on soothing abdominal muscle tightness and supporting digestive comfort as part of a holistic wellness plan.', 'Digestive Health', 11, true),
+('66666666-6666-6666-6666-666666666612', 'Menstrual Pain', 'menstrual-pain', 'Pelvic area and distal acupuncture care assisting with menstrual cramping and lower back soreness.', 'Promotes abdominal and pelvic muscle relaxation to assist with dysmenorrhea discomfort and associated lower back strain.', 'Women''s Health', 12, true)
 ON CONFLICT (id) DO NOTHING;
 
 -- Seed Treatment Process Steps
 INSERT INTO treatment_process (id, step_number, title, description, icon_name, display_order) VALUES
 ('77777777-7777-7777-7777-777777777701', 1, 'Initial Consultation', 'A thorough evaluation of your current health concerns, medical history, lifestyle factors, and main treatment goals.', 'UserCheck', 1),
 ('77777777-7777-7777-7777-777777777702', 2, 'Detailed Assessment', 'A careful clinical examination assessing functional posture, range of motion, and pulse/tongue indicators where appropriate.', 'ClipboardList', 2),
-('77777777-7777-7777-7777-777777777703', 3, 'Customized Care Plan', 'A clear explanation of recommended acupuncture modalities, estimated frequency, and realistic recovery expectations.', 'FileText', 3),
+('77777777-7777-7777-7777-777777777703', 3, 'Customized Care Plan', 'A clear explanation of recommended acupuncture modalities and individualized care recommendations based on your assessment.', 'FileText', 3),
 ('77777777-7777-7777-7777-777777777704', 4, 'Therapeutic Session', 'Relax in a calm environment while gentle, sterile acupuncture treatment is administered with maximal patient comfort.', 'Sparkles', 4),
 ('77777777-7777-7777-7777-777777777705', 5, 'Ongoing Guidance', 'Receive helpful post-treatment lifestyle, hydration, and posture advice to support your body''s ongoing recovery.', 'ShieldCheck', 5)
 ON CONFLICT (id) DO NOTHING;
@@ -431,7 +519,7 @@ INSERT INTO faqs (id, question, answer, category, display_order, is_published) V
 (
     '88888888-8888-8888-8888-888888888804',
     'How many acupuncture sessions will I need?',
-    'Treatment duration varies depending on your condition, severity, and how long you have experienced symptoms. Acute concerns may respond in a few sessions, while chronic conditions often benefit from a structured plan of 6 to 12 sessions.',
+    'Treatment duration varies depending on your condition, severity, and how long you have experienced symptoms. Recommended session plans are determined following your initial consultation and individual assessment.',
     'Treatment Details', 4, true
 ),
 (
@@ -448,7 +536,7 @@ INSERT INTO seo_metadata (id, route, title, description, canonical_url, keywords
     '/',
     'Mantra Acupuncture Clinic | Changanacherry, Kerala | Heal • Balance • Thrive',
     'Personalized, patient-focused acupuncture care in Changanacherry by Dr. Nikku Thomas. Supportive treatment for back pain, neck pain, sciatica, migraine, and stress.',
-    'https://mantraacupuncture.com',
+    NULL,
     'acupuncture changanacherry, doctor nikku thomas, acupuncture clinic kerala, back pain treatment changanacherry, sciatica acupuncture'
 ),
 (
@@ -456,7 +544,7 @@ INSERT INTO seo_metadata (id, route, title, description, canonical_url, keywords
     '/about',
     'About Mantra Acupuncture Clinic | Patient-Centered Care in Changanacherry',
     'Learn about Mantra Acupuncture Clinic, our holistic philosophy, patient-focused assessment process, and peaceful treatment sanctuary in Changanacherry, Kerala.',
-    'https://mantraacupuncture.com/about',
+    NULL,
     'mantra acupuncture story, holistic clinic changanacherry, natural healing kerala'
 ),
 (
@@ -464,7 +552,7 @@ INSERT INTO seo_metadata (id, route, title, description, canonical_url, keywords
     '/treatments',
     'Acupuncture & Electro-Acupuncture Treatments | Mantra Acupuncture Clinic',
     'Explore personalized treatment options including traditional Acupuncture, Electro-Acupuncture, and Cupping/Hijama therapy at Mantra Acupuncture Clinic.',
-    'https://mantraacupuncture.com/treatments',
+    NULL,
     'acupuncture treatment, electro acupuncture, cupping hijama therapy changanacherry'
 ),
 (
@@ -472,15 +560,15 @@ INSERT INTO seo_metadata (id, route, title, description, canonical_url, keywords
     '/conditions',
     'Conditions Supported | Mantra Acupuncture Clinic Changanacherry',
     'Supportive acupuncture care for low back pain, neck strain, knee osteoarthritis, sciatica, migraine, stress, and functional health concerns.',
-    'https://mantraacupuncture.com/conditions',
+    NULL,
     'back pain acupuncture, neck pain relief, sciatica care changanacherry, migraine acupuncture'
 ),
 (
     '99999999-9999-9999-9999-999999999905',
     '/doctor',
     'Dr. Nikku Thomas | BNYS, MD, Master in Acupuncture | Changanacherry',
-    'Meet Dr. Nikku Thomas, leading Naturopathy & Acupuncture practitioner holding BNYS, MD Naturopathy, and Master Degree in Acupuncture.',
-    'https://mantraacupuncture.com/doctor',
+    'Meet Dr. Nikku Thomas, Naturopathy & Acupuncture practitioner holding BNYS, MD Naturopathy, and Master Degree in Acupuncture.',
+    NULL,
     'dr nikku thomas, acupuncture doctor changanacherry, bnys md acupuncture kerala'
 ),
 (
@@ -488,6 +576,6 @@ INSERT INTO seo_metadata (id, route, title, description, canonical_url, keywords
     '/contact',
     'Contact Mantra Acupuncture Clinic | Schedule Consultation | Changanacherry',
     'Contact Mantra Acupuncture Clinic in Changanacherry, Kerala. View working hours, phone number, WhatsApp link, location address, and consultation enquiry form.',
-    'https://mantraacupuncture.com/contact',
+    NULL,
     'contact mantra acupuncture, acupuncture clinic address changanacherry, book acupuncture consultation'
 ) ON CONFLICT (id) DO NOTHING;
