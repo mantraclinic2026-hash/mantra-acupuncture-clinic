@@ -18,11 +18,12 @@ END;
 $$ LANGUAGE plpgsql SET search_path = public, pg_temp;
 
 -- BEFORE INSERT trigger function for consultation_inquiries
--- Forces database control over status, admin_notes, created_at, and updated_at for non-admin insertions
+-- Forces database control over id, status, admin_notes, created_at, and updated_at for non-admin insertions
 CREATE OR REPLACE FUNCTION sanitize_consultation_inquiry_insert()
 RETURNS TRIGGER AS $$
 BEGIN
     IF NOT is_admin() THEN
+        NEW.id := gen_random_uuid();
         NEW.status := 'new';
         NEW.admin_notes := NULL;
         NEW.created_at := NOW();
@@ -326,11 +327,12 @@ CREATE POLICY "Public Read Gallery" ON gallery_items FOR SELECT USING (is_publis
 DROP POLICY IF EXISTS "Public Read SEO Metadata" ON seo_metadata;
 CREATE POLICY "Public Read SEO Metadata" ON seo_metadata FOR SELECT USING (true);
 
--- 5.2 Public Insert Policy for Inquiries (Strict minimal write surface: status MUST be 'new' and admin_notes MUST be NULL)
+-- 5.2 Public Insert Policy for Inquiries (Strict minimal write surface: auth.role() = 'anon', status = 'new', admin_notes IS NULL)
 DROP POLICY IF EXISTS "Public Insert Consultation Inquiries" ON consultation_inquiries;
 CREATE POLICY "Public Insert Consultation Inquiries" ON consultation_inquiries
     FOR INSERT WITH CHECK (
         (is_admin()) OR (
+            auth.role() = 'anon' AND
             full_name IS NOT NULL AND
             length(trim(full_name)) > 1 AND
             phone IS NOT NULL AND
