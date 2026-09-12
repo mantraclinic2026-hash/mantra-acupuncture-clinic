@@ -1,8 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { MapPin, Phone, Clock, MessageCircle, Lock } from 'lucide-react';
+import Image from 'next/image';
+import { MapPin, Phone, Clock, MessageCircle, Lock, ChevronDown } from 'lucide-react';
 import { buildWhatsAppUrl } from '@/lib/whatsapp';
 
 interface FooterProps {
@@ -31,22 +32,45 @@ export default function Footer({
   const cleanPhone = phone.replace(/[^0-9+]/g, '');
   const whatsappUrl = buildWhatsAppUrl(whatsappNumber, defaultMessage);
 
+  // Mobile accordion state for small footer
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
+    navigation: false,
+    details: false,
+  });
+
+  const toggleSection = (section: string) => {
+    setOpenSections((prev) => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
+  };
+
   return (
-    <footer className="bg-[#12291E] text-[#EBF2EE] pt-12 pb-24 md:pb-12 border-t border-[#C5A059]/20">
+    <footer className="bg-[#12291E] text-[#EBF2EE] pt-8 md:pt-12 pb-24 md:pb-12 border-t border-[#C5A059]/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Main Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 pb-10 border-b border-[#EBF2EE]/10">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 lg:gap-12 pb-8 md:pb-10 border-b border-[#EBF2EE]/10">
           
           {/* Brand Column */}
-          <div className="md:col-span-5 space-y-4">
-            <Link href="/" className="inline-block">
-              <span className="font-serif text-2xl font-bold tracking-tight text-white block">
-                {siteName}
-              </span>
-              <span className="text-xs uppercase tracking-widest text-[#C5A059] font-medium block">
-                {tagline}
-              </span>
+          <div className="md:col-span-5 space-y-3.5 pb-2 md:pb-0 border-b border-[#EBF2EE]/10 md:border-b-0">
+            <Link href="/" className="inline-flex items-center gap-1" aria-label={siteName}>
+              <Image
+                src="/mantra-logo1.png"
+                alt="Mantra icon"
+                width={40}
+                height={40}
+                style={{ width: 'auto' }}
+                className="h-8 sm:h-9 w-auto object-contain brightness-0 invert opacity-85 shrink-0"
+              />
+              <Image
+                src="/mantratext-logo1.png"
+                alt={siteName}
+                width={160}
+                height={40}
+                style={{ width: 'auto' }}
+                className="h-8 sm:h-9 w-auto object-contain brightness-0 invert opacity-85"
+              />
             </Link>
 
             <p className="text-xs sm:text-sm text-[#EBF2EE]/80 leading-relaxed max-w-sm">
@@ -54,7 +78,7 @@ export default function Footer({
             </p>
 
             {instagramUrl && (
-              <div className="pt-2">
+              <div className="pt-1 pb-1">
                 <a
                   href={instagramUrl}
                   target="_blank"
@@ -71,48 +95,84 @@ export default function Footer({
             )}
           </div>
 
-          {/* Quick Links */}
-          <div className="md:col-span-3 space-y-3">
-            <p className="text-xs font-bold uppercase tracking-wider text-[#C5A059]">
-              Navigation
-            </p>
-            <ul className="space-y-2 text-xs sm:text-sm text-[#EBF2EE]/80">
-              <li>
-                <Link href="/" className="hover:text-[#C5A059] transition-colors">Home</Link>
-              </li>
-              <li>
-                <Link href="/about" className="hover:text-[#C5A059] transition-colors">About Clinic</Link>
-              </li>
-              <li>
-                <Link href="/treatments" className="hover:text-[#C5A059] transition-colors">Therapeutic Treatments</Link>
-              </li>
-              <li>
-                <Link href="/conditions" className="hover:text-[#C5A059] transition-colors">Supported Conditions</Link>
-              </li>
-              <li>
-                <Link href="/doctor" className="hover:text-[#C5A059] transition-colors">Dr. Nikku Thomas</Link>
-              </li>
-              <li>
-                <Link href="/gallery" className="hover:text-[#C5A059] transition-colors">Clinic Gallery</Link>
-              </li>
-              <li>
-                <Link href="/contact" className="hover:text-[#C5A059] transition-colors">Contact & Directions</Link>
-              </li>
-              <li>
-                <Link href="/faq" className="hover:text-[#C5A059] transition-colors">Frequently Asked Questions</Link>
-              </li>
-            </ul>
+          {/* Quick Links / Navigation (Dropdown on mobile) */}
+          <div className="md:col-span-3 pb-3 md:pb-0 border-b border-[#EBF2EE]/10 md:border-b-0">
+            <button
+              type="button"
+              onClick={() => toggleSection('navigation')}
+              className="w-full flex items-center justify-between py-1.5 md:py-0 text-left md:pointer-events-none group"
+              aria-expanded={openSections.navigation}
+            >
+              <span className="text-xs font-bold uppercase tracking-wider text-[#C5A059] group-hover:text-[#e0b86c] transition-colors">
+                Navigation
+              </span>
+              <ChevronDown
+                className={`w-4 h-4 text-[#C5A059] transition-transform duration-300 md:hidden ${
+                  openSections.navigation ? 'rotate-180' : 'rotate-0'
+                }`}
+              />
+            </button>
+
+            <div
+              className={`space-y-2 pt-3 md:pt-3 text-xs sm:text-sm text-[#EBF2EE]/80 ${
+                openSections.navigation ? 'block animate-in fade-in-50 duration-200' : 'hidden'
+              } md:block`}
+            >
+              <ul className="space-y-2.5">
+                <li>
+                  <Link href="/" className="hover:text-[#C5A059] transition-colors inline-block py-0.5">Home</Link>
+                </li>
+                <li>
+                  <Link href="/about" className="hover:text-[#C5A059] transition-colors inline-block py-0.5">About Clinic</Link>
+                </li>
+                <li>
+                  <Link href="/treatments" className="hover:text-[#C5A059] transition-colors inline-block py-0.5">Therapeutic Treatments</Link>
+                </li>
+                <li>
+                  <Link href="/conditions" className="hover:text-[#C5A059] transition-colors inline-block py-0.5">Supported Conditions</Link>
+                </li>
+                <li>
+                  <Link href="/doctor" className="hover:text-[#C5A059] transition-colors inline-block py-0.5">Dr. Nikku Thomas</Link>
+                </li>
+                <li>
+                  <Link href="/gallery" className="hover:text-[#C5A059] transition-colors inline-block py-0.5">Clinic Gallery</Link>
+                </li>
+                <li>
+                  <Link href="/contact" className="hover:text-[#C5A059] transition-colors inline-block py-0.5">Contact & Directions</Link>
+                </li>
+                <li>
+                  <Link href="/faq" className="hover:text-[#C5A059] transition-colors inline-block py-0.5">Frequently Asked Questions</Link>
+                </li>
+              </ul>
+            </div>
           </div>
 
-          {/* Contact & Hours */}
-          <div className="md:col-span-4 space-y-3">
-            <p className="text-xs font-bold uppercase tracking-wider text-[#C5A059]">
-              Clinic Details
-            </p>
-            <div className="space-y-3 text-xs sm:text-sm text-[#EBF2EE]/80">
+          {/* Contact & Hours / Clinic Details (Dropdown on mobile) */}
+          <div className="md:col-span-4 pb-1 md:pb-0">
+            <button
+              type="button"
+              onClick={() => toggleSection('details')}
+              className="w-full flex items-center justify-between py-1.5 md:py-0 text-left md:pointer-events-none group"
+              aria-expanded={openSections.details}
+            >
+              <span className="text-xs font-bold uppercase tracking-wider text-[#C5A059] group-hover:text-[#e0b86c] transition-colors">
+                Clinic Details
+              </span>
+              <ChevronDown
+                className={`w-4 h-4 text-[#C5A059] transition-transform duration-300 md:hidden ${
+                  openSections.details ? 'rotate-180' : 'rotate-0'
+                }`}
+              />
+            </button>
+
+            <div
+              className={`space-y-3 pt-3 md:pt-3 text-xs sm:text-sm text-[#EBF2EE]/80 ${
+                openSections.details ? 'block animate-in fade-in-50 duration-200' : 'hidden'
+              } md:block`}
+            >
               <div className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-[#C5A059] shrink-0 mt-0.5" />
-                <span>{address}</span>
+                <span className="leading-snug">{address}</span>
               </div>
               <div className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-[#C5A059] shrink-0" />
@@ -120,13 +180,13 @@ export default function Footer({
               </div>
               <div className="flex items-center gap-2.5">
                 <MessageCircle className="w-4 h-4 text-[#25D366] shrink-0" />
-                <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="hover:underline text-[#25D366]">
+                <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="hover:underline text-[#25D366] font-medium">
                   WhatsApp Direct Chat
                 </a>
               </div>
               <div className="flex items-start gap-2.5 pt-1">
                 <Clock className="w-4 h-4 text-[#C5A059] shrink-0 mt-0.5" />
-                <span>{workingHours}</span>
+                <span className="leading-snug">{workingHours}</span>
               </div>
             </div>
           </div>
@@ -140,7 +200,7 @@ export default function Footer({
 
         {/* Copyright & Admin Link */}
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#EBF2EE]/50">
-          <p>© {new Date().getFullYear()} {siteName}. All rights reserved.</p>
+          <p suppressHydrationWarning>© {new Date().getFullYear()} {siteName}. All rights reserved.</p>
           <Link href="/admin/login" className="flex items-center gap-1 hover:text-[#C5A059] transition-colors">
             <Lock className="w-3 h-3" />
             <span>Admin Portal</span>

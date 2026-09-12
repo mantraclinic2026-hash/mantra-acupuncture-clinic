@@ -34,7 +34,7 @@ export default async function AboutPage() {
         ctaLabel={siteSettings.primary_cta_label}
       />
 
-      <main className="flex-1 bg-[#FDFBF7] py-12 lg:py-20">
+      <main className="flex-1 bg-[#FAF2EB] py-12 lg:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
           
           {/* Header Banner */}
@@ -51,7 +51,7 @@ export default async function AboutPage() {
           </div>
 
           {/* Story Paragraphs */}
-          <div className="bg-[#F4EFE6] rounded-3xl p-8 sm:p-12 border border-[#E6DFD3] space-y-6 max-w-4xl mx-auto text-base sm:text-lg text-[#2C3531] leading-relaxed">
+          <div className="bg-[#EEE4D8] rounded-3xl p-8 sm:p-12 border border-[#E6DFD3] space-y-6 max-w-4xl mx-auto text-base sm:text-lg text-[#2C3531] leading-relaxed">
             {about.story_paragraphs.map((para, idx) => (
               <p key={idx}>{para}</p>
             ))}
@@ -60,7 +60,7 @@ export default async function AboutPage() {
           {/* Pillars */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {about.pillars.map((pillar, idx) => (
-              <div key={idx} className="bg-[#FDFBF7] p-8 rounded-3xl border border-[#E6DFD3] space-y-3 shadow-sm">
+              <div key={idx} className="bg-[#FAF2EB] p-8 rounded-3xl border border-[#E6DFD3] space-y-3 shadow-sm">
                 <span className="w-8 h-8 rounded-full bg-[#1B3B2B] text-[#C5A059] flex items-center justify-center font-bold text-sm">
                   0{idx + 1}
                 </span>

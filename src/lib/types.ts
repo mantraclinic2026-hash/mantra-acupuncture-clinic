@@ -18,6 +18,19 @@ export interface SiteSettings {
   consultation_cta_label: string;
   call_cta_label: string;
   disclaimer_text: string;
+  banner_eyebrow?: string | null;
+  banner_headline?: string | null;
+  banner_primary_cta_label?: string | null;
+  banner_primary_cta_link?: string | null;
+  banner_phone_label?: string | null;
+  conditions_eyebrow?: string | null;
+  conditions_headline?: string | null;
+  conditions_subtitle?: string | null;
+  conditions_cta_label?: string | null;
+  conditions_cta_link?: string | null;
+  practitioner_eyebrow?: string | null;
+  practitioner_booking_headline?: string | null;
+  practitioner_booking_subtitle?: string | null;
   created_at?: string;
   updated_at?: string;
 }
@@ -32,7 +45,12 @@ export interface HeroSection {
   secondary_cta_text: string;
   secondary_cta_link: string;
   hero_image_url: string | null;
+  hero_mobile_image_url?: string | null;
   hero_image_alt: string | null;
+  hero_side_text?: string | null;
+  trust_badge_1?: string | null;
+  trust_badge_2?: string | null;
+  trust_badge_3?: string | null;
   created_at?: string;
   updated_at?: string;
 }
@@ -44,9 +62,12 @@ export interface PillarItem {
 
 export interface AboutContent {
   id: string;
+  eyebrow?: string | null;
   headline: string;
   story_paragraphs: string[];
   pillars: PillarItem[];
+  learn_more_text?: string | null;
+  learn_more_link?: string | null;
   created_at?: string;
   updated_at?: string;
 }

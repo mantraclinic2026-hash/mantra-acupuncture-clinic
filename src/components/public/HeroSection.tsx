@@ -2,9 +2,8 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, Sparkles, ShieldCheck, HeartPulse } from 'lucide-react';
-import ImageFallback from './ImageFallback';
-import WhatsAppButton from './WhatsAppButton';
+import { ArrowRight, Phone, Leaf, UserCheck, ShieldCheck } from 'lucide-react';
+import Image from 'next/image';
 
 interface HeroSectionProps {
   badgeText?: string | null;
@@ -15,129 +14,399 @@ interface HeroSectionProps {
   secondaryCtaText?: string;
   secondaryCtaLink?: string;
   heroImageUrl?: string | null;
+  heroMobileImageUrl?: string | null;
   heroImageAlt?: string | null;
+  heroSideText?: string | null;
+  trustBadge1?: string | null;
+  trustBadge2?: string | null;
+  trustBadge3?: string | null;
   whatsappNumber?: string;
   defaultWhatsappMessage?: string;
 }
 
 export default function HeroSection({
-  badgeText = 'Personalized Acupuncture Care in Changanacherry',
-  headline = 'Personalized Acupuncture Care for Natural Healing & Vitality',
-  subheadline = 'Combining traditional acupuncture principles with a modern clinical understanding of health to support your body’s natural healing process, balance, and well-being.',
+  badgeText = 'PERSONALIZED ACUPUNCTURE CARE',
+  headline = 'Care Designed Around You.',
+  subheadline = 'At Mantra Acupuncture Clinic, every consultation begins with understanding your individual condition, lifestyle, and health goals.',
   primaryCtaText = 'Book a Consultation',
   primaryCtaLink = '/contact',
-  secondaryCtaText = 'Explore Treatments',
-  secondaryCtaLink = '/treatments',
+  secondaryCtaText = 'Call +91 8129627829',
+  secondaryCtaLink = 'tel:+918129627829',
   heroImageUrl,
-  heroImageAlt = 'Mantra Acupuncture Clinic environment',
-  whatsappNumber = '+91 81296 27829',
-  defaultWhatsappMessage = 'Hello, I would like to enquire about an acupuncture consultation at Mantra Acupuncture Clinic.',
+  heroMobileImageUrl,
+  heroImageAlt = 'Mantra Acupuncture Clinic treatment environment',
+  trustBadge1 = 'Personalized Assessment',
+  trustBadge2 = 'Individual Treatment Plans',
+  trustBadge3 = 'Patient Comfort & Safety',
 }: HeroSectionProps) {
-  return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-[#FDFBF7] via-[#F4EFE6]/50 to-[#FDFBF7] py-8 sm:py-16 lg:py-20 border-b border-[#E6DFD3]">
-      {/* Subtle organic background decoration */}
-      <div className="absolute top-0 right-0 -translate-y-12 translate-x-12 w-96 h-96 bg-[#C5A059]/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-0 translate-y-12 -translate-x-12 w-96 h-96 bg-[#1B3B2B]/5 rounded-full blur-3xl pointer-events-none" />
+  const bgImage =
+    heroImageUrl ||
+    'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=1920';
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-          
-          {/* Main Copy & CTAs Column */}
-          <div className="lg:col-span-7 space-y-6 text-left">
+  return (
+    <section
+      className="
+        relative
+        overflow-hidden
+        bg-[#FAF2EB]
+        border-b
+        border-[#E6DFD3]
+      "
+    >
+
+      {/* =====================================================
+          FULL-WIDTH BACKGROUND IMAGE (DESKTOP & MOBILE VIEWS)
+      ===================================================== */}
+      <div className="relative w-full min-h-[420px] sm:min-h-[460px] lg:min-h-[500px] py-8 sm:py-12 lg:py-16 flex items-center">
+
+        {/* Full Banner Images */}
+        <div className="absolute inset-0 z-0">
+          {/* Desktop & Tablet Banner */}
+          <div className={heroMobileImageUrl ? 'hidden sm:block absolute inset-0' : 'absolute inset-0'}>
+            <Image
+              src={bgImage}
+              alt={heroImageAlt || 'Mantra Acupuncture Clinic'}
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover object-center opacity-85 sm:opacity-100"
+              unoptimized={
+                bgImage.includes('res.cloudinary.com') ||
+                bgImage.includes('unsplash.com')
+              }
+            />
+          </div>
+
+          {/* Mobile Specific Banner (if uploaded in admin) */}
+          {heroMobileImageUrl && (
+            <div className="block sm:hidden absolute inset-0">
+              <Image
+                src={heroMobileImageUrl}
+                alt={heroImageAlt || 'Mantra Acupuncture Clinic Mobile'}
+                fill
+                priority
+                sizes="100vw"
+                className="object-cover object-center opacity-95"
+                unoptimized={
+                  heroMobileImageUrl.includes('res.cloudinary.com') ||
+                  heroMobileImageUrl.includes('unsplash.com')
+                }
+              />
+            </div>
+          )}
+
+          {/* Subtle luminous mist for high contrast readability without hiding the banner image */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#FAF2EB]/80 via-[#FAF2EB]/55 to-[#FAF2EB]/35 sm:from-[#FAF2EB]/85 sm:via-[#FAF2EB]/40 sm:to-transparent pointer-events-none" />
+        </div>
+
+        {/* =====================================================
+            HERO CONTENT
+        ===================================================== */}
+        <div
+          className="
+            relative
+            z-10
+            flex
+            h-full
+            flex-col
+            justify-center
+            max-w-7xl
+            mx-auto
+            w-full
+            px-4
+            sm:px-6
+            lg:px-8
+          "
+        >
+          <div className="ml-0 lg:-ml-6 xl:-ml-10 max-w-2xl xl:max-w-3xl space-y-4 sm:space-y-6 lg:space-y-7">
+
+            {/* Eyebrow Badge */}
             {badgeText && (
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EBF2EE] border border-[#1B3B2B]/10 text-[#1B3B2B] text-xs sm:text-sm font-medium">
-                <Sparkles className="w-4 h-4 text-[#C5A059]" />
-                <span>{badgeText}</span>
+              <div className="inline-flex items-center gap-2.5 px-3 py-1 rounded-full bg-[#FAF2EB]/90 border border-[#C5A059]/40 backdrop-blur-xs w-fit shadow-xs">
+                <span
+                  className="
+                    inline-block
+                    text-[10px]
+                    sm:text-xs
+                    font-bold
+                    uppercase
+                    tracking-[0.18em]
+                    sm:tracking-[0.2em]
+                    text-[#1B3B2B]
+                  "
+                >
+                  {badgeText}
+                </span>
+
+                <span className="w-5 sm:w-8 h-[1.5px] bg-[#C5A059]" />
               </div>
             )}
 
-            <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#1B3B2B] tracking-tight leading-[1.15]">
+            {/* Main Headline */}
+            <h1
+              className="
+                font-serif
+                text-2xl
+                sm:text-4xl
+                md:text-5xl
+                lg:text-[3.8rem]
+                xl:text-[4.2rem]
+                font-bold
+                text-[#1B3B2B]
+                tracking-tight
+                leading-[1.14]
+                [text-shadow:_0_1px_4px_rgba(250,242,235,0.9),_0_0_24px_rgba(250,242,235,0.7)]
+              "
+            >
               {headline}
             </h1>
 
-            <p className="text-base sm:text-lg text-[#586962] leading-relaxed max-w-2xl">
+            {/* Subheadline */}
+            <p
+              className="
+                text-sm
+                sm:text-base
+                md:text-lg
+                text-[#1B3B2B]
+                font-medium
+                leading-relaxed
+                max-w-xl
+                [text-shadow:_0_1px_3px_rgba(250,242,235,0.95)]
+              "
+            >
               {subheadline}
             </p>
 
-            {/* CTAs Group */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 pt-1 sm:pt-2">
+
               <Link
                 href={primaryCtaLink}
-                className="inline-flex items-center justify-center px-6 py-3.5 rounded-full bg-[#1B3B2B] hover:bg-[#12291E] text-white font-medium text-base shadow-md transition-all focus:ring-2 focus:ring-[#C5A059] group"
+                className="
+                  w-full
+                  sm:w-auto
+                  inline-flex
+                  items-center
+                  justify-center
+                  px-7
+                  py-3.5
+                  rounded-full
+                  bg-[#1B3B2B]
+                  hover:bg-[#12291E]
+                  text-white
+                  font-semibold
+                  text-sm
+                  sm:text-base
+                  shadow-lg
+                  transition-all
+                  duration-300
+                  hover:scale-[1.02]
+                  active:scale-[0.98]
+                  group
+                "
               >
                 <span>{primaryCtaText}</span>
-                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-              </Link>
 
-              <WhatsAppButton
-                phone={whatsappNumber}
-                defaultMessage={defaultWhatsappMessage}
-                label="WhatsApp Inquiry"
-                variant="primary"
-                className="py-3.5 px-6"
-              />
-
-              <Link
-                href={secondaryCtaLink}
-                className="inline-flex items-center justify-center px-5 py-3.5 rounded-full border border-[#1B3B2B]/20 text-[#1B3B2B] hover:bg-[#F4EFE6] font-medium text-base transition-colors"
-              >
-                {secondaryCtaText}
-              </Link>
-            </div>
-
-            {/* Trust Pill Strip */}
-            <div className="pt-4 border-t border-[#E6DFD3] grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs sm:text-sm text-[#2C3531]">
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-[#C5A059] shrink-0" />
-                <span>Sterile Single-Use Needles</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <HeartPulse className="w-4 h-4 text-[#C5A059] shrink-0" />
-                <span>Individual Assessment</span>
-              </div>
-              <div className="flex items-center gap-2 col-span-2 sm:col-span-1">
-                <Sparkles className="w-4 h-4 text-[#C5A059] shrink-0" />
-                <span>Serene Clinic Space</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Hero Visual Card / Media Column */}
-          <div className="lg:col-span-5 relative mt-4 lg:mt-0">
-            <div className="relative mx-auto max-w-md lg:max-w-none">
-              
-              {/* Outer Decorative Card Frame */}
-              <div className="absolute inset-0 bg-[#C5A059]/20 rounded-3xl transform rotate-2 scale-[1.02] pointer-events-none" />
-              
-              <div className="relative bg-white p-3 sm:p-4 rounded-3xl shadow-xl border border-[#E6DFD3]">
-                <ImageFallback
-                  src={heroImageUrl}
-                  alt={heroImageAlt || 'Mantra Acupuncture Clinic treatment environment'}
-                  width={600}
-                  height={500}
-                  priority
-                  aspectRatio="portrait"
-                  className="rounded-2xl shadow-inner min-h-[300px] sm:min-h-[380px]"
+                <ArrowRight
+                  className="
+                    w-4
+                    h-4
+                    ml-2
+                    group-hover:translate-x-1
+                    transition-transform
+                  "
                 />
+              </Link>
 
-                {/* Floating Info Overlay Badge */}
-                <div className="absolute -bottom-4 left-6 right-6 bg-[#FDFBF7] p-3.5 rounded-xl border border-[#E6DFD3] shadow-lg flex items-center justify-between">
-                  <div>
-                    <p className="text-xs uppercase tracking-wider text-[#C5A059] font-bold">Practitioner</p>
-                    <p className="font-serif text-sm sm:text-base font-bold text-[#1B3B2B]">Dr. Nikku Thomas</p>
-                  </div>
-                  <div className="text-right text-[11px] text-[#586962]">
-                    <p className="font-medium text-[#1B3B2B]">BNYS • MD • Acupuncture</p>
-                    <p>Changanacherry, Kerala</p>
-                  </div>
-                </div>
-              </div>
+              <a
+                href={secondaryCtaLink}
+                className="
+                  w-full
+                  sm:w-auto
+                  inline-flex
+                  items-center
+                  justify-center
+                  px-6
+                  py-3.5
+                  rounded-full
+                  border
+                  border-[#1B3B2B]/30
+                  hover:border-[#1B3B2B]
+                  bg-white/90
+                  sm:bg-white
+                  hover:bg-[#EEE4D8]
+                  text-[#1B3B2B]
+                  font-medium
+                  text-sm
+                  sm:text-base
+                  transition-all
+                  duration-300
+                  active:scale-[0.98]
+                "
+              >
+                <Phone className="w-4 h-4 mr-2 text-[#C5A059]" />
+
+                <span>{secondaryCtaText}</span>
+              </a>
 
             </div>
-          </div>
 
+          </div>
+        </div>
+
+      </div>
+
+      {/* =====================================================
+          TRUST STRIP
+      ===================================================== */}
+      <div
+        className="
+          relative
+          z-10
+          w-full
+          border-t
+          border-[#E6DFD3]
+          bg-[#FAF2EB]
+        "
+      >
+        <div
+          className="
+            max-w-7xl
+            mx-auto
+            px-4
+            sm:px-6
+            lg:px-8
+            py-3
+            sm:py-3.5
+          "
+        >
+          <div
+            className="
+              grid
+              grid-cols-3
+              gap-1.5
+              sm:gap-0
+              text-center
+              sm:text-left
+            "
+          >
+
+            <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-1.5 sm:gap-3 px-1 sm:px-4 sm:pl-0 border-r border-[#E6DFD3] sm:border-r-0">
+              <div
+                className="
+                  w-7
+                  h-7
+                  sm:w-9
+                  sm:h-9
+                  rounded-full
+                  bg-[#EEE4D8]
+                  border
+                  border-[#E6DFD3]
+                  flex
+                  items-center
+                  justify-center
+                  shrink-0
+                "
+              >
+                <Leaf className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#1B3B2B]" />
+              </div>
+
+              <span className="text-[10px] sm:text-xs md:text-sm font-semibold text-[#1B3B2B] leading-tight text-center sm:text-left">
+                {trustBadge1}
+              </span>
+            </div>
+
+            <div
+              className="
+                flex
+                flex-col
+                sm:flex-row
+                items-center
+                justify-center
+                sm:justify-start
+                gap-1.5
+                sm:gap-3
+                px-1
+                sm:px-4
+                border-r
+                border-[#E6DFD3]
+                sm:border-r-0
+                sm:border-l
+                sm:border-[#E6DFD3]
+                sm:pl-6
+                lg:pl-8
+              "
+            >
+              <div
+                className="
+                  w-7
+                  h-7
+                  sm:w-9
+                  sm:h-9
+                  rounded-full
+                  bg-[#EEE4D8]
+                  border
+                  border-[#E6DFD3]
+                  flex
+                  items-center
+                  justify-center
+                  shrink-0
+                "
+              >
+                <UserCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#1B3B2B]" />
+              </div>
+
+              <span className="text-[10px] sm:text-xs md:text-sm font-semibold text-[#1B3B2B] leading-tight text-center sm:text-left">
+                {trustBadge2}
+              </span>
+            </div>
+
+            <div
+              className="
+                flex
+                flex-col
+                sm:flex-row
+                items-center
+                justify-center
+                sm:justify-start
+                gap-1.5
+                sm:gap-3
+                px-1
+                sm:px-4
+                sm:border-l
+                sm:border-[#E6DFD3]
+                sm:pl-6
+                lg:pl-8
+              "
+            >
+              <div
+                className="
+                  w-7
+                  h-7
+                  sm:w-9
+                  sm:h-9
+                  rounded-full
+                  bg-[#EEE4D8]
+                  border
+                  border-[#E6DFD3]
+                  flex
+                  items-center
+                  justify-center
+                  shrink-0
+                "
+              >
+                <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#1B3B2B]" />
+              </div>
+
+              <span className="text-[10px] sm:text-xs md:text-sm font-semibold text-[#1B3B2B] leading-tight text-center sm:text-left">
+                {trustBadge3}
+              </span>
+            </div>
+
+          </div>
         </div>
       </div>
+
     </section>
   );
 }

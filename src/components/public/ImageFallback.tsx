@@ -9,22 +9,30 @@ interface ImageFallbackProps {
   src?: string | null;
   alt: string;
   className?: string;
+  imgClassName?: string;
   width?: number;
   height?: number;
   priority?: boolean;
   aspectRatio?: 'square' | 'video' | 'portrait' | 'auto';
+  objectFit?: 'cover' | 'contain';
 }
 
 export default function ImageFallback({
   src,
   alt,
   className = '',
+  imgClassName = '',
   width = 600,
   height = 400,
   priority = false,
   aspectRatio = 'auto',
+  objectFit = 'cover',
 }: ImageFallbackProps) {
   const [hasError, setHasError] = React.useState(false);
+
+  React.useEffect(() => {
+    setHasError(false);
+  }, [src]);
 
   const optimizedSrc = src ? getOptimizedImageUrl(src, { width, height, crop: 'fill' }) : null;
 
@@ -40,7 +48,7 @@ export default function ImageFallback({
   if (!optimizedSrc || hasError) {
     return (
       <div
-        className={`relative flex flex-col items-center justify-center bg-gradient-to-br from-[#F4EFE6] to-[#EAE3D5] text-[#1B3B2B]/60 p-6 rounded-2xl border border-[#E6DFD3] overflow-hidden ${aspectClass} ${className}`}
+        className={`relative flex flex-col items-center justify-center bg-gradient-to-br from-[#EEE4D8] to-[#EAE3D5] text-[#1B3B2B]/60 p-6 rounded-2xl border border-[#E6DFD3] overflow-hidden ${aspectClass} ${className}`}
         role="img"
         aria-label={alt}
       >
@@ -53,6 +61,8 @@ export default function ImageFallback({
     );
   }
 
+  const isCloudinary = optimizedSrc.includes('res.cloudinary.com');
+
   return (
     <div className={`relative overflow-hidden rounded-2xl ${aspectClass} ${className}`}>
       <Image
@@ -61,8 +71,11 @@ export default function ImageFallback({
         width={width}
         height={height}
         priority={priority}
+        unoptimized={isCloudinary || optimizedSrc.startsWith('http') || optimizedSrc.startsWith('data:')}
         onError={() => setHasError(true)}
-        className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+        className={`w-full h-full ${
+          objectFit === 'contain' ? 'object-contain' : 'object-cover'
+        } transition-transform duration-500 hover:scale-105 ${imgClassName}`}
       />
     </div>
   );

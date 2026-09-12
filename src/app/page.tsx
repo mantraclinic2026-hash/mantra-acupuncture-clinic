@@ -4,10 +4,10 @@ import Footer from '@/components/public/Footer';
 import HeroSection from '@/components/public/HeroSection';
 import ServicesGrid from '@/components/public/ServicesGrid';
 import ConditionsGrid from '@/components/public/ConditionsGrid';
-import PractitionerSection from '@/components/public/PractitionerSection';
-import TreatmentProcess from '@/components/public/TreatmentProcess';
+import AboutAndProcessSection from '@/components/public/AboutAndProcessSection';
+import PractitionerAndBookingSection from '@/components/public/PractitionerAndBookingSection';
+import PreFooterCTA from '@/components/public/PreFooterCTA';
 import FAQAccordion from '@/components/public/FAQAccordion';
-import ConsultationForm from '@/components/public/ConsultationForm';
 import MobileStickyActions from '@/components/public/MobileStickyActions';
 import WhatsAppButton from '@/components/public/WhatsAppButton';
 import JsonLd from '@/components/public/JsonLd';
@@ -80,76 +80,33 @@ export default async function HomePage() {
           secondaryCtaText={hero.secondary_cta_text}
           secondaryCtaLink={hero.secondary_cta_link}
           heroImageUrl={hero.hero_image_url}
+          heroMobileImageUrl={hero.hero_mobile_image_url}
           heroImageAlt={hero.hero_image_alt}
+          heroSideText={hero.hero_side_text}
+          trustBadge1={hero.trust_badge_1}
+          trustBadge2={hero.trust_badge_2}
+          trustBadge3={hero.trust_badge_3}
           whatsappNumber={siteSettings.whatsapp_number}
           defaultWhatsappMessage={siteSettings.default_whatsapp_message}
         />
 
-        {/* CLINIC PHILOSOPHY & ABOUT SUMMARY */}
-        <section className="py-16 lg:py-24 bg-[#FDFBF7]">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-              
-              <div className="lg:col-span-6 space-y-6">
-                <span className="text-xs uppercase tracking-widest text-[#C5A059] font-bold">
-                  Clinic Positioning
-                </span>
-                <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-[#1B3B2B]">
-                  {about.headline}
-                </h2>
-                <div className="space-y-4 text-base text-[#586962] leading-relaxed">
-                  {about.story_paragraphs.map((p, idx) => (
-                    <p key={idx}>{p}</p>
-                  ))}
-                </div>
-              </div>
-
-              <div className="lg:col-span-6">
-                <div className="grid grid-cols-1 sm:grid-cols-1 gap-4">
-                  {about.pillars.map((pillar, idx) => (
-                    <div
-                      key={idx}
-                      className="p-6 rounded-2xl bg-[#F4EFE6] border border-[#E6DFD3] space-y-2 hover:border-[#C5A059] transition-colors"
-                    >
-                      <h3 className="font-serif text-xl font-bold text-[#1B3B2B]">
-                        {pillar.title}
-                      </h3>
-                      <p className="text-sm text-[#586962] leading-relaxed">
-                        {pillar.description}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </section>
-
-        {/* TREATMENT PROCESS TIMELINE */}
-        <TreatmentProcess steps={treatmentSteps} />
+        {/* ABOUT & TREATMENT PROCESS */}
+        <AboutAndProcessSection about={about} steps={treatmentSteps} />
 
         {/* SERVICES GRID */}
-        <ServicesGrid services={services} />
+        <ServicesGrid services={services} limit={3} />
 
-        {/* CONDITIONS SUPPORTED GRID */}
-        <ConditionsGrid conditions={conditions} />
+        {/* CONDITIONS WE SUPPORT */}
+        <ConditionsGrid conditions={conditions} siteSettings={siteSettings} />
 
-        {/* PRACTITIONER PROFILE */}
-        <PractitionerSection practitioner={practitioner} />
+        {/* PRACTITIONER PROFILE + CONSULTATION BOOKING */}
+        <PractitionerAndBookingSection practitioner={practitioner} siteSettings={siteSettings} />
 
         {/* FAQ ACCORDION */}
         <FAQAccordion faqs={faqs} />
 
-        {/* CONSULTATION ENQUIRY FORM */}
-        <section className="py-16 lg:py-24 bg-[#FDFBF7]" id="booking">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <ConsultationForm
-              title={siteSettings.consultation_cta_label}
-              subtitle="Submit your details below for an appointment enquiry. We look forward to supporting your wellness journey."
-            />
-          </div>
-        </section>
+        {/* PRE-FOOTER CTA BANNER */}
+        <PreFooterCTA siteSettings={siteSettings} />
       </main>
 
       {/* FOOTER */}

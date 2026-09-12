@@ -27,7 +27,7 @@ export default function TreatmentProcess({
   if (!steps || steps.length === 0) return null;
 
   return (
-    <section className="py-16 lg:py-24 bg-[#FDFBF7]" id="process">
+    <section className="py-16 lg:py-24 bg-[#FAF2EB]" id="process">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
@@ -55,7 +55,7 @@ export default function TreatmentProcess({
               return (
                 <div
                   key={step.id || index}
-                  className="bg-[#F4EFE6] rounded-2xl p-6 border border-[#E6DFD3] flex flex-col justify-between hover:border-[#C5A059] transition-all shadow-sm group"
+                  className="bg-[#EEE4D8] rounded-2xl p-6 border border-[#E6DFD3] flex flex-col justify-between hover:border-[#C5A059] transition-all shadow-sm group"
                 >
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
