@@ -1,7 +1,6 @@
 'use client';
-
 import React, { useState } from 'react';
-import { Plus, Edit2, Trash2, Save, X } from 'lucide-react';
+import { Plus, Edit2, Trash2, Save, X, ExternalLink, Loader2 } from 'lucide-react';
 import { GalleryItem } from '@/lib/types';
 import { upsertGalleryItemAction, deleteGalleryItemAction } from '@/lib/actions/admin';
 import ImageUploader from './ImageUploader';
@@ -15,6 +14,8 @@ export default function GalleryManager({ initialItems }: GalleryManagerProps) {
   const [editingItem, setEditingItem] = useState<Partial<GalleryItem> | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [publicId, setPublicId] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   const startNewItem = () => {
     setEditingItem({
@@ -26,12 +27,29 @@ export default function GalleryManager({ initialItems }: GalleryManagerProps) {
     });
     setImageUrl(null);
     setPublicId(null);
+    setSaveError(null);
   };
 
   const startEditItem = (item: GalleryItem) => {
     setEditingItem(item);
     setImageUrl(item.image_url);
     setPublicId(item.image_public_id);
+    setSaveError(null);
+  };
+
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSaving(true);
+    setSaveError(null);
+    try {
+      const formData = new FormData(e.currentTarget);
+      await upsertGalleryItemAction(formData);
+      setEditingItem(null);
+    } catch (err: unknown) {
+      setSaveError(err instanceof Error ? err.message : 'Failed to save gallery photo');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleDelete = async (id: string) => {
@@ -43,21 +61,37 @@ export default function GalleryManager({ initialItems }: GalleryManagerProps) {
   return (
     <div className="space-y-6">
       
-      <div className="flex items-center justify-between">
-        <h2 className="font-serif text-xl font-bold text-[#1B3B2B]">
-          Gallery Items ({initialItems.length})
-        </h2>
-        <button
-          onClick={startNewItem}
-          className="px-4 py-2 rounded-full bg-[#1B3B2B] text-white text-xs font-medium hover:bg-[#12291E] flex items-center gap-1.5"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Add Gallery Photo</span>
-        </button>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 className="font-serif text-xl font-bold text-[#1B3B2B]">
+            Gallery Items ({initialItems.length})
+          </h2>
+          <p className="text-xs text-[#586962]">
+            Photos of the clinic atmosphere, treatment rooms, and therapeutic setup.
+          </p>
+        </div>
+        <div className="flex items-center gap-3">
+          <a
+            href="/gallery"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-3.5 py-2 rounded-full bg-[#FAF2EB] border border-[#E6DFD3] text-[#1B3B2B] hover:text-[#C5A059] text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-sm"
+          >
+            <span>View on Webpage</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
+          <button
+            onClick={startNewItem}
+            className="px-4 py-2 rounded-full bg-[#1B3B2B] text-white text-xs font-medium hover:bg-[#12291E] flex items-center gap-1.5 shadow-sm"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Add Gallery Photo</span>
+          </button>
+        </div>
       </div>
 
       {initialItems.length === 0 ? (
-        <div className="p-8 text-center bg-[#F4EFE6] rounded-3xl border border-[#E6DFD3] text-sm text-[#586962]">
+        <div className="p-8 text-center bg-[#EEE4D8] rounded-3xl border border-[#E6DFD3] text-sm text-[#586962]">
           No gallery photos uploaded yet. Click &quot;Add Gallery Photo&quot; to upload your first clinic photo.
         </div>
       ) : (
@@ -65,7 +99,7 @@ export default function GalleryManager({ initialItems }: GalleryManagerProps) {
           {initialItems.map((item) => (
             <div
               key={item.id}
-              className="bg-[#F4EFE6] rounded-2xl border border-[#E6DFD3] overflow-hidden flex flex-col justify-between shadow-sm"
+              className="bg-[#EEE4D8] rounded-2xl border border-[#E6DFD3] overflow-hidden flex flex-col justify-between shadow-sm"
             >
               <div className="relative aspect-video">
                 <ImageFallback
@@ -79,7 +113,7 @@ export default function GalleryManager({ initialItems }: GalleryManagerProps) {
 
               <div className="p-4 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] uppercase font-bold text-[#C5A059] bg-[#FDFBF7] px-2 py-0.5 rounded border border-[#E6DFD3]">
+                  <span className="text-[10px] uppercase font-bold text-[#C5A059] bg-[#FAF2EB] px-2 py-0.5 rounded border border-[#E6DFD3]">
                     {item.category || 'Clinic'}
                   </span>
                   {!item.is_published && (
@@ -92,17 +126,17 @@ export default function GalleryManager({ initialItems }: GalleryManagerProps) {
                 {item.image_alt && <p className="text-xs text-[#586962] italic">Alt: {item.image_alt}</p>}
               </div>
 
-              <div className="p-3 bg-[#FDFBF7] border-t border-[#E6DFD3] flex items-center justify-end gap-2">
+              <div className="p-3 bg-[#FAF2EB] border-t border-[#E6DFD3] flex items-center justify-end gap-2">
                 <button
                   onClick={() => startEditItem(item)}
-                  className="p-2 rounded-xl bg-[#F4EFE6] border border-[#E6DFD3] text-[#1B3B2B] hover:text-[#C5A059]"
+                  className="p-2 rounded-xl bg-[#EEE4D8] border border-[#E6DFD3] text-[#1B3B2B] hover:text-[#C5A059]"
                   aria-label="Edit Gallery Item"
                 >
                   <Edit2 className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => handleDelete(item.id)}
-                  className="p-2 rounded-xl bg-[#F4EFE6] border border-[#E6DFD3] text-red-600 hover:bg-red-50"
+                  className="p-2 rounded-xl bg-[#EEE4D8] border border-[#E6DFD3] text-red-600 hover:bg-red-50"
                   aria-label="Delete Gallery Item"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -116,7 +150,7 @@ export default function GalleryManager({ initialItems }: GalleryManagerProps) {
       {/* Upsert Modal */}
       {editingItem && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#12291E]/60 backdrop-blur-sm">
-          <div className="bg-[#FDFBF7] rounded-3xl p-6 sm:p-8 max-w-xl w-full shadow-2xl space-y-6 border border-[#E6DFD3] max-h-[90vh] overflow-y-auto">
+          <div className="bg-[#FAF2EB] rounded-3xl p-6 sm:p-8 max-w-xl w-full shadow-2xl space-y-6 border border-[#E6DFD3] max-h-[90vh] overflow-y-auto">
             
             <div className="flex items-center justify-between border-b border-[#E6DFD3] pb-4">
               <h3 className="font-serif text-xl font-bold text-[#1B3B2B]">
@@ -127,10 +161,16 @@ export default function GalleryManager({ initialItems }: GalleryManagerProps) {
               </button>
             </div>
 
-            <form action={upsertGalleryItemAction} onSubmit={() => setEditingItem(null)} className="space-y-4">
+            <form onSubmit={handleFormSubmit} className="space-y-4">
               {editingItem.id && <input type="hidden" name="id" value={editingItem.id} />}
               <input type="hidden" name="image_url" value={imageUrl || ''} />
               <input type="hidden" name="image_public_id" value={publicId || ''} />
+
+              {saveError && (
+                <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-medium">
+                  {saveError}
+                </div>
+              )}
 
               <ImageUploader
                 currentUrl={imageUrl}
@@ -149,7 +189,7 @@ export default function GalleryManager({ initialItems }: GalleryManagerProps) {
                   required
                   defaultValue={editingItem.title}
                   placeholder="e.g. Treatment Room & Serene Atmosphere"
-                  className="w-full px-4 py-2.5 rounded-xl bg-[#F4EFE6] border border-[#E6DFD3] text-sm text-[#1B3B2B]"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#EEE4D8] border border-[#E6DFD3] text-sm text-[#1B3B2B]"
                 />
               </div>
 
@@ -160,7 +200,7 @@ export default function GalleryManager({ initialItems }: GalleryManagerProps) {
                   name="image_alt"
                   defaultValue={editingItem.image_alt || ''}
                   placeholder="e.g. Clean acupuncture treatment table with natural lighting"
-                  className="w-full px-4 py-2.5 rounded-xl bg-[#F4EFE6] border border-[#E6DFD3] text-sm text-[#1B3B2B]"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#EEE4D8] border border-[#E6DFD3] text-sm text-[#1B3B2B]"
                 />
               </div>
 
@@ -171,7 +211,7 @@ export default function GalleryManager({ initialItems }: GalleryManagerProps) {
                     type="text"
                     name="category"
                     defaultValue={editingItem.category || 'Clinic Environment'}
-                    className="w-full px-4 py-2.5 rounded-xl bg-[#F4EFE6] border border-[#E6DFD3] text-sm text-[#1B3B2B]"
+                    className="w-full px-4 py-2.5 rounded-xl bg-[#EEE4D8] border border-[#E6DFD3] text-sm text-[#1B3B2B]"
                   />
                 </div>
 
@@ -181,7 +221,7 @@ export default function GalleryManager({ initialItems }: GalleryManagerProps) {
                     type="number"
                     name="display_order"
                     defaultValue={editingItem.display_order || 0}
-                    className="w-full px-4 py-2.5 rounded-xl bg-[#F4EFE6] border border-[#E6DFD3] text-sm text-[#1B3B2B]"
+                    className="w-full px-4 py-2.5 rounded-xl bg-[#EEE4D8] border border-[#E6DFD3] text-sm text-[#1B3B2B]"
                   />
                 </div>
               </div>
@@ -191,7 +231,7 @@ export default function GalleryManager({ initialItems }: GalleryManagerProps) {
                 <select
                   name="is_published"
                   defaultValue={editingItem.is_published ? 'true' : 'false'}
-                  className="w-full px-4 py-2.5 rounded-xl bg-[#F4EFE6] border border-[#E6DFD3] text-sm text-[#1B3B2B]"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#EEE4D8] border border-[#E6DFD3] text-sm text-[#1B3B2B]"
                 >
                   <option value="true">Published (Visible)</option>
                   <option value="false">Unpublished (Hidden)</option>
@@ -202,17 +242,18 @@ export default function GalleryManager({ initialItems }: GalleryManagerProps) {
                 <button
                   type="button"
                   onClick={() => setEditingItem(null)}
-                  className="px-4 py-2.5 rounded-full border border-[#E6DFD3] text-xs font-medium text-[#586962]"
+                  disabled={isSaving}
+                  className="px-4 py-2.5 rounded-full border border-[#E6DFD3] text-xs font-medium text-[#586962] disabled:opacity-50"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  disabled={!imageUrl}
+                  disabled={!imageUrl || isSaving}
                   className="px-6 py-2.5 rounded-full bg-[#1B3B2B] text-white text-xs font-medium hover:bg-[#12291E] flex items-center gap-1.5 disabled:opacity-50"
                 >
-                  <Save className="w-4 h-4" />
-                  <span>Save Gallery Item</span>
+                  {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                  <span>{isSaving ? 'Saving...' : 'Save Gallery Item'}</span>
                 </button>
               </div>
             </form>

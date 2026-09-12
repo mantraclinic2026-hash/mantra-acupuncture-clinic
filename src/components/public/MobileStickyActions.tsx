@@ -25,7 +25,7 @@ export default function MobileStickyActions({
   if (!whatsappEnabled && !callEnabled) return null;
 
   return (
-    <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#FDFBF7]/95 backdrop-blur-md border-t border-[#E6DFD3] p-3 shadow-lg">
+    <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#FAF2EB]/95 backdrop-blur-md border-t border-[#E6DFD3] p-3 shadow-lg">
       <div className="grid grid-cols-3 gap-2 max-w-md mx-auto">
         {callEnabled && (
           <a

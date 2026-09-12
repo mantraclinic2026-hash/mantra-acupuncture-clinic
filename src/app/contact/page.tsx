@@ -34,7 +34,7 @@ export default async function ContactPage() {
         ctaLabel={siteSettings.primary_cta_label}
       />
 
-      <main className="flex-1 bg-[#FDFBF7] py-12 lg:py-20">
+      <main className="flex-1 bg-[#FAF2EB] py-12 lg:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
           
           {/* Header */}
@@ -54,7 +54,7 @@ export default async function ContactPage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
             {/* Direct Info Card */}
-            <div className="lg:col-span-5 bg-[#F4EFE6] rounded-3xl p-8 border border-[#E6DFD3] space-y-6">
+            <div className="lg:col-span-5 bg-[#EEE4D8] rounded-3xl p-8 border border-[#E6DFD3] space-y-6">
               <h2 className="font-serif text-2xl font-bold text-[#1B3B2B]">
                 Clinic Information
               </h2>

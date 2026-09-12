@@ -1,16 +1,18 @@
 import type { Metadata } from 'next';
-import { Inter, Cormorant_Garamond } from 'next/font/google';
+import { Plus_Jakarta_Sans, Playfair_Display } from 'next/font/google';
 import './globals.css';
 
-const inter = Inter({
+const plusJakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
   variable: '--font-sans',
   display: 'swap',
 });
 
-const cormorant = Cormorant_Garamond({
+const playfair = Playfair_Display({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
+  weight: ['400', '500', '600', '700', '800'],
+  style: ['normal', 'italic'],
   variable: '--font-serif',
   display: 'swap',
 });
@@ -27,8 +29,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${cormorant.variable}`}>
-      <body className="min-h-screen flex flex-col bg-[#FDFBF7] text-[#2C3531] antialiased selection:bg-[#C5A059]/20 selection:text-[#1B3B2B]">
+    <html lang="en" className={`${plusJakarta.variable} ${playfair.variable}`} suppressHydrationWarning>
+      <body
+        className="min-h-screen flex flex-col bg-[#FAF2EB] text-[#2C3531] antialiased selection:bg-[#C5A059]/20 selection:text-[#1B3B2B]"
+        suppressHydrationWarning
+      >
         {children}
       </body>
     </html>

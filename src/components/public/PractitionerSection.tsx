@@ -11,10 +11,10 @@ interface PractitionerSectionProps {
 }
 
 export default function PractitionerSection({ practitioner }: PractitionerSectionProps) {
-  if (!practitioner || !practitioner.is_active) return null;
+  if (!practitioner) return null;
 
   return (
-    <section className="py-16 lg:py-24 bg-[#FDFBF7]" id="practitioner">
+    <section className="py-16 lg:py-24 bg-[#FAF2EB]" id="practitioner">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div className="bg-[#1B3B2B] text-white rounded-3xl p-8 sm:p-12 lg:p-16 overflow-hidden relative shadow-2xl">
@@ -28,14 +28,23 @@ export default function PractitionerSection({ practitioner }: PractitionerSectio
               <div className="relative mx-auto max-w-sm lg:max-w-none">
                 <div className="absolute inset-0 bg-[#C5A059] rounded-3xl transform rotate-3 scale-105 opacity-20 pointer-events-none" />
                 <div className="relative bg-[#12291E] p-3 rounded-3xl border border-[#C5A059]/30">
-                  <ImageFallback
-                    src={practitioner.profile_image_url}
-                    alt={practitioner.profile_image_alt || practitioner.full_name}
-                    width={500}
-                    height={600}
-                    aspectRatio="portrait"
-                    className="rounded-2xl min-h-[350px]"
-                  />
+                  {practitioner.profile_image_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={practitioner.profile_image_url}
+                      alt={practitioner.profile_image_alt || practitioner.full_name}
+                      className="w-full h-full min-h-[350px] max-h-[500px] object-cover rounded-2xl"
+                    />
+                  ) : (
+                    <ImageFallback
+                      src={null}
+                      alt={practitioner.profile_image_alt || practitioner.full_name}
+                      width={500}
+                      height={600}
+                      aspectRatio="portrait"
+                      className="rounded-2xl min-h-[350px]"
+                    />
+                  )}
                 </div>
               </div>
             </div>

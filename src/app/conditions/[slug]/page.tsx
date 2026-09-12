@@ -57,7 +57,7 @@ export default async function ConditionDetailPage({ params }: { params: Promise<
         ctaLabel={siteSettings.primary_cta_label}
       />
 
-      <main className="flex-1 bg-[#FDFBF7] py-12 lg:py-20">
+      <main className="flex-1 bg-[#FAF2EB] py-12 lg:py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           
           {/* Breadcrumb Back Link */}
@@ -73,7 +73,7 @@ export default async function ConditionDetailPage({ params }: { params: Promise<
 
           {/* Title Header */}
           <div className="space-y-4">
-            <span className="text-xs uppercase tracking-widest text-[#C5A059] font-bold bg-[#F4EFE6] px-3 py-1 rounded-full border border-[#E6DFD3]">
+            <span className="text-xs uppercase tracking-widest text-[#C5A059] font-bold bg-[#EEE4D8] px-3 py-1 rounded-full border border-[#E6DFD3]">
               {condition.category || 'Supported Concern'}
             </span>
             <h1 className="font-serif text-4xl sm:text-5xl font-bold text-[#1B3B2B]">
@@ -98,7 +98,7 @@ export default async function ConditionDetailPage({ params }: { params: Promise<
           )}
 
           {/* Detailed Content */}
-          <div className="bg-[#F4EFE6] rounded-3xl p-8 sm:p-12 border border-[#E6DFD3] space-y-6 text-base sm:text-lg text-[#2C3531] leading-relaxed">
+          <div className="bg-[#EEE4D8] rounded-3xl p-8 sm:p-12 border border-[#E6DFD3] space-y-6 text-base sm:text-lg text-[#2C3531] leading-relaxed">
             <h2 className="font-serif text-2xl font-bold text-[#1B3B2B] border-b border-[#E6DFD3] pb-3">
               Supportive Approach for {condition.title}
             </h2>
@@ -107,7 +107,7 @@ export default async function ConditionDetailPage({ params }: { params: Promise<
             </div>
 
             {/* Medical Disclaimer Banner */}
-            <div className="p-4 rounded-2xl bg-[#FDFBF7] border border-[#E6DFD3] text-xs text-[#586962] flex items-start gap-2.5 italic">
+            <div className="p-4 rounded-2xl bg-[#FAF2EB] border border-[#E6DFD3] text-xs text-[#586962] flex items-start gap-2.5 italic">
               <ShieldAlert className="w-4 h-4 text-[#C5A059] shrink-0 mt-0.5" />
               <span>
                 Disclaimer: Treatment outcomes vary depending on individual health status, duration of symptoms, and compliance with care recommendations. Acupuncture is intended to support natural self-healing and should be discussed during an initial clinical assessment.

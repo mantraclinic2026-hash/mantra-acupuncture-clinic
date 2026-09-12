@@ -5,6 +5,11 @@ import { requireAdmin } from '@/lib/supabase/admin-auth';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { InquiryStatus } from '@/lib/types';
 
+function isValidUUID(val?: string | null): val is string {
+  if (!val || val === 'default') return false;
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(val);
+}
+
 // 1. UPDATE SITE SETTINGS
 export async function updateSiteSettingsAction(formData: FormData): Promise<void> {
   await requireAdmin();
@@ -24,21 +29,47 @@ export async function updateSiteSettingsAction(formData: FormData): Promise<void
     floating_whatsapp_enabled: formData.get('floating_whatsapp_enabled') === 'true',
     floating_call_enabled: formData.get('floating_call_enabled') === 'true',
     primary_cta_label: formData.get('primary_cta_label')?.toString() || 'Book a Consultation',
-    consultation_cta_label: formData.get('consultation_cta_label')?.toString() || 'Schedule Your Consultation',
+    consultation_cta_label: formData.get('consultation_cta_label')?.toString() || 'Book Your Consultation',
     call_cta_label: formData.get('call_cta_label')?.toString() || 'Call Clinic',
     disclaimer_text: formData.get('disclaimer_text')?.toString() || '',
+    banner_eyebrow: formData.get('banner_eyebrow')?.toString() || 'YOUR HEALING JOURNEY',
+    banner_headline: formData.get('banner_headline')?.toString() || 'Your Journey Toward Better Balance Can Begin With a Conversation.',
+    banner_primary_cta_label: formData.get('banner_primary_cta_label')?.toString() || 'Book Your Consultation',
+    banner_primary_cta_link: formData.get('banner_primary_cta_link')?.toString() || '/contact',
+    banner_phone_label: formData.get('banner_phone_label')?.toString() || 'Call +91 8129627829',
+    conditions_eyebrow: formData.get('conditions_eyebrow')?.toString() || 'CONDITIONS WE SUPPORT',
+    conditions_headline: formData.get('conditions_headline')?.toString() || 'Supporting Your Body Through Better Balance.',
+    conditions_subtitle: formData.get('conditions_subtitle')?.toString() || null,
+    conditions_cta_label: formData.get('conditions_cta_label')?.toString() || 'View All Conditions',
+    conditions_cta_link: formData.get('conditions_cta_link')?.toString() || '/conditions',
+    practitioner_eyebrow: formData.get('practitioner_eyebrow')?.toString() || 'YOUR PRACTITIONER',
+    practitioner_booking_headline: formData.get('practitioner_booking_headline')?.toString() || 'Book Your Consultation',
+    practitioner_booking_subtitle: formData.get('practitioner_booking_subtitle')?.toString() || null,
   };
 
-  const id = formData.get('id')?.toString();
+  const rawId = formData.get('id')?.toString();
+  let targetId = isValidUUID(rawId) ? rawId : null;
   let error;
 
-  if (id) {
-    ({ error } = await supabase.from('site_settings').update(payload).eq('id', id));
+  if (!targetId) {
+    const { data: existing } = await supabase
+      .from('site_settings')
+      .select('id')
+      .limit(1)
+      .maybeSingle();
+    if (existing?.id) {
+      targetId = existing.id;
+    }
+  }
+
+  if (targetId) {
+    ({ error } = await supabase.from('site_settings').update(payload).eq('id', targetId));
   } else {
     ({ error } = await supabase.from('site_settings').insert(payload));
   }
 
   if (error) throw new Error(`Failed to update site settings: ${error.message}`);
+
 
   revalidatePath('/');
   revalidatePath('/about');
@@ -47,6 +78,7 @@ export async function updateSiteSettingsAction(formData: FormData): Promise<void
   revalidatePath('/conditions');
   revalidatePath('/doctor');
   revalidatePath('/faq');
+  revalidatePath('/admin/settings');
 }
 
 // 2. UPDATE HERO SECTION
@@ -54,30 +86,208 @@ export async function updateHeroAction(formData: FormData): Promise<void> {
   await requireAdmin();
   const supabase = await createServerSupabaseClient();
 
-  const payload = {
+  const hero_image_url = formData.get('hero_image_url')?.toString() || null;
+  const hero_mobile_image_url = formData.get('hero_mobile_image_url')?.toString() || null;
+
+  const payload: Record<string, any> = {
     badge_text: formData.get('badge_text')?.toString() || null,
     headline: formData.get('headline')?.toString() || '',
     subheadline: formData.get('subheadline')?.toString() || '',
     primary_cta_text: formData.get('primary_cta_text')?.toString() || 'Book a Consultation',
     primary_cta_link: formData.get('primary_cta_link')?.toString() || '/contact',
-    secondary_cta_text: formData.get('secondary_cta_text')?.toString() || 'Explore Treatments',
-    secondary_cta_link: formData.get('secondary_cta_link')?.toString() || '/treatments',
-    hero_image_url: formData.get('hero_image_url')?.toString() || null,
-    hero_image_alt: formData.get('hero_image_alt')?.toString() || null,
+    secondary_cta_text: formData.get('secondary_cta_text')?.toString() || 'Call +91 8129627829',
+    secondary_cta_link: formData.get('secondary_cta_link')?.toString() || 'tel:+918129627829',
+    hero_image_url,
+    hero_mobile_image_url,
   };
 
-  const id = formData.get('id')?.toString();
+  const rawId = formData.get('id')?.toString();
+  let targetId = isValidUUID(rawId) ? rawId : null;
   let error;
 
-  if (id) {
-    ({ error } = await supabase.from('hero_sections').update(payload).eq('id', id));
+  if (!targetId) {
+    const { data: existing } = await supabase
+      .from('hero_sections')
+      .select('id')
+      .limit(1)
+      .maybeSingle();
+    if (existing?.id) {
+      targetId = existing.id;
+    }
+  }
+
+  if (targetId) {
+    const res = await supabase.from('hero_sections').update(payload).eq('id', targetId);
+    if (res.error && res.error.message.includes('hero_mobile_image_url')) {
+      delete payload.hero_mobile_image_url;
+      if (hero_mobile_image_url) {
+        payload.hero_image_alt = `Mantra Acupuncture Clinic treatment environment __MOBILE_BANNER__:${hero_mobile_image_url}`;
+      }
+      ({ error } = await supabase.from('hero_sections').update(payload).eq('id', targetId));
+    } else {
+      error = res.error;
+    }
   } else {
-    ({ error } = await supabase.from('hero_sections').insert(payload));
+    const res = await supabase.from('hero_sections').insert(payload);
+    if (res.error && res.error.message.includes('hero_mobile_image_url')) {
+      delete payload.hero_mobile_image_url;
+      if (hero_mobile_image_url) {
+        payload.hero_image_alt = `Mantra Acupuncture Clinic treatment environment __MOBILE_BANNER__:${hero_mobile_image_url}`;
+      }
+      ({ error } = await supabase.from('hero_sections').insert(payload));
+    } else {
+      error = res.error;
+    }
   }
 
   if (error) throw new Error(`Failed to update hero: ${error.message}`);
 
+  revalidatePath('/', 'layout');
+  revalidatePath('/admin/hero');
+}
+
+// 2A. UPDATE HERO MOBILE BANNER SPECIFICALLY
+export async function updateHeroMobileBannerAction(mobileImageUrl: string | null): Promise<void> {
+  await requireAdmin();
+  const supabase = await createServerSupabaseClient();
+
+  const { data: existing } = await supabase
+    .from('hero_sections')
+    .select('id, hero_image_alt')
+    .limit(1)
+    .maybeSingle();
+
+  const payload: Record<string, any> = {
+    hero_mobile_image_url: mobileImageUrl,
+  };
+
+  const getFallbackPayload = (currentAlt?: string | null) => {
+    const baseAlt = currentAlt ? currentAlt.split('__MOBILE_BANNER__:')[0].trim() : 'Mantra Acupuncture Clinic treatment environment';
+    return {
+      hero_image_alt: mobileImageUrl ? `${baseAlt} __MOBILE_BANNER__:${mobileImageUrl}` : baseAlt,
+    };
+  };
+
+  let error;
+  if (existing?.id) {
+    const res = await supabase.from('hero_sections').update(payload).eq('id', existing.id);
+    if (res.error && res.error.message.includes('hero_mobile_image_url')) {
+      ({ error } = await supabase.from('hero_sections').update(getFallbackPayload(existing.hero_image_alt)).eq('id', existing.id));
+    } else {
+      error = res.error;
+    }
+  } else {
+    const res = await supabase.from('hero_sections').insert({
+      headline: 'Care Designed Around You.',
+      subheadline: 'At Mantra Acupuncture Clinic, every consultation begins with understanding your individual condition, lifestyle, and health goals.',
+      ...payload,
+    });
+    if (res.error && res.error.message.includes('hero_mobile_image_url')) {
+      ({ error } = await supabase.from('hero_sections').insert({
+        headline: 'Care Designed Around You.',
+        subheadline: 'At Mantra Acupuncture Clinic, every consultation begins with understanding your individual condition, lifestyle, and health goals.',
+        ...getFallbackPayload(),
+      }));
+    } else {
+      error = res.error;
+    }
+  }
+
+  if (error) throw new Error(`Failed to update mobile banner: ${error.message}`);
+
+  revalidatePath('/', 'layout');
+  revalidatePath('/admin/hero');
+}
+
+// 2B. UPDATE ABOUT SECTION
+export async function updateAboutAction(formData: FormData): Promise<void> {
+  await requireAdmin();
+  const supabase = await createServerSupabaseClient();
+
+  const paragraphsRaw = formData.get('story_paragraphs')?.toString() || '';
+  const story_paragraphs = paragraphsRaw
+    .split('\n\n')
+    .map((p) => p.trim())
+    .filter(Boolean);
+
+  const payload = {
+    eyebrow: formData.get('eyebrow')?.toString() || 'ABOUT MANTRA',
+    headline: formData.get('headline')?.toString() || 'Treating the Person, Not Just the Symptoms.',
+    story_paragraphs: story_paragraphs.length > 0 ? story_paragraphs : [
+      'Mantra Acupuncture Clinic is dedicated to providing personalized, patient-focused acupuncture care in a calm and welcoming environment.',
+      'Our approach combines traditional acupuncture principles with a modern understanding of health and wellness to support the body’s natural healing process, improve balance, and enhance overall well-being.',
+    ],
+    learn_more_text: formData.get('learn_more_text')?.toString() || 'Learn More',
+    learn_more_link: formData.get('learn_more_link')?.toString() || '/about',
+  };
+
+  const rawId = formData.get('id')?.toString();
+  let targetId = isValidUUID(rawId) ? rawId : null;
+  let error;
+
+  if (!targetId) {
+    const { data: existing } = await supabase
+      .from('about_content')
+      .select('id')
+      .limit(1)
+      .maybeSingle();
+    if (existing?.id) {
+      targetId = existing.id;
+    }
+  }
+
+  if (targetId) {
+    ({ error } = await supabase.from('about_content').update(payload).eq('id', targetId));
+  } else {
+    ({ error } = await supabase.from('about_content').insert(payload));
+  }
+
+  if (error) throw new Error(`Failed to update about content: ${error.message}`);
+
+
   revalidatePath('/');
+  revalidatePath('/about');
+  revalidatePath('/admin/about');
+}
+
+// 2C. UPSERT PROCESS STEP
+export async function upsertProcessStepAction(formData: FormData): Promise<void> {
+  await requireAdmin();
+  const supabase = await createServerSupabaseClient();
+
+  const rawId = formData.get('id')?.toString();
+  const id = isValidUUID(rawId) ? rawId : null;
+
+  const payload = {
+    step_number: parseInt(formData.get('step_number')?.toString() || '1', 10),
+    title: formData.get('title')?.toString() || '',
+    description: formData.get('description')?.toString() || '',
+    icon_name: formData.get('icon_name')?.toString() || 'CheckCircle2',
+    display_order: parseInt(formData.get('display_order')?.toString() || '0', 10),
+  };
+
+  let error;
+  if (id) {
+    ({ error } = await supabase.from('treatment_process').update(payload).eq('id', id));
+  } else {
+    ({ error } = await supabase.from('treatment_process').insert(payload));
+  }
+
+  if (error) throw new Error(`Failed to save process step: ${error.message}`);
+
+  revalidatePath('/');
+  revalidatePath('/admin/about');
+}
+
+// 2D. DELETE PROCESS STEP
+export async function deleteProcessStepAction(id: string): Promise<void> {
+  await requireAdmin();
+  const supabase = await createServerSupabaseClient();
+  const { error } = await supabase.from('treatment_process').delete().eq('id', id);
+  if (error) throw new Error(`Failed to delete process step: ${error.message}`);
+
+  revalidatePath('/');
+  revalidatePath('/admin/about');
 }
 
 // 3. UPSERT SERVICE
@@ -85,7 +295,8 @@ export async function upsertServiceAction(formData: FormData): Promise<void> {
   await requireAdmin();
   const supabase = await createServerSupabaseClient();
 
-  const id = formData.get('id')?.toString();
+  const rawId = formData.get('id')?.toString();
+  let targetId = isValidUUID(rawId) ? rawId : null;
   const payload = {
     title: formData.get('title')?.toString() || '',
     slug: formData.get('slug')?.toString() || '',
@@ -100,9 +311,21 @@ export async function upsertServiceAction(formData: FormData): Promise<void> {
     seo_description: formData.get('seo_description')?.toString() || null,
   };
 
+  if (!targetId && payload.slug) {
+    const { data: existing } = await supabase
+      .from('services')
+      .select('id')
+      .eq('slug', payload.slug)
+      .limit(1)
+      .maybeSingle();
+    if (existing?.id) {
+      targetId = existing.id;
+    }
+  }
+
   let error;
-  if (id) {
-    ({ error } = await supabase.from('services').update(payload).eq('id', id));
+  if (targetId) {
+    ({ error } = await supabase.from('services').update(payload).eq('id', targetId));
   } else {
     ({ error } = await supabase.from('services').insert(payload));
   }
@@ -130,7 +353,8 @@ export async function upsertConditionAction(formData: FormData): Promise<void> {
   await requireAdmin();
   const supabase = await createServerSupabaseClient();
 
-  const id = formData.get('id')?.toString();
+  const rawId = formData.get('id')?.toString();
+  let targetId = isValidUUID(rawId) ? rawId : null;
   const payload = {
     title: formData.get('title')?.toString() || '',
     slug: formData.get('slug')?.toString() || '',
@@ -144,9 +368,21 @@ export async function upsertConditionAction(formData: FormData): Promise<void> {
     seo_description: formData.get('seo_description')?.toString() || null,
   };
 
+  if (!targetId && payload.slug) {
+    const { data: existing } = await supabase
+      .from('conditions')
+      .select('id')
+      .eq('slug', payload.slug)
+      .limit(1)
+      .maybeSingle();
+    if (existing?.id) {
+      targetId = existing.id;
+    }
+  }
+
   let error;
-  if (id) {
-    ({ error } = await supabase.from('conditions').update(payload).eq('id', id));
+  if (targetId) {
+    ({ error } = await supabase.from('conditions').update(payload).eq('id', targetId));
   } else {
     ({ error } = await supabase.from('conditions').insert(payload));
   }
@@ -155,6 +391,7 @@ export async function upsertConditionAction(formData: FormData): Promise<void> {
 
   revalidatePath('/');
   revalidatePath('/conditions');
+  revalidatePath('/admin/conditions');
   revalidatePath(`/conditions/${payload.slug}`);
 }
 
@@ -167,6 +404,7 @@ export async function deleteConditionAction(id: string): Promise<void> {
 
   revalidatePath('/');
   revalidatePath('/conditions');
+  revalidatePath('/admin/conditions');
 }
 
 // 5. UPDATE INQUIRY STATUS & NOTES
@@ -187,7 +425,8 @@ export async function upsertFAQAction(formData: FormData): Promise<void> {
   await requireAdmin();
   const supabase = await createServerSupabaseClient();
 
-  const id = formData.get('id')?.toString();
+  const rawId = formData.get('id')?.toString();
+  const id = isValidUUID(rawId) ? rawId : null;
   const payload = {
     question: formData.get('question')?.toString() || '',
     answer: formData.get('answer')?.toString() || '',
@@ -225,7 +464,8 @@ export async function updatePractitionerAction(formData: FormData): Promise<void
   await requireAdmin();
   const supabase = await createServerSupabaseClient();
 
-  const id = formData.get('id')?.toString();
+  const rawId = formData.get('id')?.toString();
+  let targetId = isValidUUID(rawId) ? rawId : null;
   const qualifications = formData.get('qualifications')?.toString()
     ? JSON.parse(formData.get('qualifications')!.toString())
     : [];
@@ -237,21 +477,35 @@ export async function updatePractitionerAction(formData: FormData): Promise<void
     bio: formData.get('bio')?.toString() || '',
     profile_image_url: formData.get('profile_image_url')?.toString() || null,
     profile_image_alt: formData.get('profile_image_alt')?.toString() || null,
-    is_active: formData.get('is_active') === 'true',
+    is_active: formData.get('is_active') === 'false' ? false : true,
   };
 
   let error;
-  if (id) {
-    ({ error } = await supabase.from('practitioners').update(payload).eq('id', id));
+
+  if (!targetId) {
+    const { data: existing } = await supabase
+      .from('practitioners')
+      .select('id')
+      .limit(1)
+      .maybeSingle();
+    if (existing?.id) {
+      targetId = existing.id;
+    }
+  }
+
+  if (targetId) {
+    ({ error } = await supabase.from('practitioners').update(payload).eq('id', targetId));
   } else {
     ({ error } = await supabase.from('practitioners').insert(payload));
   }
 
   if (error) throw new Error(`Failed to update practitioner: ${error.message}`);
 
+
   revalidatePath('/');
   revalidatePath('/doctor');
   revalidatePath('/about');
+  revalidatePath('/admin/practitioner');
 }
 
 // 8. UPSERT GALLERY ITEM
@@ -259,7 +513,8 @@ export async function upsertGalleryItemAction(formData: FormData): Promise<void>
   await requireAdmin();
   const supabase = await createServerSupabaseClient();
 
-  const id = formData.get('id')?.toString();
+  const rawId = formData.get('id')?.toString();
+  const id = isValidUUID(rawId) ? rawId : null;
   const payload = {
     title: formData.get('title')?.toString() || '',
     category: formData.get('category')?.toString() || 'Clinic Environment',
@@ -282,7 +537,6 @@ export async function upsertGalleryItemAction(formData: FormData): Promise<void>
   }
 
   if (error) throw new Error(`Failed to save gallery item: ${error.message}`);
-
   revalidatePath('/');
   revalidatePath('/about');
 }
@@ -293,7 +547,8 @@ export async function deleteGalleryItemAction(id: string): Promise<void> {
   const supabase = await createServerSupabaseClient();
   const { error } = await supabase.from('gallery_items').delete().eq('id', id);
   if (error) throw new Error(`Failed to delete gallery item: ${error.message}`);
-
   revalidatePath('/');
   revalidatePath('/about');
 }
+
+

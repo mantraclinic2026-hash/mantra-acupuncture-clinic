@@ -12,9 +12,9 @@ import {
   Activity,
   HelpCircle,
   UserCheck,
-  Globe,
   LogOut,
   Image as ImageIcon,
+  BookOpen,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
@@ -34,6 +34,7 @@ export default function AdminSidebar() {
     { label: 'Patient Inquiries', href: '/admin/inquiries', icon: Inbox },
     { label: 'Site Settings', href: '/admin/settings', icon: Settings },
     { label: 'Hero Content', href: '/admin/hero', icon: Sparkles },
+    { label: 'About & Process', href: '/admin/about', icon: BookOpen },
     { label: 'Services CMS', href: '/admin/services', icon: Activity },
     { label: 'Conditions CMS', href: '/admin/conditions', icon: Stethoscope },
     { label: 'Practitioner', href: '/admin/practitioner', icon: UserCheck },
@@ -83,15 +84,6 @@ export default function AdminSidebar() {
 
       {/* Footer Controls */}
       <div className="pt-6 border-t border-[#C5A059]/20 space-y-3">
-        <Link
-          href="/"
-          target="_blank"
-          className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium text-[#EBF2EE]/70 hover:text-white hover:bg-[#1B3B2B] transition-colors"
-        >
-          <Globe className="w-4 h-4 text-[#C5A059]" />
-          <span>View Live Public Site</span>
-        </Link>
-
         <button
           onClick={handleSignOut}
           className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium text-red-400 hover:text-red-300 hover:bg-red-950/30 transition-colors"
