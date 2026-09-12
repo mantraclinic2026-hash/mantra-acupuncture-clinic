@@ -80,10 +80,13 @@ CREATE TABLE IF NOT EXISTS hero_sections (
     secondary_cta_text TEXT NOT NULL DEFAULT 'Explore Treatments',
     secondary_cta_link TEXT NOT NULL DEFAULT '/treatments',
     hero_image_url TEXT,
+    hero_mobile_image_url TEXT,
     hero_image_alt TEXT DEFAULT 'Mantra Acupuncture Clinic treatment environment',
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+ALTER TABLE hero_sections ADD COLUMN IF NOT EXISTS hero_mobile_image_url TEXT;
 
 -- 2.3 About Content
 CREATE TABLE IF NOT EXISTS about_content (

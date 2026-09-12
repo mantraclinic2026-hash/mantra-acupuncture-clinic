@@ -39,7 +39,7 @@ export default async function AdminDashboardOverview() {
       {/* Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         
-        <div className="bg-[#F4EFE6] p-6 rounded-3xl border border-[#E6DFD3] space-y-2">
+        <div className="bg-[#EEE4D8] p-6 rounded-3xl border border-[#E6DFD3] space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-[#586962]">New Inquiries</span>
             <Inbox className="w-5 h-5 text-[#C5A059]" />
@@ -48,7 +48,7 @@ export default async function AdminDashboardOverview() {
           <span className="text-[11px] text-[#25D366] font-medium">Requires Admin Attention</span>
         </div>
 
-        <div className="bg-[#F4EFE6] p-6 rounded-3xl border border-[#E6DFD3] space-y-2">
+        <div className="bg-[#EEE4D8] p-6 rounded-3xl border border-[#E6DFD3] space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-[#586962]">Total Inquiries</span>
             <Calendar className="w-5 h-5 text-[#1B3B2B]" />
@@ -57,7 +57,7 @@ export default async function AdminDashboardOverview() {
           <span className="text-[11px] text-[#586962]">All Received Enquiries</span>
         </div>
 
-        <div className="bg-[#F4EFE6] p-6 rounded-3xl border border-[#E6DFD3] space-y-2">
+        <div className="bg-[#EEE4D8] p-6 rounded-3xl border border-[#E6DFD3] space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-[#586962]">Active Services</span>
             <Activity className="w-5 h-5 text-[#1B3B2B]" />
@@ -66,7 +66,7 @@ export default async function AdminDashboardOverview() {
           <span className="text-[11px] text-[#586962]">Live CMS Services</span>
         </div>
 
-        <div className="bg-[#F4EFE6] p-6 rounded-3xl border border-[#E6DFD3] space-y-2">
+        <div className="bg-[#EEE4D8] p-6 rounded-3xl border border-[#E6DFD3] space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-[#586962]">Active Conditions</span>
             <Stethoscope className="w-5 h-5 text-[#1B3B2B]" />
@@ -78,7 +78,7 @@ export default async function AdminDashboardOverview() {
       </div>
 
       {/* Recent Inquiries Section */}
-      <div className="bg-[#F4EFE6] rounded-3xl p-6 border border-[#E6DFD3] space-y-6">
+      <div className="bg-[#EEE4D8] rounded-3xl p-6 border border-[#E6DFD3] space-y-6">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="font-serif text-xl font-bold text-[#1B3B2B]">
@@ -96,7 +96,7 @@ export default async function AdminDashboardOverview() {
         </div>
 
         {inquiriesList.length === 0 ? (
-          <div className="p-8 text-center bg-[#FDFBF7] rounded-2xl border border-[#E6DFD3] text-sm text-[#586962]">
+          <div className="p-8 text-center bg-[#FAF2EB] rounded-2xl border border-[#E6DFD3] text-sm text-[#586962]">
             No patient inquiries received yet. Submit test entry via consultation form to verify.
           </div>
         ) : (
@@ -104,7 +104,7 @@ export default async function AdminDashboardOverview() {
             {inquiriesList.map((inq) => (
               <div
                 key={inq.id}
-                className="bg-[#FDFBF7] p-4 rounded-2xl border border-[#E6DFD3] flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                className="bg-[#FAF2EB] p-4 rounded-2xl border border-[#E6DFD3] flex flex-col sm:flex-row sm:items-center justify-between gap-4"
               >
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
@@ -141,19 +141,19 @@ export default async function AdminDashboardOverview() {
 
       {/* Quick CMS Action Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Link href="/admin/settings" className="p-6 bg-[#FDFBF7] rounded-2xl border border-[#E6DFD3] hover:border-[#C5A059] transition-colors space-y-2 group">
+        <Link href="/admin/settings" className="p-6 bg-[#FAF2EB] rounded-2xl border border-[#E6DFD3] hover:border-[#C5A059] transition-colors space-y-2 group">
           <Settings className="w-6 h-6 text-[#1B3B2B] group-hover:text-[#C5A059]" />
           <h3 className="font-bold text-[#1B3B2B]">Site & Contact Settings</h3>
           <p className="text-xs text-[#586962]">Update phone numbers, WhatsApp prompts, address, working hours, and CTA button labels.</p>
         </Link>
 
-        <Link href="/admin/services" className="p-6 bg-[#FDFBF7] rounded-2xl border border-[#E6DFD3] hover:border-[#C5A059] transition-colors space-y-2 group">
+        <Link href="/admin/services" className="p-6 bg-[#FAF2EB] rounded-2xl border border-[#E6DFD3] hover:border-[#C5A059] transition-colors space-y-2 group">
           <Activity className="w-6 h-6 text-[#1B3B2B] group-hover:text-[#C5A059]" />
           <h3 className="font-bold text-[#1B3B2B]">Manage Services</h3>
           <p className="text-xs text-[#586962]">Create, edit, reorder, or update images for treatment services.</p>
         </Link>
 
-        <Link href="/admin/conditions" className="p-6 bg-[#FDFBF7] rounded-2xl border border-[#E6DFD3] hover:border-[#C5A059] transition-colors space-y-2 group">
+        <Link href="/admin/conditions" className="p-6 bg-[#FAF2EB] rounded-2xl border border-[#E6DFD3] hover:border-[#C5A059] transition-colors space-y-2 group">
           <Stethoscope className="w-6 h-6 text-[#1B3B2B] group-hover:text-[#C5A059]" />
           <h3 className="font-bold text-[#1B3B2B]">Manage Conditions</h3>
           <p className="text-xs text-[#586962]">Control supported health concerns and medical disclaimer information.</p>

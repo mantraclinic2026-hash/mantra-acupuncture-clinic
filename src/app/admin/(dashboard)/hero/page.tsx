@@ -14,7 +14,7 @@ export default async function AdminHeroPage() {
           <span>Hero Section CMS</span>
         </h1>
         <p className="text-xs sm:text-sm text-[#586962] mt-1">
-          Edit headline, subheadline, primary & secondary CTAs, and hero photo.
+          Edit headline, subheadline, CTAs, and drag & drop desktop and mobile view banners.
         </p>
       </div>
 

@@ -32,7 +32,7 @@ export default function ConsultationForm({
   };
 
   return (
-    <div className={`bg-[#F4EFE6] rounded-3xl p-6 sm:p-10 border border-[#E6DFD3] shadow-md ${className}`} id="consultation-form">
+    <div className={`bg-[#EEE4D8] rounded-3xl p-6 sm:p-10 border border-[#E6DFD3] shadow-md ${className}`} id="consultation-form">
       <div className="max-w-xl mx-auto space-y-6">
         
         {/* Form Title & Subtitle */}
@@ -90,7 +90,7 @@ export default function ConsultationForm({
               name="fullName"
               required
               placeholder="e.g. Anish Kumar"
-              className="w-full px-4 py-3 rounded-xl bg-[#FDFBF7] border border-[#E6DFD3] text-[#2C3531] placeholder-[#586962]/50 text-sm focus:outline-none focus:ring-2 focus:ring-[#C5A059] focus:border-transparent transition-all"
+              className="w-full px-4 py-3 rounded-xl bg-[#FAF2EB] border border-[#E6DFD3] text-[#2C3531] placeholder-[#586962]/50 text-sm focus:outline-none focus:ring-2 focus:ring-[#C5A059] focus:border-transparent transition-all"
             />
             {result?.errors?.fullName && (
               <p className="text-xs text-red-600 mt-1">{result.errors.fullName}</p>
@@ -108,7 +108,7 @@ export default function ConsultationForm({
               name="phone"
               required
               placeholder="+91 98765 43210"
-              className="w-full px-4 py-3 rounded-xl bg-[#FDFBF7] border border-[#E6DFD3] text-[#2C3531] placeholder-[#586962]/50 text-sm focus:outline-none focus:ring-2 focus:ring-[#C5A059] focus:border-transparent transition-all"
+              className="w-full px-4 py-3 rounded-xl bg-[#FAF2EB] border border-[#E6DFD3] text-[#2C3531] placeholder-[#586962]/50 text-sm focus:outline-none focus:ring-2 focus:ring-[#C5A059] focus:border-transparent transition-all"
             />
             {result?.errors?.phone && (
               <p className="text-xs text-red-600 mt-1">{result.errors.phone}</p>
@@ -125,7 +125,7 @@ export default function ConsultationForm({
               id="email"
               name="email"
               placeholder="anish@example.com"
-              className="w-full px-4 py-3 rounded-xl bg-[#FDFBF7] border border-[#E6DFD3] text-[#2C3531] placeholder-[#586962]/50 text-sm focus:outline-none focus:ring-2 focus:ring-[#C5A059] focus:border-transparent transition-all"
+              className="w-full px-4 py-3 rounded-xl bg-[#FAF2EB] border border-[#E6DFD3] text-[#2C3531] placeholder-[#586962]/50 text-sm focus:outline-none focus:ring-2 focus:ring-[#C5A059] focus:border-transparent transition-all"
             />
             {result?.errors?.email && (
               <p className="text-xs text-red-600 mt-1">{result.errors.email}</p>
@@ -142,7 +142,8 @@ export default function ConsultationForm({
               id="preferredDate"
               name="preferredDate"
               min={new Date().toISOString().split('T')[0]}
-              className="w-full px-4 py-3 rounded-xl bg-[#FDFBF7] border border-[#E6DFD3] text-[#2C3531] text-sm focus:outline-none focus:ring-2 focus:ring-[#C5A059] focus:border-transparent transition-all"
+              suppressHydrationWarning
+              className="w-full px-4 py-3 rounded-xl bg-[#FAF2EB] border border-[#E6DFD3] text-[#2C3531] text-sm focus:outline-none focus:ring-2 focus:ring-[#C5A059] focus:border-transparent transition-all"
             />
           </div>
 
@@ -156,7 +157,7 @@ export default function ConsultationForm({
               name="message"
               rows={3}
               placeholder="Briefly describe your main health concern or questions..."
-              className="w-full px-4 py-3 rounded-xl bg-[#FDFBF7] border border-[#E6DFD3] text-[#2C3531] placeholder-[#586962]/50 text-sm focus:outline-none focus:ring-2 focus:ring-[#C5A059] focus:border-transparent transition-all"
+              className="w-full px-4 py-3 rounded-xl bg-[#FAF2EB] border border-[#E6DFD3] text-[#2C3531] placeholder-[#586962]/50 text-sm focus:outline-none focus:ring-2 focus:ring-[#C5A059] focus:border-transparent transition-all"
             />
             {result?.errors?.message && (
               <p className="text-xs text-red-600 mt-1">{result.errors.message}</p>

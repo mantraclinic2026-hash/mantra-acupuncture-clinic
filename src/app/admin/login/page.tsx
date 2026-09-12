@@ -41,7 +41,7 @@ export default function AdminLoginPage() {
 
   return (
     <div className="min-h-screen bg-[#12291E] flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-[#FDFBF7] rounded-3xl p-8 border border-[#C5A059]/30 shadow-2xl space-y-6">
+      <div className="w-full max-w-md bg-[#FAF2EB] rounded-3xl p-8 border border-[#C5A059]/30 shadow-2xl space-y-6">
         
         {/* Brand Title */}
         <div className="text-center space-y-2">
@@ -76,7 +76,7 @@ export default function AdminLoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="admin@mantraacupuncture.com"
-                className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#F4EFE6] border border-[#E6DFD3] text-sm text-[#2C3531] focus:outline-none focus:ring-2 focus:ring-[#C5A059]"
+                className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#EEE4D8] border border-[#E6DFD3] text-sm text-[#2C3531] focus:outline-none focus:ring-2 focus:ring-[#C5A059]"
               />
             </div>
           </div>
@@ -93,7 +93,7 @@ export default function AdminLoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#F4EFE6] border border-[#E6DFD3] text-sm text-[#2C3531] focus:outline-none focus:ring-2 focus:ring-[#C5A059]"
+                className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#EEE4D8] border border-[#E6DFD3] text-sm text-[#2C3531] focus:outline-none focus:ring-2 focus:ring-[#C5A059]"
               />
             </div>
           </div>

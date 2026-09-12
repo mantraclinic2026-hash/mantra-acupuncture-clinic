@@ -34,7 +34,7 @@ export default async function FAQPage() {
         ctaLabel={siteSettings.primary_cta_label}
       />
 
-      <main className="flex-1 bg-[#FDFBF7] py-12 lg:py-20">
+      <main className="flex-1 bg-[#FAF2EB] py-12 lg:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
           <FAQAccordion faqs={faqs} />
           <ConsultationForm />

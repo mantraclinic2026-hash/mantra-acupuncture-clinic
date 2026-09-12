@@ -51,7 +51,7 @@ export default function InquiryTable({ inquiries }: InquiryTableProps) {
         <button
           onClick={() => setActiveTab('all')}
           className={`px-4 py-2 rounded-full text-xs font-bold transition-colors ${
-            activeTab === 'all' ? 'bg-[#1B3B2B] text-white' : 'bg-[#F4EFE6] text-[#2C3531] hover:bg-[#EAE3D5]'
+            activeTab === 'all' ? 'bg-[#1B3B2B] text-white' : 'bg-[#EEE4D8] text-[#2C3531] hover:bg-[#EAE3D5]'
           }`}
         >
           All ({inquiries.length})
@@ -63,7 +63,7 @@ export default function InquiryTable({ inquiries }: InquiryTableProps) {
               key={st}
               onClick={() => setActiveTab(st)}
               className={`px-4 py-2 rounded-full text-xs font-bold capitalize transition-colors ${
-                activeTab === st ? 'bg-[#1B3B2B] text-white' : 'bg-[#F4EFE6] text-[#2C3531] hover:bg-[#EAE3D5]'
+                activeTab === st ? 'bg-[#1B3B2B] text-white' : 'bg-[#EEE4D8] text-[#2C3531] hover:bg-[#EAE3D5]'
               }`}
             >
               {st} ({count})
@@ -74,11 +74,11 @@ export default function InquiryTable({ inquiries }: InquiryTableProps) {
 
       {/* Inquiries Table / Cards */}
       {filteredInquiries.length === 0 ? (
-        <div className="p-12 text-center bg-[#F4EFE6] rounded-3xl border border-[#E6DFD3] text-sm text-[#586962]">
+        <div className="p-12 text-center bg-[#EEE4D8] rounded-3xl border border-[#E6DFD3] text-sm text-[#586962]">
           No inquiries found matching selected status filter.
         </div>
       ) : (
-        <div className="bg-[#F4EFE6] rounded-3xl border border-[#E6DFD3] overflow-hidden shadow-sm">
+        <div className="bg-[#EEE4D8] rounded-3xl border border-[#E6DFD3] overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs sm:text-sm">
               <thead className="bg-[#EAE3D5] text-[#1B3B2B] font-bold uppercase tracking-wider text-[11px]">
@@ -93,7 +93,7 @@ export default function InquiryTable({ inquiries }: InquiryTableProps) {
               </thead>
               <tbody className="divide-y divide-[#E6DFD3]">
                 {filteredInquiries.map((inq) => (
-                  <tr key={inq.id} className="hover:bg-[#FDFBF7]/60 transition-colors">
+                  <tr key={inq.id} className="hover:bg-[#FAF2EB]/60 transition-colors">
                     <td className="p-4 font-bold text-[#1B3B2B]">
                       {inq.full_name}
                       {inq.email && <span className="block text-xs font-normal text-[#586962]">{inq.email}</span>}
@@ -142,7 +142,7 @@ export default function InquiryTable({ inquiries }: InquiryTableProps) {
       {/* Inquiry Detail Modal */}
       {selectedInquiry && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#12291E]/60 backdrop-blur-sm">
-          <div className="bg-[#FDFBF7] rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl space-y-6 border border-[#E6DFD3] max-h-[90vh] overflow-y-auto">
+          <div className="bg-[#FAF2EB] rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl space-y-6 border border-[#E6DFD3] max-h-[90vh] overflow-y-auto">
             
             <div className="flex items-center justify-between border-b border-[#E6DFD3] pb-4">
               <div>
@@ -183,7 +183,7 @@ export default function InquiryTable({ inquiries }: InquiryTableProps) {
               {selectedInquiry.message && (
                 <div className="pt-2">
                   <span className="font-bold block mb-1">Patient Concern / Note:</span>
-                  <div className="p-3 bg-[#F4EFE6] rounded-xl text-xs leading-relaxed italic text-[#586962]">
+                  <div className="p-3 bg-[#EEE4D8] rounded-xl text-xs leading-relaxed italic text-[#586962]">
                     &quot;{selectedInquiry.message}&quot;
                   </div>
                 </div>
@@ -199,7 +199,7 @@ export default function InquiryTable({ inquiries }: InquiryTableProps) {
                 <select
                   value={selectedStatus}
                   onChange={(e) => setSelectedStatus(e.target.value as InquiryStatus)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-[#F4EFE6] border border-[#E6DFD3] text-sm font-medium text-[#1B3B2B]"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#EEE4D8] border border-[#E6DFD3] text-sm font-medium text-[#1B3B2B]"
                 >
                   {STATUSES.map((st) => (
                     <option key={st} value={st}>
@@ -218,7 +218,7 @@ export default function InquiryTable({ inquiries }: InquiryTableProps) {
                   value={adminNotes}
                   onChange={(e) => setAdminNotes(e.target.value)}
                   placeholder="Record call outcome, scheduled slot, or receptionist notes..."
-                  className="w-full px-4 py-2.5 rounded-xl bg-[#F4EFE6] border border-[#E6DFD3] text-xs text-[#2C3531]"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#EEE4D8] border border-[#E6DFD3] text-xs text-[#2C3531]"
                 />
               </div>
 

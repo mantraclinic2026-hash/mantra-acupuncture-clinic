@@ -1,7 +1,9 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { X, Clock, MapPin } from 'lucide-react';
 import WhatsAppButton from './WhatsAppButton';
@@ -24,7 +26,13 @@ export default function MobileNav({
   workingHours,
 }: MobileNavProps) {
   const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Lock body scroll when drawer is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -36,6 +44,7 @@ export default function MobileNav({
     };
   }, [isOpen]);
 
+  // Close on Escape key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) {
@@ -46,7 +55,14 @@ export default function MobileNav({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
+  // Close when pathname changes
+  useEffect(() => {
+    if (isOpen) {
+      onClose();
+    }
+  }, [pathname]);
+
+  if (!mounted || !isOpen) return null;
 
   const navLinks = [
     { label: 'Home', href: '/' },
@@ -59,36 +75,42 @@ export default function MobileNav({
     { label: 'FAQ', href: '/faq' },
   ];
 
-  return (
-    <div className="fixed inset-0 z-50 flex justify-end md:hidden">
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] flex justify-end md:hidden" role="dialog" aria-modal="true" aria-label="Mobile Navigation Menu">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-[#12291E]/60 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-[#12291E]/60 backdrop-blur-xs transition-opacity duration-300"
         onClick={onClose}
         aria-hidden="true"
       />
 
       {/* Drawer */}
       <div
-        className="relative w-full max-w-xs bg-[#FDFBF7] h-full shadow-2xl flex flex-col justify-between overflow-y-auto p-6 transition-transform transform translate-x-0"
-        role="dialog"
-        aria-modal="true"
-        aria-label="Mobile Navigation Menu"
+        className="relative w-full max-w-xs sm:max-w-sm bg-[#FAF2EB] h-screen h-[100dvh] shadow-2xl flex flex-col justify-between overflow-y-auto p-6 z-10 transition-transform duration-300 animate-in slide-in-from-right"
+        role="document"
       >
         <div>
           {/* Drawer Header */}
           <div className="flex items-center justify-between pb-6 border-b border-[#E6DFD3]">
-            <div>
-              <span className="font-serif text-lg font-bold text-[#1B3B2B] block">
-                Mantra
-              </span>
-              <span className="text-xs uppercase tracking-widest text-[#C5A059] block font-medium">
-                Acupuncture Clinic
-              </span>
-            </div>
+            <Link href="/" onClick={onClose} className="flex items-center gap-2" aria-label="Mantra Acupuncture Clinic">
+              <Image
+                src="/mantra-logo1.png"
+                alt="Mantra icon"
+                width={40}
+                height={40}
+                className="h-9 w-auto object-contain shrink-0"
+              />
+              <Image
+                src="/mantratext-logo1.png"
+                alt="Mantra Acupuncture Clinic"
+                width={130}
+                height={40}
+                className="h-7 w-auto object-contain"
+              />
+            </Link>
             <button
               onClick={onClose}
-              className="p-2 rounded-full text-[#2C3531] hover:bg-[#F4EFE6] transition-colors focus:outline-none focus:ring-2 focus:ring-[#C5A059]"
+              className="p-2 rounded-full text-[#2C3531] hover:bg-[#EEE4D8] transition-colors focus:outline-none focus:ring-2 focus:ring-[#C5A059]"
               aria-label="Close Navigation Menu"
             >
               <X className="w-6 h-6" />
@@ -107,7 +129,7 @@ export default function MobileNav({
                   className={`block px-4 py-3 rounded-xl text-base font-medium transition-colors ${
                     isActive
                       ? 'bg-[#1B3B2B] text-white'
-                      : 'text-[#2C3531] hover:bg-[#F4EFE6] hover:text-[#1B3B2B]'
+                      : 'text-[#2C3531] hover:bg-[#EEE4D8] hover:text-[#1B3B2B]'
                   }`}
                 >
                   {link.label}
@@ -147,6 +169,7 @@ export default function MobileNav({
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

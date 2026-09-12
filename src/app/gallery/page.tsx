@@ -24,11 +24,11 @@ export default async function GalleryPage() {
   const galleryItems = await getPublishedGallery();
 
   return (
-    <div className="bg-[#FDFBF7] min-h-screen py-12 sm:py-16">
+    <div className="bg-[#FAF2EB] min-h-screen py-12 sm:py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         {/* Header Header */}
         <div className="text-center max-w-3xl mx-auto space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#F4EFE6] border border-[#E6DFD3] text-[#1B3B2B] text-xs font-semibold uppercase tracking-wider">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#EEE4D8] border border-[#E6DFD3] text-[#1B3B2B] text-xs font-semibold uppercase tracking-wider">
             <Camera className="w-3.5 h-3.5 text-[#C5A059]" />
             <span>Clinic Environment</span>
           </div>
@@ -72,11 +72,12 @@ export default async function GalleryPage() {
                   key={item.id}
                   className="group bg-white rounded-2xl overflow-hidden border border-[#E6DFD3] shadow-sm hover:shadow-md transition-all flex flex-col"
                 >
-                  <div className="relative aspect-[4/3] bg-[#F4EFE6] overflow-hidden">
+                  <div className="relative aspect-[4/3] bg-[#EEE4D8] overflow-hidden">
                     <Image
                       src={displayUrl}
                       alt={item.image_alt || item.title || 'Mantra Acupuncture Clinic Photo'}
                       fill
+                      unoptimized={displayUrl.includes('res.cloudinary.com')}
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />

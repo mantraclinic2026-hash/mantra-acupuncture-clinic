@@ -1,9 +1,14 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: var(--font-sans), 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: var(--font-serif), 'Playfair Display', Georgia, Cambria, 'Times New Roman', Times, serif;
+}
+
 @layer base {
   :root {
-    --bg-cream: #FDFBF7;
-    --bg-surface: #F4EFE6;
+    --bg-cream: #FAF2EB;
+    --bg-surface: #F2E9DF;
     --bg-surface-elevated: #FFFFFF;
     --border-neutral: #E6DFD3;
     
@@ -35,12 +40,20 @@
 }
 
 /* Custom Typography & Utility Classes */
+.font-serif {
+  font-family: var(--font-serif), 'Playfair Display', Georgia, Cambria, "Times New Roman", Times, serif;
+}
+
+.font-sans {
+  font-family: var(--font-sans), 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
 .font-serif-heading {
-  font-family: var(--font-serif), Georgia, Cambria, "Times New Roman", Times, serif;
+  font-family: var(--font-serif), 'Playfair Display', Georgia, Cambria, "Times New Roman", Times, serif;
 }
 
 .bg-cream-surface {
-  background-color: #F8F4EC;
+  background-color: #FAF2EB;
 }
 
 .bg-forest {

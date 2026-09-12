@@ -57,7 +57,7 @@ export default async function TreatmentDetailPage({ params }: { params: Promise<
         ctaLabel={siteSettings.primary_cta_label}
       />
 
-      <main className="flex-1 bg-[#FDFBF7] py-12 lg:py-20">
+      <main className="flex-1 bg-[#FAF2EB] py-12 lg:py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           
           {/* Breadcrumb Back Link */}
@@ -85,20 +85,31 @@ export default async function TreatmentDetailPage({ params }: { params: Promise<
           </div>
 
           {/* Optional Media */}
-          {service.image_url && (
-            <div className="rounded-3xl overflow-hidden border border-[#E6DFD3] shadow-md">
-              <ImageFallback
-                src={service.image_url}
-                alt={service.image_alt || service.title}
-                width={800}
-                height={450}
-                aspectRatio="video"
-              />
-            </div>
-          )}
+          {(() => {
+            const treatmentImage =
+              service.image_url ||
+              (service.slug === 'acupuncture-treatment' ? '/images/acupuncture.png' : null);
+
+            if (!treatmentImage) return null;
+
+            return (
+              <div className="rounded-3xl overflow-hidden border border-[#E6DFD3] shadow-md bg-[#FAF6F0] flex items-center justify-center p-3 sm:p-6">
+                <ImageFallback
+                  src={treatmentImage}
+                  alt={service.image_alt || service.title}
+                  width={900}
+                  height={500}
+                  aspectRatio="auto"
+                  objectFit={treatmentImage.includes('.png') ? 'contain' : 'cover'}
+                  className="w-full max-h-[460px] bg-[#FAF6F0]"
+                  imgClassName="max-h-[440px] p-2"
+                />
+              </div>
+            );
+          })()}
 
           {/* Detailed Description Content */}
-          <div className="bg-[#F4EFE6] rounded-3xl p-8 sm:p-12 border border-[#E6DFD3] space-y-6 text-base sm:text-lg text-[#2C3531] leading-relaxed">
+          <div className="bg-[#EEE4D8] rounded-3xl p-8 sm:p-12 border border-[#E6DFD3] space-y-6 text-base sm:text-lg text-[#2C3531] leading-relaxed">
             <h2 className="font-serif text-2xl font-bold text-[#1B3B2B] border-b border-[#E6DFD3] pb-3">
               About {service.title}
             </h2>
