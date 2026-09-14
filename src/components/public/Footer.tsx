@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { MapPin, Phone, Clock, MessageCircle, Lock, ChevronDown } from 'lucide-react';
+import { MapPin, Phone, Clock, MessageCircle, ChevronDown } from 'lucide-react';
 import { buildWhatsAppUrl } from '@/lib/whatsapp';
 
 interface FooterProps {
@@ -198,13 +198,9 @@ export default function Footer({
           {disclaimerText}
         </div>
 
-        {/* Copyright & Admin Link */}
-        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#EBF2EE]/50">
+        {/* Copyright */}
+        <div className="pt-6 flex flex-col sm:flex-row items-center justify-center gap-4 text-xs text-[#EBF2EE]/50 text-center">
           <p suppressHydrationWarning>© {new Date().getFullYear()} {siteName}. All rights reserved.</p>
-          <Link href="/admin/login" className="flex items-center gap-1 hover:text-[#C5A059] transition-colors">
-            <Lock className="w-3 h-3" />
-            <span>Admin Portal</span>
-          </Link>
         </div>
 
       </div>
