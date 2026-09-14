@@ -29,7 +29,7 @@ export default function TreatmentProcess({
   return (
     <section className="py-16 lg:py-24 bg-[#FAF2EB]" id="process">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
           <span className="text-xs uppercase tracking-widest text-[#C5A059] font-bold">
