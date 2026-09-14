@@ -87,12 +87,11 @@ export default function AboutAndProcessSection({
         className="
           relative
           z-10
-          max-w-[1400px]
+          max-w-7xl
           mx-auto
           px-4
           sm:px-6
           lg:px-8
-          xl:px-10
         "
       >
         {/* =====================================================
@@ -124,6 +123,10 @@ export default function AboutAndProcessSection({
               justify-center
               py-1
               lg:py-4
+              -translate-x-1
+              sm:-translate-x-3
+              lg:-translate-x-8
+              xl:-translate-x-12
             "
           >
             {/* Eyebrow */}
