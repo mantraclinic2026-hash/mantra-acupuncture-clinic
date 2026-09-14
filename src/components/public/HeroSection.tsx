@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, Phone, Leaf, UserCheck, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Leaf, UserCheck, ShieldCheck } from 'lucide-react';
 import Image from 'next/image';
 
 interface HeroSectionProps {
@@ -26,12 +26,12 @@ interface HeroSectionProps {
 
 export default function HeroSection({
   badgeText = 'PERSONALIZED ACUPUNCTURE CARE',
-  headline = 'Care Designed Around You.',
-  subheadline = 'At Mantra Acupuncture Clinic, every consultation begins with understanding your individual condition, lifestyle, and health goals.',
+  headline = 'Personalized Acupuncture Care',
+  subheadline = 'Natural healing. A healthier you.',
   primaryCtaText = 'Book a Consultation',
   primaryCtaLink = '/contact',
-  secondaryCtaText = 'Call +91 8129627829',
-  secondaryCtaLink = 'tel:+918129627829',
+  secondaryCtaText = 'Explore Treatments',
+  secondaryCtaLink = '/treatments',
   heroImageUrl,
   heroMobileImageUrl,
   heroImageAlt = 'Mantra Acupuncture Clinic treatment environment',
@@ -48,18 +48,18 @@ export default function HeroSection({
       className="
         relative
         overflow-hidden
-        bg-[#FAF2EB]
+        bg-[#FAF5EE]
         border-b
         border-[#E6DFD3]
       "
     >
 
       {/* =====================================================
-          FULL-WIDTH BACKGROUND IMAGE (DESKTOP & MOBILE VIEWS)
+          HERO BANNER & ORGANIC CREAM DIVISION
       ===================================================== */}
-      <div className="relative w-full min-h-[420px] sm:min-h-[460px] lg:min-h-[500px] py-8 sm:py-12 lg:py-16 flex items-center">
+      <div className="relative w-full min-h-[460px] sm:min-h-[500px] lg:min-h-[540px] py-10 sm:py-14 lg:py-20 flex items-center">
 
-        {/* Full Banner Images */}
+        {/* Banner Images on Right */}
         <div className="absolute inset-0 z-0">
           {/* Desktop & Tablet Banner */}
           <div className={heroMobileImageUrl ? 'hidden sm:block absolute inset-0' : 'absolute inset-0'}>
@@ -69,7 +69,7 @@ export default function HeroSection({
               fill
               priority
               sizes="100vw"
-              className="object-cover object-center opacity-85 sm:opacity-100"
+              className="object-cover object-right"
               unoptimized={
                 bgImage.includes('res.cloudinary.com') ||
                 bgImage.includes('unsplash.com')
@@ -77,7 +77,7 @@ export default function HeroSection({
             />
           </div>
 
-          {/* Mobile Specific Banner (if uploaded in admin) */}
+          {/* Mobile Specific Banner */}
           {heroMobileImageUrl && (
             <div className="block sm:hidden absolute inset-0">
               <Image
@@ -86,7 +86,7 @@ export default function HeroSection({
                 fill
                 priority
                 sizes="100vw"
-                className="object-cover object-center opacity-95"
+                className="object-cover object-right"
                 unoptimized={
                   heroMobileImageUrl.includes('res.cloudinary.com') ||
                   heroMobileImageUrl.includes('unsplash.com')
@@ -95,8 +95,6 @@ export default function HeroSection({
             </div>
           )}
 
-          {/* Subtle luminous mist for high contrast readability without hiding the banner image */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#FAF2EB]/80 via-[#FAF2EB]/55 to-[#FAF2EB]/35 sm:from-[#FAF2EB]/85 sm:via-[#FAF2EB]/40 sm:to-transparent pointer-events-none" />
         </div>
 
         {/* =====================================================
@@ -118,137 +116,105 @@ export default function HeroSection({
             lg:px-8
           "
         >
-          <div className="ml-0 lg:-ml-6 xl:-ml-10 max-w-2xl xl:max-w-3xl space-y-4 sm:space-y-6 lg:space-y-7">
+          <div className="max-w-xl space-y-4 sm:space-y-6 -translate-x-1 sm:-translate-x-3 lg:-translate-x-8 xl:-translate-x-12">
 
-            {/* Eyebrow Badge */}
-            {badgeText && (
-              <div className="inline-flex items-center gap-2.5 px-3 py-1 rounded-full bg-[#FAF2EB]/90 border border-[#C5A059]/40 backdrop-blur-xs w-fit shadow-xs">
-                <span
-                  className="
-                    inline-block
-                    text-[10px]
-                    sm:text-xs
-                    font-bold
-                    uppercase
-                    tracking-[0.18em]
-                    sm:tracking-[0.2em]
-                    text-[#1B3B2B]
-                  "
-                >
-                  {badgeText}
-                </span>
-
-                <span className="w-5 sm:w-8 h-[1.5px] bg-[#C5A059]" />
-              </div>
-            )}
+            {/* Eyebrow Badge Pill */}
+            <div className="inline-flex items-center gap-2 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-[#D6C7B2] bg-[#FAF5EE]/90 backdrop-blur-xs w-fit shadow-2xs">
+              <span className="text-[8.5px] sm:text-[9.5px] font-semibold uppercase tracking-[0.15em] text-[#1B3B2B]">
+                {badgeText || 'PERSONALIZED ACUPUNCTURE CARE'}
+              </span>
+              <span className="w-4 sm:w-6 h-[1px] bg-[#C5A059]" />
+            </div>
 
             {/* Main Headline */}
-            <h1
-              className="
-                font-serif
-                text-2xl
-                sm:text-4xl
-                md:text-5xl
-                lg:text-[3.8rem]
-                xl:text-[4.2rem]
-                font-bold
-                text-[#1B3B2B]
-                tracking-tight
-                leading-[1.14]
-                [text-shadow:_0_1px_4px_rgba(250,242,235,0.9),_0_0_24px_rgba(250,242,235,0.7)]
-              "
-            >
-              {headline}
+            <h1 className="font-serif text-3xl sm:text-5xl lg:text-[3.85rem] font-medium text-[#1B3B2B] tracking-tight leading-[1.08] max-w-lg">
+              {headline || 'Personalized Acupuncture Care'}
             </h1>
 
-            {/* Subheadline */}
-            <p
-              className="
-                text-sm
-                sm:text-base
-                md:text-lg
-                text-[#1B3B2B]
-                font-medium
-                leading-relaxed
-                max-w-xl
-                [text-shadow:_0_1px_3px_rgba(250,242,235,0.95)]
-              "
-            >
-              {subheadline}
-            </p>
+            {/* Decorative Slogan Line (Gold line + Lotus Icon + Slogan) */}
+            <div className="flex items-center gap-3 pt-1">
+              <span className="w-7 sm:w-9 h-[1.5px] bg-[#C5A059] shrink-0" />
+              <svg
+                className="w-5 h-5 sm:w-6 sm:h-6 text-[#C5A059] shrink-0"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M12 4c-1.8 3.5-3 6.8-3 9.5 0 2.5 1.3 4.5 3 4.5s3-2 3-4.5c0-2.7-1.2-6-3-9.5z" />
+                <path d="M9 13.5C6.5 12.8 4.5 10.5 4 8c2.5 1 4.5 3.2 5 5.5z" />
+                <path d="M15 13.5c2.5-.7 4.5-3 5-5.5-2.5 1-4.5 3.2-5 5.5z" />
+                <path d="M7 16c2 1.8 3.5 2 5 2s3-.2 5-2" />
+              </svg>
+              <span className="text-sm sm:text-base md:text-lg text-[#2C4A3E] font-normal tracking-wide">
+                Natural healing. A healthier you.
+              </span>
+            </div>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 pt-1 sm:pt-2">
-
+            {/* CTA Buttons: Exactly 2 buttons (Book a Consultation & Explore Treatments) */}
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-3">
               <Link
-                href={primaryCtaLink}
+                href={primaryCtaLink || '/contact'}
                 className="
-                  w-full
-                  sm:w-auto
                   inline-flex
                   items-center
                   justify-center
-                  px-7
-                  py-3.5
+                  gap-2.5
+                  px-6
+                  sm:px-7
+                  py-3
+                  sm:py-3.5
                   rounded-full
                   bg-[#1B3B2B]
                   hover:bg-[#12291E]
                   text-white
-                  font-semibold
+                  font-medium
                   text-sm
                   sm:text-base
-                  shadow-lg
+                  shadow-sm
                   transition-all
-                  duration-300
+                  duration-200
                   hover:scale-[1.02]
                   active:scale-[0.98]
                   group
                 "
               >
-                <span>{primaryCtaText}</span>
-
-                <ArrowRight
-                  className="
-                    w-4
-                    h-4
-                    ml-2
-                    group-hover:translate-x-1
-                    transition-transform
-                  "
-                />
+                <span>{primaryCtaText || 'Book a Consultation'}</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
 
-              <a
-                href={secondaryCtaLink}
+              <Link
+                href={secondaryCtaLink || '/treatments'}
                 className="
-                  w-full
-                  sm:w-auto
                   inline-flex
                   items-center
                   justify-center
+                  gap-2.5
                   px-6
-                  py-3.5
+                  sm:px-7
+                  py-3
+                  sm:py-3.5
                   rounded-full
                   border
-                  border-[#1B3B2B]/30
+                  border-[#1B3B2B]/35
                   hover:border-[#1B3B2B]
-                  bg-white/90
-                  sm:bg-white
-                  hover:bg-[#EEE4D8]
+                  bg-[#FAF5EE]
+                  hover:bg-white
                   text-[#1B3B2B]
                   font-medium
                   text-sm
                   sm:text-base
                   transition-all
-                  duration-300
+                  duration-200
+                  hover:scale-[1.02]
                   active:scale-[0.98]
                 "
               >
-                <Phone className="w-4 h-4 mr-2 text-[#C5A059]" />
-
-                <span>{secondaryCtaText}</span>
-              </a>
-
+                <Leaf className="w-4 h-4 text-[#C5A059]" />
+                <span>{secondaryCtaText || 'Explore Treatments'}</span>
+              </Link>
             </div>
 
           </div>

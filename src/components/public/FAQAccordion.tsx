@@ -28,8 +28,8 @@ export default function FAQAccordion({
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
-        <div className="text-center space-y-3 sm:space-y-4 mb-6 sm:mb-8">
-          <span className="text-xs uppercase tracking-widest text-[#C5A059] font-bold flex items-center justify-center gap-1.5">
+        <div className="text-center space-y-3 sm:space-y-4 mb-8 sm:mb-10 max-w-2xl mx-auto">
+          <span className="text-xs uppercase tracking-widest text-[#C5A059] font-bold inline-flex items-center justify-center gap-1.5">
             <HelpCircle className="w-4 h-4" />
             <span>Patient FAQs</span>
           </span>
