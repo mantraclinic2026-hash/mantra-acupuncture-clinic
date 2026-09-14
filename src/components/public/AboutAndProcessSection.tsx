@@ -270,7 +270,7 @@ export default function AboutAndProcessSection({
               </h3>
 
               {/* Treatment Steps */}
-              <div className="mt-1">
+              <div className="mt-5 space-y-4 sm:space-y-4.5">
                 {sortedSteps.map((step, index) => {
                   const isLast = index === sortedSteps.length - 1;
 
@@ -280,8 +280,8 @@ export default function AboutAndProcessSection({
                       className="
                         relative
                         flex
-                        items-start
-                        gap-1
+                        items-center
+                        gap-3.5
                       "
                     >
                       {/* =================================================
@@ -292,8 +292,8 @@ export default function AboutAndProcessSection({
                           className="
                             absolute
                             left-[15px]
-                            top-[38px]
-                            bottom-[-14px]
+                            top-[32px]
+                            bottom-[-16px]
                             w-px
                             bg-[#D8CFC2]
                           "
@@ -316,43 +316,26 @@ export default function AboutAndProcessSection({
                           justify-center
                           text-xs
                           font-semibold
+                          shadow-2xs
                         "
                       >
                         {step.step_number || index + 1}
                       </div>
 
-                      {/* Step Content */}
-                      <div
-                        className={`
-                          flex-1
-                          min-w-0
-                          ${isLast ? 'pb-0' : 'pb-7'}
-                        `}
-                      >
+                      {/* Step Content - Main Point Only */}
+                      <div className="flex-1 min-w-0">
                         <h4
                           className="
                             font-serif
-                            text-base
-                            sm:text-[17px]
-                            font-bold
+                            text-[15px]
+                            sm:text-base
+                            font-semibold
                             text-[#1B3B2B]
-                            leading-tight
+                            leading-snug
                           "
                         >
                           {step.title}
                         </h4>
-
-                        <p
-                          className="
-                            mt-1.5
-                            text-xs
-                            sm:text-[13px]
-                            text-[#586962]
-                            leading-[1.5]
-                          "
-                        >
-                          {step.description}
-                        </p>
                       </div>
                     </div>
                   );
