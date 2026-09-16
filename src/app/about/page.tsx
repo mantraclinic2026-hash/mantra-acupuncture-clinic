@@ -45,7 +45,7 @@ export default async function AboutPage() {
             <h1 className="font-serif text-4xl sm:text-5xl font-bold text-[#1B3B2B]">
               {about.headline}
             </h1>
-            <p className="text-base sm:text-lg text-[#586962] leading-relaxed">
+            <p className="text-base sm:text-lg text-[#2C3531] leading-relaxed">
               Combining traditional acupuncture principles with a modern clinical understanding of health and natural vitality.
             </p>
           </div>
@@ -67,7 +67,7 @@ export default async function AboutPage() {
                 <h3 className="font-serif text-2xl font-bold text-[#1B3B2B]">
                   {pillar.title}
                 </h3>
-                <p className="text-sm text-[#586962] leading-relaxed">
+                <p className="text-sm text-[#2C3531] leading-relaxed">
                   {pillar.description}
                 </p>
               </div>

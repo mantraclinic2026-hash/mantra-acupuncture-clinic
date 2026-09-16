@@ -38,7 +38,7 @@ export default function TreatmentProcess({
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-[#1B3B2B]">
             {title}
           </h2>
-          <p className="text-base sm:text-lg text-[#586962] leading-relaxed">
+          <p className="text-base sm:text-lg text-[#2C3531] leading-relaxed">
             {subtitle}
           </p>
         </div>
@@ -48,28 +48,28 @@ export default function TreatmentProcess({
           {/* Connector Line for Desktop */}
           <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-0.5 bg-[#E6DFD3] -translate-y-6 z-0" />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 relative z-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5 lg:gap-3.5 xl:gap-8 relative z-10">
             {steps.map((step, index) => {
               const IconComp = (step.icon_name && ICON_MAP[step.icon_name]) || CheckCircle2;
 
               return (
                 <div
                   key={step.id || index}
-                  className="bg-[#EEE4D8] rounded-2xl p-6 border border-[#E6DFD3] flex flex-col justify-between hover:border-[#C5A059] transition-all shadow-sm group"
+                  className="bg-[#EEE4D8] rounded-2xl p-4 lg:p-4.5 xl:p-6 border border-[#E6DFD3] flex flex-col justify-between hover:border-[#C5A059] transition-all shadow-sm group"
                 >
-                  <div className="space-y-4">
+                  <div className="space-y-3 xl:space-y-4">
                     <div className="flex items-center justify-between">
-                      <div className="w-10 h-10 rounded-full bg-[#1B3B2B] text-[#C5A059] flex items-center justify-center font-bold text-sm">
+                      <div className="w-9 h-9 xl:w-10 xl:h-10 rounded-full bg-[#1B3B2B] text-[#C5A059] flex items-center justify-center font-bold text-xs xl:text-sm">
                         {step.step_number || index + 1}
                       </div>
-                      <IconComp className="w-5 h-5 text-[#586962] group-hover:text-[#1B3B2B] transition-colors" />
+                      <IconComp className="w-4 h-4 xl:w-5 xl:h-5 text-[#586962] group-hover:text-[#1B3B2B] transition-colors" />
                     </div>
 
-                    <h3 className="font-serif text-xl font-bold text-[#1B3B2B]">
+                    <h3 className="font-serif text-base lg:text-base xl:text-xl font-bold text-[#1B3B2B]">
                       {step.title}
                     </h3>
 
-                    <p className="text-xs sm:text-sm text-[#586962] leading-relaxed">
+                    <p className="text-xs xl:text-sm text-[#2C3531] leading-relaxed">
                       {step.description}
                     </p>
                   </div>

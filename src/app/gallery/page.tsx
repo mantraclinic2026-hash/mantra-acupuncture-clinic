@@ -53,7 +53,7 @@ export default async function GalleryPage() {
           <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-[#1B3B2B]">
             Clinic Gallery
           </h1>
-          <p className="text-sm sm:text-base text-[#586962] leading-relaxed">
+          <p className="text-sm sm:text-base text-[#2C3531] leading-relaxed">
             Take a look inside Mantra Acupuncture Clinic. We maintain a calm, hygienic, and serene atmosphere tailored for peaceful healing and holistic relaxation.
           </p>
         </div>
@@ -65,7 +65,7 @@ export default async function GalleryPage() {
             <h3 className="font-serif text-xl font-bold text-[#1B3B2B]">
               Gallery Coming Soon
             </h3>
-            <p className="text-sm text-[#586962]">
+            <p className="text-sm text-[#2C3531]">
               We are currently updating our clinic photo gallery. Please check back soon or reach out directly to schedule a visit.
             </p>
             <Link
@@ -112,7 +112,7 @@ export default async function GalleryPage() {
                       </h3>
                     </div>
                     {item.image_alt && (
-                      <p className="text-xs text-[#586962] line-clamp-2 leading-relaxed">
+                      <p className="text-xs text-[#2C3531] line-clamp-2 leading-relaxed">
                         {item.image_alt}
                       </p>
                     )}

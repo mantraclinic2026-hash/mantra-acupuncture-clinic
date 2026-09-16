@@ -86,7 +86,7 @@ export default function PractitionerAndBookingSection({
                     </h2>
                     <div className="space-y-1 pt-0.5">
                       {practitioner.qualifications.map((q, i) => (
-                        <p key={i} className="flex items-center gap-2 text-xs sm:text-sm text-[#586962]">
+                        <p key={i} className="flex items-center gap-2 text-xs sm:text-sm text-[#2C3531]">
                           <span className="w-1.5 h-1.5 rounded-full bg-[#C5A059] shrink-0" />
                           {q}
                         </p>
@@ -96,7 +96,7 @@ export default function PractitionerAndBookingSection({
                 </div>
 
                 {/* Bio */}
-                <p className="text-sm text-[#586962] leading-relaxed">
+                <p className="text-sm text-[#2C3531] leading-relaxed">
                   {practitioner.bio}
                 </p>
 
@@ -189,7 +189,7 @@ export default function PractitionerAndBookingSection({
                 <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#1B3B2B]">
                   {bookingHeadline}
                 </h2>
-                <p className="mt-1 text-sm text-[#586962] leading-relaxed">
+                <p className="mt-1 text-sm text-[#2C3531] leading-relaxed">
                   {bookingSubtitle}
                 </p>
               </div>
@@ -200,7 +200,7 @@ export default function PractitionerAndBookingSection({
                   <CheckCircle className="w-5 h-5 text-[#1B3B2B] shrink-0 mt-0.5" />
                   <div className="text-sm">
                     <p className="font-bold">Enquiry Submitted</p>
-                    <p className="mt-0.5 text-[#586962]">{result.message}</p>
+                    <p className="mt-0.5 text-[#2C3531]">{result.message}</p>
                   </div>
                 </div>
               )}
@@ -298,7 +298,7 @@ export default function PractitionerAndBookingSection({
                     )}
                   </button>
 
-                  <div className="flex items-center justify-center gap-1.5 text-[11px] text-[#586962]">
+                  <div className="flex items-center justify-center gap-1.5 text-[11px] text-[#2C3531]">
                     <Lock className="w-3 h-3 text-[#C5A059]" />
                     <span>Your details are private and will only be used to schedule your consultation.</span>
                   </div>

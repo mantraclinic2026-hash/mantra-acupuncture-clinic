@@ -6,6 +6,41 @@ import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import { AboutContent, TreatmentProcessStep } from '@/lib/types';
 
+const FALLBACK_STEPS: TreatmentProcessStep[] = [
+  {
+    id: 'default-1',
+    step_number: 1,
+    title: 'Consultation',
+    description: 'Understand your concerns, lifestyle and health goals.',
+    icon_name: 'UserCheck',
+    display_order: 1,
+  },
+  {
+    id: 'default-2',
+    step_number: 2,
+    title: 'Assessment',
+    description: 'A detailed assessment of your individual needs.',
+    icon_name: 'ClipboardList',
+    display_order: 2,
+  },
+  {
+    id: 'default-3',
+    step_number: 3,
+    title: 'Treatment Plan',
+    description: 'A customized acupuncture plan for your condition.',
+    icon_name: 'FileText',
+    display_order: 3,
+  },
+  {
+    id: 'default-4',
+    step_number: 4,
+    title: 'Ongoing Support',
+    description: 'Continuous care for your progress and well-being.',
+    icon_name: 'CheckCircle2',
+    display_order: 4,
+  },
+];
+
 interface AboutAndProcessSectionProps {
   about: AboutContent;
   steps: TreatmentProcessStep[];
@@ -23,8 +58,9 @@ export default function AboutAndProcessSection({
           'Our approach combines traditional acupuncture principles with a modern understanding of health and wellness to support the body’s natural healing process, improve balance, and enhance overall well-being.',
         ];
 
-  // Sort treatment process steps by step number
-  const sortedSteps = [...steps].sort(
+  // Sort treatment process steps by step number (fallback to default steps if empty)
+  const stepsToRender = steps && steps.length > 0 ? steps : FALLBACK_STEPS;
+  const sortedSteps = [...stepsToRender].sort(
     (a, b) => (a.step_number || 0) - (b.step_number || 0)
   );
 
@@ -65,9 +101,9 @@ export default function AboutAndProcessSection({
           h-[460px]
           sm:h-[580px]
           lg:h-[720px]
-          opacity-[0.14]
-          sm:opacity-[0.18]
-          lg:opacity-[0.22]
+          opacity-[0.08]
+          sm:opacity-[0.10]
+          lg:opacity-[0.12]
           select-none
           z-0
         "
@@ -135,7 +171,7 @@ export default function AboutAndProcessSection({
                 font-bold
                 uppercase
                 tracking-[0.16em]
-                text-[#586962]
+                text-[#C5A059]
                 mb-2.5
                 sm:mb-3
                 block
@@ -163,7 +199,7 @@ export default function AboutAndProcessSection({
                 'Treating the Person, Not Just the Symptoms.'}
             </h2>
 
-            {/* Paragraphs */}
+            {/* Paragraphs - high contrast deep text color for effortless legibility */}
             <div
               className="
                 mt-5
@@ -173,7 +209,7 @@ export default function AboutAndProcessSection({
                 max-w-[650px]
                 text-sm
                 sm:text-base
-                text-[#586962]
+                text-[#2C3531]
                 leading-relaxed
               "
             >
@@ -268,7 +304,7 @@ export default function AboutAndProcessSection({
               </h3>
 
               {/* Treatment Steps */}
-              <div className="mt-5 space-y-4 sm:space-y-4.5">
+              <div className="mt-5">
                 {sortedSteps.map((step, index) => {
                   const isLast = index === sortedSteps.length - 1;
 
@@ -278,27 +314,29 @@ export default function AboutAndProcessSection({
                       className="
                         relative
                         flex
-                        items-center
+                        items-start
                         gap-3.5
+                        sm:gap-4
+                        pb-5
+                        sm:pb-6
+                        last:pb-1
                       "
                     >
-                      {/* =================================================
-                          CONNECTING LINE
-                      ================================================= */}
+                      {/* Connecting Line */}
                       {!isLast && (
                         <div
                           className="
                             absolute
                             left-[15px]
-                            top-[32px]
-                            bottom-[-16px]
-                            w-px
-                            bg-[#D8CFC2]
+                            top-8
+                            bottom-0
+                            w-[1.5px]
+                            bg-[#C5A059]/40
                           "
                         />
                       )}
 
-                      {/* Number */}
+                      {/* Number Badge */}
                       <div
                         className="
                           relative
@@ -320,20 +358,34 @@ export default function AboutAndProcessSection({
                         {step.step_number || index + 1}
                       </div>
 
-                      {/* Step Content - Main Point Only */}
-                      <div className="flex-1 min-w-0">
+                      {/* Step Content: Title & Description from admin */}
+                      <div className="flex-1 min-w-0 pt-0.5">
                         <h4
                           className="
                             font-serif
                             text-[15px]
                             sm:text-base
-                            font-semibold
+                            font-bold
                             text-[#1B3B2B]
-                            leading-snug
+                            leading-tight
                           "
                         >
                           {step.title}
                         </h4>
+
+                        {step.description && (
+                          <p
+                            className="
+                              mt-1
+                              text-xs
+                              sm:text-[13px]
+                              text-[#2C3531]
+                              leading-relaxed
+                            "
+                          >
+                            {step.description}
+                          </p>
+                        )}
                       </div>
                     </div>
                   );
