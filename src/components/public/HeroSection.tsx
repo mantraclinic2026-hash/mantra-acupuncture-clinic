@@ -90,17 +90,16 @@ export default function HeroSection({
             HERO CONTENT
         ===================================================== */}
         <div className="relative z-10 flex h-full flex-col justify-center max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8">
-          <div className="max-w-md lg:max-w-[430px] xl:max-w-xl space-y-4 sm:space-y-5 xl:space-y-6">
+          <div className="max-w-md lg:max-w-[340px] xl:max-w-xl space-y-4 sm:space-y-5 xl:space-y-6">
             {/* Eyebrow Badge Pill */}
-            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-[#D6C7B2] bg-[#FAF5EE]/95 backdrop-blur-xs w-fit shadow-2xs max-w-full">
+            <div className="inline-flex items-center px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-[#D6C7B2] bg-[#FAF5EE]/95 backdrop-blur-xs w-fit shadow-2xs max-w-full">
               <span className="text-[8.5px] sm:text-[9.5px] font-semibold uppercase tracking-[0.14em] text-[#1B3B2B] truncate">
                 {badgeText || 'PERSONALIZED ACUPUNCTURE CARE'}
               </span>
-              <span className="w-3.5 sm:w-6 h-[1px] bg-[#C5A059] shrink-0" />
             </div>
 
             {/* Main Headline */}
-            <h1 className="font-serif text-[34px] xs:text-[40px] sm:text-[44px] lg:text-[2.65rem] xl:text-[3.85rem] font-medium text-[#1B3B2B] tracking-tight leading-[1.12] sm:leading-[1.08] max-w-md lg:max-w-[420px] xl:max-w-lg">
+            <h1 className="font-serif text-[34px] xs:text-[40px] sm:text-[44px] lg:text-[2.25rem] xl:text-[3.85rem] font-medium text-[#1B3B2B] tracking-tight leading-[1.12] sm:leading-[1.08] max-w-md lg:max-w-[300px] xl:max-w-lg">
               {headline || 'Personalized Acupuncture Care'}
             </h1>
 
