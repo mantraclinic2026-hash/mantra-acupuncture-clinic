@@ -164,7 +164,7 @@ export default function ConditionsGrid({ conditions, siteSettings }: ConditionsG
           {/* =====================================================
               LEFT COLUMN – Headline, Narrative, Leaf & CTA
           ===================================================== */}
-          <div className="lg:col-span-4 xl:col-span-4 flex flex-col justify-center space-y-4 sm:space-y-5 xl:-translate-x-4 2xl:-translate-x-6">
+          <div className="lg:col-span-4 xl:col-span-4 flex flex-col justify-center space-y-4 sm:space-y-5">
             {/* Eyebrow */}
             <div className="flex items-center gap-3">
               <span className="w-8 h-px bg-[#C5A059]" />
