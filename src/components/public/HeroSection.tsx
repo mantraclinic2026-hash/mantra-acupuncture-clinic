@@ -50,16 +50,16 @@ export default function HeroSection({
       ===================================================== */}
       <div className="relative w-full min-h-[460px] sm:min-h-[500px] lg:min-h-[540px] py-10 sm:py-14 lg:py-20 flex items-center">
         {/* Banner Images */}
-        <div className="absolute inset-0 z-0">
-          {/* Desktop & Tablet Banner */}
-          <div className="hidden sm:block absolute inset-0">
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          {/* Desktop & Tablet Banner: zoomed and shifted right on 13.3" screens so white curve covers the text area, unchanged on xl+ */}
+          <div className="hidden sm:block absolute inset-0 overflow-hidden">
             <Image
               src={bgImage}
               alt={heroImageAlt || 'Mantra Acupuncture Clinic'}
               fill
               priority
               sizes="100vw"
-              className="object-cover object-right"
+              className="object-cover sm:scale-105 sm:object-[80%_center] lg:scale-110 lg:translate-x-10 lg:object-[70%_center] xl:scale-100 xl:translate-x-0 xl:object-right transition-all duration-300"
               unoptimized={
                 bgImage.includes('res.cloudinary.com') ||
                 bgImage.includes('unsplash.com')
@@ -90,16 +90,9 @@ export default function HeroSection({
             HERO CONTENT
         ===================================================== */}
         <div className="relative z-10 flex h-full flex-col justify-center max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8">
-          <div className="max-w-md lg:max-w-[340px] xl:max-w-xl space-y-4 sm:space-y-5 xl:space-y-6">
-            {/* Eyebrow Badge Pill */}
-            <div className="inline-flex items-center px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-[#D6C7B2] bg-[#FAF5EE]/95 backdrop-blur-xs w-fit shadow-2xs max-w-full">
-              <span className="text-[8.5px] sm:text-[9.5px] font-semibold uppercase tracking-[0.14em] text-[#1B3B2B] truncate">
-                {badgeText || 'PERSONALIZED ACUPUNCTURE CARE'}
-              </span>
-            </div>
-
+          <div className="max-w-md lg:max-w-[430px] xl:max-w-xl space-y-4 sm:space-y-5 xl:space-y-6">
             {/* Main Headline */}
-            <h1 className="font-serif text-[34px] xs:text-[40px] sm:text-[44px] lg:text-[2.25rem] xl:text-[3.85rem] font-medium text-[#1B3B2B] tracking-tight leading-[1.12] sm:leading-[1.08] max-w-md lg:max-w-[300px] xl:max-w-lg">
+            <h1 className="font-serif text-[34px] xs:text-[40px] sm:text-[44px] lg:text-[2.65rem] xl:text-[3.85rem] font-medium text-[#1B3B2B] tracking-tight leading-[1.12] sm:leading-[1.08] max-w-md lg:max-w-[420px] xl:max-w-lg">
               {headline || 'Personalized Acupuncture Care'}
             </h1>
 
