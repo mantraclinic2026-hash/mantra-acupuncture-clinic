@@ -100,33 +100,33 @@ export default function Header({
       </div>
 
       {/* Main Header Container */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex items-center justify-between">
         
         {/* Brand Logo – icon + wordmark */}
         <Link
           href="/"
-          className="group focus:outline-none flex items-center"
+          className="group focus:outline-none flex items-center gap-2 sm:gap-2.5"
           aria-label={siteName}
         >
           {/* Main Logo Icon */}
           <Image
             src="/mantra-logo1.png"
             alt="Mantra icon"
-            width={128}
-            height={128}
+            width={160}
+            height={160}
             style={{ width: 'auto' }}
-            className="h-10 sm:h-11 w-auto object-contain shrink-0 transition-opacity group-hover:opacity-90"
+            className="h-12 sm:h-14 lg:h-16 w-auto object-contain shrink-0 transition-opacity group-hover:opacity-90"
             priority
           />
 
-          {/* Mantra Text Logo - pulled closer to icon */}
+          {/* Mantra Text Logo */}
           <Image
-            src="/mantratext-logo1.png"
+            src="/mantratext-logo3.png"
             alt={siteName}
-            width={176}
-            height={44}
+            width={240}
+            height={64}
             style={{ width: 'auto' }}
-            className="h-10 sm:h-11 w-auto object-contain -ml-2.5 sm:-ml-2.5 transition-opacity group-hover:opacity-90"
+            className="h-12 sm:h-14 lg:h-16 w-auto object-contain transition-opacity group-hover:opacity-90"
             priority
           />
         </Link>
