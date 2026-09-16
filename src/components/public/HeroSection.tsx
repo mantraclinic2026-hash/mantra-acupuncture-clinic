@@ -43,6 +43,23 @@ export default function HeroSection({
     heroImageUrl ||
     'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=1920';
 
+  const renderHeadline = () => {
+    const text = headline || 'Personalized Acupuncture Care';
+    const match = text.match(/\b(Care)\b/i);
+    if (!match || match.index === undefined) return text;
+    const index = match.index;
+    const prefix = text.slice(0, index);
+    const suffix = text.slice(index + match[0].length);
+    return (
+      <>
+        {prefix.trimEnd()}
+        <br className="hidden lg:block xl:hidden" />{' '}
+        <span className="text-[#C5A059]">{match[0]}</span>
+        {suffix}
+      </>
+    );
+  };
+
   return (
     <section className="relative overflow-hidden bg-[#FAF5EE] border-b border-[#E6DFD3]">
       {/* =====================================================
@@ -92,8 +109,8 @@ export default function HeroSection({
         <div className="relative z-10 flex h-full flex-col justify-center max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8">
           <div className="max-w-md lg:max-w-[340px] xl:max-w-xl space-y-4 sm:space-y-5 xl:space-y-6">
             {/* Main Headline */}
-            <h1 className="font-serif text-[34px] xs:text-[40px] sm:text-[44px] lg:text-[2.05rem] xl:text-[3.85rem] font-medium text-[#1B3B2B] tracking-tight leading-[1.15] sm:leading-[1.08] max-w-md lg:max-w-[320px] xl:max-w-lg">
-              {headline || 'Personalized Acupuncture Care'}
+            <h1 className="font-serif text-[34px] xs:text-[40px] sm:text-[44px] lg:text-[2rem] xl:text-[3.85rem] font-medium text-[#1B3B2B] tracking-tight leading-[1.15] sm:leading-[1.08] lg:leading-[1.12] max-w-md lg:max-w-[240px] xl:max-w-lg">
+              {renderHeadline()}
             </h1>
 
             {/* Decorative Slogan Line */}
