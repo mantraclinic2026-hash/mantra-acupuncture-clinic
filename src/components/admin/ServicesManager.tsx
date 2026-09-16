@@ -227,28 +227,23 @@ export default function ServicesManager({ initialServices }: ServicesManagerProp
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#1B3B2B] mb-1">Display Order</label>
-                  <input
-                    type="number"
-                    name="display_order"
-                    defaultValue={editingService.display_order || 0}
-                    className="w-full px-4 py-2.5 rounded-xl bg-[#EEE4D8] border border-[#E6DFD3] text-sm text-[#1B3B2B]"
-                  />
-                </div>
+              {/* Hidden display_order — auto-assigned: existing items keep their order, new items get next position */}
+              <input
+                type="hidden"
+                name="display_order"
+                value={editingService.display_order ?? initialServices.length + 1}
+              />
 
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#1B3B2B] mb-1">Publication Status</label>
-                  <select
-                    name="is_published"
-                    defaultValue={editingService.is_published ? 'true' : 'false'}
-                    className="w-full px-4 py-2.5 rounded-xl bg-[#EEE4D8] border border-[#E6DFD3] text-sm text-[#1B3B2B]"
-                  >
-                    <option value="true">Published (Live)</option>
-                    <option value="false">Unpublished (Hidden)</option>
-                  </select>
-                </div>
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-[#1B3B2B] mb-1">Publication Status</label>
+                <select
+                  name="is_published"
+                  defaultValue={editingService.is_published ? 'true' : 'false'}
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#EEE4D8] border border-[#E6DFD3] text-sm text-[#1B3B2B]"
+                >
+                  <option value="true">Published (Live)</option>
+                  <option value="false">Unpublished (Hidden)</option>
+                </select>
               </div>
 
               <ImageUploader

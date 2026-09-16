@@ -129,15 +129,12 @@ export default function FAQsManager({ initialFAQs }: FAQsManagerProps) {
                   />
                 </div>
 
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#1B3B2B] mb-1">Display Order</label>
-                  <input
-                    type="number"
-                    name="display_order"
-                    defaultValue={editingFAQ.display_order || 0}
-                    className="w-full px-4 py-2.5 rounded-xl bg-[#EEE4D8] border border-[#E6DFD3] text-sm text-[#1B3B2B]"
-                  />
-                </div>
+                {/* Hidden display_order — auto-assigned */}
+                <input
+                  type="hidden"
+                  name="display_order"
+                  value={editingFAQ.display_order ?? initialFAQs.length + 1}
+                />
               </div>
 
               <div>
