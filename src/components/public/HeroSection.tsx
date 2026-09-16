@@ -45,6 +45,20 @@ export default function HeroSection({
 
   const renderHeadline = () => {
     const text = headline || 'Personalized Acupuncture Care';
+    
+    // Stacked down-to-down in mobile view with each word on its own line
+    if (/^Personalized Acupuncture Care$/i.test(text.trim())) {
+      return (
+        <>
+          Personalized
+          <br className="block sm:hidden" />{' '}
+          Acupuncture
+          <br className="block sm:hidden lg:block xl:hidden" />{' '}
+          Care
+        </>
+      );
+    }
+
     const match = text.match(/\b(Care)\b/i);
     if (!match || match.index === undefined) return text;
     const index = match.index;
@@ -53,8 +67,8 @@ export default function HeroSection({
     return (
       <>
         {prefix.trimEnd()}
-        <br className="hidden lg:block xl:hidden" />{' '}
-        <span className="text-[#C5A059]">{match[0]}</span>
+        <br className="block sm:hidden lg:block xl:hidden" />{' '}
+        <span>{match[0]}</span>
         {suffix}
       </>
     );
@@ -65,7 +79,7 @@ export default function HeroSection({
       {/* =====================================================
           HERO BANNER & ORGANIC CREAM DIVISION
       ===================================================== */}
-      <div className="relative w-full min-h-[460px] sm:min-h-[500px] lg:min-h-[540px] py-10 sm:py-14 lg:py-20 flex items-center">
+      <div className="relative w-full min-h-[480px] sm:min-h-[500px] lg:min-h-[540px] py-12 sm:py-14 lg:py-20 flex items-center">
         {/* Banner Images */}
         <div className="absolute inset-0 z-0 overflow-hidden">
           {/* Desktop & Tablet Banner: zoomed and shifted right on 13.3" screens so white curve covers the text area, unchanged on xl+ */}
@@ -98,8 +112,8 @@ export default function HeroSection({
                 (heroMobileImageUrl || bgImage).includes('unsplash.com')
               }
             />
-            {/* Soft gradient fade on mobile so text is readable over background image */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#FAF5EE]/90 via-[#FAF5EE]/60 to-transparent pointer-events-none" />
+            {/* Balanced white opacity so background image is visible with good text contrast */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#FAF5EE]/60 via-[#FAF5EE]/40 to-[#FAF5EE]/15 pointer-events-none" />
           </div>
         </div>
 
@@ -109,18 +123,18 @@ export default function HeroSection({
         <div className="relative z-10 flex h-full flex-col justify-center max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8">
           <div className="max-w-md lg:max-w-[340px] xl:max-w-xl space-y-4 sm:space-y-5 xl:space-y-6">
             {/* Main Headline */}
-            <h1 className="font-serif text-[34px] xs:text-[40px] sm:text-[44px] lg:text-[2rem] xl:text-[3.85rem] font-medium text-[#1B3B2B] tracking-tight leading-[1.15] sm:leading-[1.08] lg:leading-[1.12] max-w-md lg:max-w-[240px] xl:max-w-lg">
+            <h1 className="font-serif text-[38px] xs:text-[44px] sm:text-[48px] lg:text-[2rem] xl:text-[3.85rem] font-medium text-[#1B3B2B] tracking-tight leading-[1.08] sm:leading-[1.05] lg:leading-[1.12] max-w-md lg:max-w-[240px] xl:max-w-lg">
               {renderHeadline()}
             </h1>
 
-            {/* Decorative Slogan Line */}
-            <div className="flex items-center gap-2 sm:gap-2.5 pt-0.5 sm:pt-1 flex-wrap">
+            {/* Decorative Slogan Line - Enhanced Visibility */}
+            <div className="inline-flex items-center gap-2 sm:gap-2.5 px-3 py-1 rounded-full bg-[#FAF5EE]/90 backdrop-blur-xs border border-[#C5A059]/30 shadow-xs w-fit">
               <svg
-                className="w-4 h-4 sm:w-6 sm:h-6 text-[#C5A059] shrink-0"
+                className="w-4 h-4 sm:w-5 sm:h-5 text-[#C5A059] shrink-0"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                strokeWidth="1.5"
+                strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
@@ -129,16 +143,16 @@ export default function HeroSection({
                 <path d="M15 13.5c2.5-.7 4.5-3 5-5.5-2.5 1-4.5 3.2-5 5.5z" />
                 <path d="M7 16c2 1.8 3.5 2 5 2s3-.2 5-2" />
               </svg>
-              <span className="text-xs sm:text-sm lg:text-sm xl:text-lg text-[#2C4A3E] font-medium tracking-wide">
+              <span className="text-sm xs:text-base sm:text-base lg:text-base xl:text-lg text-[#12291E] font-semibold tracking-wide">
                 Natural healing. A healthier you.
               </span>
             </div>
 
             {/* CTA Buttons */}
-            <div className="flex flex-row items-center gap-2 sm:gap-2.5 xl:gap-4 pt-2 sm:pt-3 flex-wrap">
+            <div className="flex flex-row items-center gap-2 sm:gap-2.5 xl:gap-4 pt-1.5 sm:pt-3 flex-wrap">
               <Link
                 href={primaryCtaLink || '/contact'}
-                className="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-4 xs:px-4.5 sm:px-5 lg:px-5 xl:px-7 py-2.5 sm:py-3 xl:py-3.5 rounded-full bg-[#1B3B2B] hover:bg-[#12291E] text-white font-medium text-xs xs:text-xs sm:text-sm xl:text-base shadow-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] group shrink-0"
+                className="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-3.5 xs:px-4.5 sm:px-5 lg:px-5 xl:px-7 py-2.5 sm:py-3 xl:py-3.5 rounded-full bg-[#1B3B2B] hover:bg-[#12291E] text-white font-medium text-xs sm:text-sm xl:text-base shadow-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] group shrink-0"
               >
                 <span>{primaryCtaText || 'Book a Consultation'}</span>
                 <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" />
@@ -146,7 +160,7 @@ export default function HeroSection({
 
               <Link
                 href={secondaryCtaLink || '/treatments'}
-                className="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-4 xs:px-5 sm:px-7 py-2.5 sm:py-3.5 rounded-full border border-[#1B3B2B]/35 hover:border-[#1B3B2B] bg-[#FAF5EE] hover:bg-white text-[#1B3B2B] font-medium text-xs xs:text-sm sm:text-base transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shrink-0"
+                className="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-3.5 xs:px-5 sm:px-7 py-2.5 sm:py-3.5 rounded-full border border-[#1B3B2B]/35 hover:border-[#1B3B2B] bg-[#FAF5EE] hover:bg-white text-[#1B3B2B] font-medium text-xs sm:text-sm xl:text-base transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shrink-0"
               >
                 <Leaf className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#C5A059]" />
                 <span>{secondaryCtaText || 'Explore Treatments'}</span>
