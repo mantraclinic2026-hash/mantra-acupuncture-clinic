@@ -224,7 +224,7 @@ export default function ServicesGrid({
         {/* =================================================
             SECTION HEADER
         ================================================= */}
-        <div className="max-w-3xl mb-6 sm:mb-8 lg:mb-10 space-y-2.5 xl:-translate-x-4 2xl:-translate-x-6">
+        <div className="max-w-3xl mb-6 sm:mb-8 lg:mb-10 space-y-2.5">
           <span
             className="
               text-xs
