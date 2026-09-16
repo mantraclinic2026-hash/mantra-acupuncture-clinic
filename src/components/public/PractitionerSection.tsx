@@ -33,7 +33,7 @@ export default function PractitionerSection({ practitioner }: PractitionerSectio
                     <img
                       src={practitioner.profile_image_url}
                       alt={practitioner.profile_image_alt || practitioner.full_name}
-                      className="w-full h-full min-h-[350px] max-h-[500px] object-cover rounded-2xl"
+                      className="w-full h-full min-h-[350px] max-h-[500px] object-cover object-top rounded-2xl"
                     />
                   ) : (
                     <ImageFallback

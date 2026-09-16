@@ -57,36 +57,36 @@ export default function PractitionerAndBookingSection({
               {/* Top Details */}
               <div className="space-y-4">
                 {/* Photo + Name row */}
-                <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-4 sm:gap-5">
-                  {/* Circular photo with gold ring */}
+                <div className="flex flex-col sm:flex-row items-center sm:items-center text-center sm:text-left gap-5 sm:gap-6">
+                  {/* Circular photo with gold ring - enlarged layout with breathing room to fully show face */}
                   <div className="relative shrink-0">
-                    <div className="w-24 h-24 rounded-full ring-4 ring-[#C5A059]/50 ring-offset-2 ring-offset-[#EEE4D8] overflow-hidden bg-[#1B3B2B]/10 flex items-center justify-center">
+                    <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full ring-4 ring-[#C5A059]/60 ring-offset-2 ring-offset-[#EEE4D8] overflow-hidden bg-white shadow-md flex items-center justify-center">
                       {practitioner.profile_image_url ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
                           src={practitioner.profile_image_url}
                           alt={practitioner.profile_image_alt || practitioner.full_name}
-                          className="w-full h-full object-cover rounded-full"
+                          className="w-full h-full object-cover object-[center_top] scale-95 rounded-full transition-transform duration-300 hover:scale-100"
                         />
                       ) : (
                         <ImageFallback
                           src={null}
                           alt={practitioner.profile_image_alt || practitioner.full_name}
-                          width={96}
-                          height={96}
+                          width={144}
+                          height={144}
                           aspectRatio="square"
                           className="w-full h-full object-cover"
                         />
                       )}
                     </div>
                   </div>
-                  <div>
-                    <h2 className="font-serif text-xl sm:text-2xl font-bold text-[#1B3B2B]">
+                  <div className="space-y-1 sm:space-y-1.5">
+                    <h2 className="font-serif text-xl sm:text-2xl lg:text-3xl font-bold text-[#1B3B2B]">
                       {practitioner.full_name}
                     </h2>
-                    <div className="mt-1 space-y-0.5">
+                    <div className="space-y-1 pt-0.5">
                       {practitioner.qualifications.map((q, i) => (
-                        <p key={i} className="flex items-center gap-1.5 text-xs text-[#586962]">
+                        <p key={i} className="flex items-center gap-2 text-xs sm:text-sm text-[#586962]">
                           <span className="w-1.5 h-1.5 rounded-full bg-[#C5A059] shrink-0" />
                           {q}
                         </p>

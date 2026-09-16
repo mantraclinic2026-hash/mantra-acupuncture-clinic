@@ -164,7 +164,7 @@ export default function ConditionsGrid({ conditions, siteSettings }: ConditionsG
           {/* =====================================================
               LEFT COLUMN – Headline, Narrative, Leaf & CTA
           ===================================================== */}
-          <div className="lg:col-span-4 xl:col-span-4 flex flex-col justify-center space-y-4 sm:space-y-5 -translate-x-1 sm:-translate-x-3 lg:-translate-x-8 xl:-translate-x-12">
+          <div className="lg:col-span-4 xl:col-span-4 flex flex-col justify-center space-y-4 sm:space-y-5 xl:-translate-x-4 2xl:-translate-x-6">
             {/* Eyebrow */}
             <div className="flex items-center gap-3">
               <span className="w-8 h-px bg-[#C5A059]" />
@@ -221,29 +221,16 @@ export default function ConditionsGrid({ conditions, siteSettings }: ConditionsG
           <div className="lg:col-span-8 xl:col-span-8 relative">
             <div className="relative bg-[#FAF5EF] rounded-3xl p-6 sm:p-8 lg:p-10 border border-[#EAE1D3] shadow-[0_10px_35px_-5px_rgba(0,0,0,0.06)] overflow-hidden">
 
-              {/* Botanical Leaf Watermark - Top Right Corner */}
+              {/* Single Botanical Leaf Background Watermark */}
               <div
-                className="pointer-events-none absolute -top-10 -right-10 w-64 h-64 opacity-25 mix-blend-multiply overflow-hidden z-0"
+                className="pointer-events-none absolute -bottom-6 -right-6 sm:-bottom-10 sm:-right-10 w-52 h-52 sm:w-80 sm:h-80 lg:w-96 lg:h-96 opacity-[0.09] sm:opacity-[0.14] lg:opacity-[0.18] mix-blend-multiply overflow-hidden z-0 select-none"
                 aria-hidden="true"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/images/botanical-flowers1.png"
                   alt=""
-                  className="w-full h-full object-contain rotate-45 scale-125"
-                />
-              </div>
-
-              {/* Botanical Leaf Watermark - Bottom Left Corner */}
-              <div
-                className="pointer-events-none absolute -bottom-12 -left-12 w-64 h-64 opacity-20 mix-blend-multiply overflow-hidden z-0"
-                aria-hidden="true"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/images/botanical-flowers1.png"
-                  alt=""
-                  className="w-full h-full object-contain -rotate-135 scale-125"
+                  className="w-full h-full object-contain object-bottom-right"
                 />
               </div>
 
@@ -311,9 +298,9 @@ export default function ConditionsGrid({ conditions, siteSettings }: ConditionsG
                       if (!selected) return null;
                       return (
                         <>
-                          <div className="pb-2 border-b border-[#E8DFD0] flex items-center justify-between">
+                          <div className="pb-3 border-b border-[#E8DFD0] flex items-center justify-between">
                             <div className="flex items-center gap-2.5">
-                              <div className={`w-8 h-8 rounded-full ${selected.badgeBg} flex items-center justify-center shrink-0`}>
+                              <div className={`w-8 h-8 rounded-full ${selected.badgeBg} flex items-center justify-center shrink-0 border border-black/5`}>
                                 {selected.renderIcon()}
                               </div>
                               <span className="text-xs uppercase tracking-widest font-bold text-[#1B3B2B]">
@@ -323,18 +310,18 @@ export default function ConditionsGrid({ conditions, siteSettings }: ConditionsG
                             <button
                               type="button"
                               onClick={() => setActiveMobileTab('All')}
-                              className="text-[11px] font-semibold text-[#C5A059] hover:text-[#1B3B2B]"
+                              className="text-[11px] font-semibold text-[#C5A059] hover:text-[#1B3B2B] transition-colors"
                             >
                               View All
                             </button>
                           </div>
-                          <ul className="space-y-2 pt-1">
+                          <ul className="space-y-2.5 pt-2">
                             {selected.items.map((item, idx) => (
                               <li key={idx} className="flex items-center gap-2.5 text-xs text-[#2C3531]">
                                 <span className="w-1.5 h-1.5 rounded-full bg-[#C5A059] shrink-0" />
                                 <Link
                                   href={`/conditions/${item.slug}`}
-                                  className="hover:underline underline-offset-2"
+                                  className="hover:text-[#C5A059] transition-colors font-medium"
                                 >
                                   {item.title}
                                 </Link>

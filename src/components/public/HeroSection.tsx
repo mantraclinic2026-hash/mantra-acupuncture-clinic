@@ -116,7 +116,7 @@ export default function HeroSection({
             lg:px-8
           "
         >
-          <div className="max-w-xl space-y-4 sm:space-y-6 translate-x-0 sm:-translate-x-3 lg:-translate-x-8 xl:-translate-x-12">
+          <div className="max-w-xl space-y-4 sm:space-y-6 xl:-translate-x-6 2xl:-translate-x-10">
 
             {/* Eyebrow Badge Pill */}
             <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-[#D6C7B2] bg-[#FAF5EE]/95 backdrop-blur-xs w-fit shadow-2xs max-w-full">
