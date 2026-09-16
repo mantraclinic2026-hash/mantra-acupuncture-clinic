@@ -179,7 +179,7 @@ export default function ConditionsGrid({ conditions, siteSettings }: ConditionsG
             </h2>
 
             {/* Subtitle */}
-            <p className="text-sm sm:text-base text-[#586962] leading-relaxed max-w-md">
+            <p className="text-sm sm:text-base text-[#2C3531] leading-relaxed max-w-md">
               {subtitle}
             </p>
 
@@ -454,7 +454,7 @@ export default function ConditionsGrid({ conditions, siteSettings }: ConditionsG
 
               {/* CARD FOOTER – Centered subtle medical disclaimer */}
               <div className="relative z-10 mt-6 sm:mt-8 pt-4 border-t border-[#E8DFD0]/80 text-center">
-                <p className="text-[10px] sm:text-[11px] text-[#586962] italic">
+                <p className="text-[10px] sm:text-[11px] text-[#2C3531]/80 font-medium italic">
                   Acupuncture is provided as supportive care following individual assessment. It does not replace emergency medical care.
                 </p>
               </div>

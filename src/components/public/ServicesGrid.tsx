@@ -231,7 +231,7 @@ export default function ServicesGrid({
               font-bold
               uppercase
               tracking-wider
-              text-[#586962]
+              text-[#C5A059]
               block
             "
           >
@@ -257,7 +257,7 @@ export default function ServicesGrid({
             className="
               text-sm
               sm:text-base
-              text-[#586962]
+              text-[#2C3531]
               leading-relaxed
               max-w-2xl
               pt-1
@@ -461,7 +461,7 @@ export default function ServicesGrid({
                       className="
                         text-[10px]
                         sm:text-xs
-                        text-[#586962]
+                        text-[#2C3531]
                         leading-tight
                         sm:leading-[1.5]
                         line-clamp-2

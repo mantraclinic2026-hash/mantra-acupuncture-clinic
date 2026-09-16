@@ -43,7 +43,7 @@ export default function ConsultationForm({
           <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#1B3B2B]">
             {title}
           </h3>
-          <p className="text-sm text-[#586962] leading-relaxed">
+          <p className="text-sm text-[#2C3531] leading-relaxed">
             {subtitle}
           </p>
         </div>
@@ -54,7 +54,7 @@ export default function ConsultationForm({
             <CheckCircle className="w-5 h-5 text-[#1B3B2B] shrink-0 mt-0.5" />
             <div className="text-sm">
               <p className="font-bold">Enquiry Submitted Successfully</p>
-              <p className="mt-1 text-[#586962]">{result.message}</p>
+              <p className="mt-1 text-[#2C3531]">{result.message}</p>
             </div>
           </div>
         )}
@@ -183,7 +183,7 @@ export default function ConsultationForm({
             )}
           </button>
 
-          <p className="text-[11px] text-[#586962] text-center pt-2 italic">
+          <p className="text-[11px] text-[#2C3531] text-center pt-2 italic">
             Submitting this enquiry does not instantly guarantee an appointment slot. Our clinic receptionist will contact you to finalize appointment scheduling.
           </p>
 
