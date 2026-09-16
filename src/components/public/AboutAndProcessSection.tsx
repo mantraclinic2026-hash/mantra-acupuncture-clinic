@@ -123,10 +123,8 @@ export default function AboutAndProcessSection({
               justify-center
               py-1
               lg:py-4
-              -translate-x-1
-              sm:-translate-x-3
-              lg:-translate-x-8
-              xl:-translate-x-12
+              xl:-translate-x-4
+              2xl:-translate-x-6
             "
           >
             {/* Eyebrow */}

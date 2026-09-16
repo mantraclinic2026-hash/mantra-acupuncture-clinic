@@ -1,7 +1,10 @@
 import React from 'react';
 import { Metadata } from 'next';
 import Image from 'next/image';
-import { getPublishedGallery, getSEOMetadata } from '@/lib/queries/site';
+import Header from '@/components/public/Header';
+import Footer from '@/components/public/Footer';
+import MobileStickyActions from '@/components/public/MobileStickyActions';
+import { getPublishedGallery, getSiteSettings, getSEOMetadata } from '@/lib/queries/site';
 import { getCloudinaryUrl } from '@/lib/cloudinary/url';
 import { Camera, Image as ImageIcon } from 'lucide-react';
 import Link from 'next/link';
@@ -21,11 +24,26 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function GalleryPage() {
-  const galleryItems = await getPublishedGallery();
+  const [siteSettings, galleryItems] = await Promise.all([
+    getSiteSettings(),
+    getPublishedGallery(),
+  ]);
 
   return (
-    <div className="bg-[#FAF2EB] min-h-screen py-12 sm:py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+    <>
+      <Header
+        siteName={siteSettings.site_name}
+        tagline={siteSettings.tagline}
+        phone={siteSettings.phone}
+        whatsappNumber={siteSettings.whatsapp_number}
+        defaultMessage={siteSettings.default_whatsapp_message}
+        address={siteSettings.address}
+        workingHours={siteSettings.working_hours}
+        ctaLabel={siteSettings.primary_cta_label}
+      />
+
+      <main className="flex-1 bg-[#FAF2EB] py-12 lg:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         {/* Header Header */}
         <div className="text-center max-w-3xl mx-auto space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#EEE4D8] border border-[#E6DFD3] text-[#1B3B2B] text-xs font-semibold uppercase tracking-wider">
@@ -104,7 +122,28 @@ export default async function GalleryPage() {
             })}
           </div>
         )}
-      </div>
-    </div>
+        </div>
+      </main>
+
+      <Footer
+        siteName={siteSettings.site_name}
+        tagline={siteSettings.tagline}
+        phone={siteSettings.phone}
+        whatsappNumber={siteSettings.whatsapp_number}
+        defaultMessage={siteSettings.default_whatsapp_message}
+        address={siteSettings.address}
+        workingHours={siteSettings.working_hours}
+        instagramUrl={siteSettings.instagram_url}
+        disclaimerText={siteSettings.disclaimer_text}
+      />
+
+      <MobileStickyActions
+        phone={siteSettings.phone}
+        whatsappNumber={siteSettings.whatsapp_number}
+        defaultMessage={siteSettings.default_whatsapp_message}
+        whatsappEnabled={siteSettings.floating_whatsapp_enabled}
+        callEnabled={siteSettings.floating_call_enabled}
+      />
+    </>
   );
 }

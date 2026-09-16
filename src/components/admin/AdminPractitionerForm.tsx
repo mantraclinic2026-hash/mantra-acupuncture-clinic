@@ -85,16 +85,16 @@ export default function AdminPractitionerForm({ practitioner }: AdminPractitione
         {/* Preview Body */}
         <div className="p-6 flex flex-col sm:flex-row items-start sm:items-center gap-5">
           {/* Avatar Thumbnail */}
-          <div className="w-20 h-20 rounded-2xl overflow-hidden bg-[#DED5C5] border border-[#E6DFD3] shrink-0 flex items-center justify-center">
+          <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full ring-4 ring-[#C5A059]/50 ring-offset-2 ring-offset-white overflow-hidden bg-white shrink-0 flex items-center justify-center shadow-sm">
             {currentPractitioner.profile_image_url ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={currentPractitioner.profile_image_url}
                 alt={currentPractitioner.full_name}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover object-[center_top] scale-95 rounded-full"
               />
             ) : (
-              <User className="w-8 h-8 text-[#A0907A]" />
+              <User className="w-10 h-10 text-[#A0907A]" />
             )}
           </div>
 
