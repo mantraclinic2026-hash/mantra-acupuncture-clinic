@@ -293,10 +293,7 @@ export default function ConditionsManager({ initialConditions }: ConditionsManag
                       </div>
 
                       {/* Footer Actions */}
-                      <div className="flex items-center justify-between gap-2 pt-2.5 border-t border-[#E6DFD3]/80">
-                        <span className="text-[10px] text-[#586962]">
-                          Order: <span className="font-mono">{item.display_order || 0}</span>
-                        </span>
+                      <div className="flex items-center justify-end gap-2 pt-2.5 border-t border-[#E6DFD3]/80">
                         <div className="flex items-center gap-1.5">
                           <button
                             onClick={() => startEditCondition(item)}
@@ -445,18 +442,13 @@ export default function ConditionsManager({ initialConditions }: ConditionsManag
               </div>
 
               {/* Order & Status */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#1B3B2B] mb-1">
-                    Display Order
-                  </label>
-                  <input
-                    type="number"
-                    name="display_order"
-                    defaultValue={editingCondition.display_order || 0}
-                    className="w-full px-4 py-2.5 rounded-xl bg-[#EEE4D8] border border-[#E6DFD3] text-sm text-[#1B3B2B]"
-                  />
-                </div>
+              <div>
+                {/* Hidden display_order — auto-assigned: existing items keep their order, new items get next */}
+                <input
+                  type="hidden"
+                  name="display_order"
+                  value={editingCondition.display_order ?? initialConditions.length + 1}
+                />
 
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-[#1B3B2B] mb-1">
