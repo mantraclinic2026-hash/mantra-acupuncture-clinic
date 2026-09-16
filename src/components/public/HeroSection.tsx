@@ -59,7 +59,7 @@ export default function HeroSection({
               fill
               priority
               sizes="100vw"
-              className="object-cover sm:scale-105 sm:object-[80%_center] lg:scale-110 lg:translate-x-10 lg:object-[70%_center] xl:scale-100 xl:translate-x-0 xl:object-right transition-all duration-300"
+              className="object-cover sm:scale-105 sm:origin-left sm:translate-x-8 lg:scale-115 lg:origin-left lg:translate-x-24 xl:scale-100 xl:origin-center xl:translate-x-0 xl:object-right transition-all duration-300"
               unoptimized={
                 bgImage.includes('res.cloudinary.com') ||
                 bgImage.includes('unsplash.com')
@@ -90,15 +90,14 @@ export default function HeroSection({
             HERO CONTENT
         ===================================================== */}
         <div className="relative z-10 flex h-full flex-col justify-center max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8">
-          <div className="max-w-md lg:max-w-[430px] xl:max-w-xl space-y-4 sm:space-y-5 xl:space-y-6">
+          <div className="max-w-md lg:max-w-[340px] xl:max-w-xl space-y-4 sm:space-y-5 xl:space-y-6">
             {/* Main Headline */}
-            <h1 className="font-serif text-[34px] xs:text-[40px] sm:text-[44px] lg:text-[2.65rem] xl:text-[3.85rem] font-medium text-[#1B3B2B] tracking-tight leading-[1.12] sm:leading-[1.08] max-w-md lg:max-w-[420px] xl:max-w-lg">
+            <h1 className="font-serif text-[34px] xs:text-[40px] sm:text-[44px] lg:text-[2.05rem] xl:text-[3.85rem] font-medium text-[#1B3B2B] tracking-tight leading-[1.15] sm:leading-[1.08] max-w-md lg:max-w-[320px] xl:max-w-lg">
               {headline || 'Personalized Acupuncture Care'}
             </h1>
 
             {/* Decorative Slogan Line */}
-            <div className="flex items-center gap-2 sm:gap-3 pt-0.5 sm:pt-1 flex-wrap">
-              <span className="w-5 sm:w-9 h-[1.5px] bg-[#C5A059] shrink-0" />
+            <div className="flex items-center gap-2 sm:gap-2.5 pt-0.5 sm:pt-1 flex-wrap">
               <svg
                 className="w-4 h-4 sm:w-6 sm:h-6 text-[#C5A059] shrink-0"
                 viewBox="0 0 24 24"
