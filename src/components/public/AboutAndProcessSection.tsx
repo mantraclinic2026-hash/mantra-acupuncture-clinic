@@ -78,9 +78,9 @@ export default function AboutAndProcessSection({
         bg-[#FAF2EB]
         border-b
         border-[#E6DFD3]
-        py-8
-        sm:py-12
-        lg:py-16
+        py-6
+        sm:py-10
+        lg:py-12
       "
     >
       {/* =====================================================
@@ -273,29 +273,30 @@ export default function AboutAndProcessSection({
               className="
                 w-full
                 max-w-full
-                sm:max-w-[420px]
+                sm:max-w-[370px]
+                lg:max-w-[350px]
+                xl:max-w-[380px]
                 bg-[#FAF7F2]
                 rounded-2xl
-                sm:rounded-[22px]
                 border
                 border-[#DED5C8]
-                px-5
-                py-5
-                sm:px-7
-                sm:py-7
-                shadow-[0_3px_14px_rgba(27,59,43,0.04)]
+                px-4
+                py-4
+                sm:px-5
+                sm:py-4.5
+                shadow-[0_2px_10px_rgba(27,59,43,0.04)]
               "
             >
               {/* Card Heading */}
               <h3
                 className="
-                  text-[11px]
-                  sm:text-xs
+                  text-[10px]
+                  sm:text-[11px]
                   font-bold
                   uppercase
-                  tracking-[0.15em]
+                  tracking-[0.14em]
                   text-[#1B3B2B]
-                  pb-4
+                  pb-2.5
                   border-b
                   border-[#DED5C8]
                 "
@@ -304,7 +305,7 @@ export default function AboutAndProcessSection({
               </h3>
 
               {/* Treatment Steps */}
-              <div className="mt-5">
+              <div className="mt-3 sm:mt-3.5">
                 {sortedSteps.map((step, index) => {
                   const isLast = index === sortedSteps.length - 1;
 
@@ -315,11 +316,10 @@ export default function AboutAndProcessSection({
                         relative
                         flex
                         items-start
-                        gap-3.5
-                        sm:gap-4
-                        pb-5
-                        sm:pb-6
-                        last:pb-1
+                        gap-3
+                        pb-3
+                        sm:pb-3.5
+                        last:pb-0
                       "
                     >
                       {/* Connecting Line */}
@@ -327,8 +327,8 @@ export default function AboutAndProcessSection({
                         <div
                           className="
                             absolute
-                            left-[15px]
-                            top-8
+                            left-[13px]
+                            top-7
                             bottom-0
                             w-[1.5px]
                             bg-[#C5A059]/40
@@ -342,29 +342,29 @@ export default function AboutAndProcessSection({
                           relative
                           z-10
                           shrink-0
-                          w-8
-                          h-8
+                          w-7
+                          h-7
                           rounded-full
                           bg-[#1B3B2B]
                           text-white
                           flex
                           items-center
                           justify-center
-                          text-xs
-                          font-semibold
+                          text-[11px]
+                          font-bold
                           shadow-2xs
                         "
                       >
                         {step.step_number || index + 1}
                       </div>
 
-                      {/* Step Content: Title & Description from admin */}
+                      {/* Step Content: Title & Description */}
                       <div className="flex-1 min-w-0 pt-0.5">
                         <h4
                           className="
                             font-serif
-                            text-[15px]
-                            sm:text-base
+                            text-[13px]
+                            sm:text-sm
                             font-bold
                             text-[#1B3B2B]
                             leading-tight
@@ -376,11 +376,11 @@ export default function AboutAndProcessSection({
                         {step.description && (
                           <p
                             className="
-                              mt-1
-                              text-xs
-                              sm:text-[13px]
+                              mt-0.5
+                              text-[11px]
+                              sm:text-xs
                               text-[#2C3531]
-                              leading-relaxed
+                              leading-snug
                             "
                           >
                             {step.description}
