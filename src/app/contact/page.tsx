@@ -45,7 +45,7 @@ export default async function ContactPage() {
             <h1 className="font-serif text-4xl sm:text-5xl font-bold text-[#1B3B2B]">
               Contact & Location Details
             </h1>
-            <p className="text-base sm:text-lg text-[#586962] leading-relaxed">
+            <p className="text-base sm:text-lg text-[#2C3531] leading-relaxed">
               We welcome your inquiries. Please contact us via phone, WhatsApp, or by submitting an online appointment request below.
             </p>
           </div>
@@ -68,7 +68,7 @@ export default async function ContactPage() {
                   </div>
                   <div>
                     <p className="font-bold text-[#1B3B2B]">Clinic Address</p>
-                    <p className="text-[#586962] text-xs sm:text-sm mt-0.5">{siteSettings.address}</p>
+                    <p className="text-[#2C3531] text-xs sm:text-sm mt-0.5">{siteSettings.address}</p>
                     {siteSettings.google_maps_url && (
                       <a
                         href={siteSettings.google_maps_url}
@@ -90,7 +90,7 @@ export default async function ContactPage() {
                   </div>
                   <div>
                     <p className="font-bold text-[#1B3B2B]">Phone</p>
-                    <a href={`tel:${cleanPhone}`} className="text-[#586962] hover:text-[#1B3B2B] font-medium text-sm">
+                    <a href={`tel:${cleanPhone}`} className="text-[#2C3531] hover:text-[#1B3B2B] font-medium text-sm">
                       {siteSettings.phone}
                     </a>
                   </div>
@@ -116,7 +116,7 @@ export default async function ContactPage() {
                   </div>
                   <div>
                     <p className="font-bold text-[#1B3B2B]">Working Hours</p>
-                    <p className="text-[#586962] text-xs sm:text-sm mt-0.5">{siteSettings.working_hours}</p>
+                    <p className="text-[#2C3531] text-xs sm:text-sm mt-0.5">{siteSettings.working_hours}</p>
                   </div>
                 </div>
 

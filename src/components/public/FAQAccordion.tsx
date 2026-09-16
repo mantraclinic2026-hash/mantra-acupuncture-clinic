@@ -36,7 +36,7 @@ export default function FAQAccordion({
           <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-[#1B3B2B] leading-tight">
             {title}
           </h2>
-          <p className="text-sm sm:text-base text-[#586962] leading-relaxed max-w-xl mx-auto">
+          <p className="text-sm sm:text-base text-[#2C3531] leading-relaxed max-w-xl mx-auto">
             {subtitle}
           </p>
         </div>
@@ -64,7 +64,7 @@ export default function FAQAccordion({
                 </button>
 
                 {isOpen && (
-                  <div className="px-5 sm:px-6 pb-6 pt-1 text-sm sm:text-base text-[#586962] leading-relaxed border-t border-[#E6DFD3]/60">
+                  <div className="px-5 sm:px-6 pb-6 pt-1 text-sm sm:text-base text-[#2C3531] leading-relaxed border-t border-[#E6DFD3]/60">
                     {faq.answer}
                   </div>
                 )}
