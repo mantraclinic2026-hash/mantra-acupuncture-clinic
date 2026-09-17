@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Plus, Edit2, Trash2, Save, X, ExternalLink, Loader2 } from 'lucide-react';
 import { GalleryItem } from '@/lib/types';
 import { upsertGalleryItemAction, deleteGalleryItemAction } from '@/lib/actions/admin';
@@ -11,13 +12,21 @@ interface GalleryManagerProps {
 }
 
 export default function GalleryManager({ initialItems }: GalleryManagerProps) {
+  const router = useRouter();
   const [editingItem, setEditingItem] = useState<Partial<GalleryItem> | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [publicId, setPublicId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
 
+  const MAX_IMAGES = 12;
+  const isLimitReached = initialItems.length >= MAX_IMAGES;
+
   const startNewItem = () => {
+    if (isLimitReached) {
+      alert('Gallery limit of 12 images reached. Please delete an existing image first before adding a new one.');
+      return;
+    }
     setEditingItem({
       title: '',
       category: 'Clinic Environment',
@@ -39,12 +48,17 @@ export default function GalleryManager({ initialItems }: GalleryManagerProps) {
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!editingItem?.id && isLimitReached) {
+      setSaveError('Cannot add more than 12 images. Please delete an older photo first.');
+      return;
+    }
     setIsSaving(true);
     setSaveError(null);
     try {
       const formData = new FormData(e.currentTarget);
       await upsertGalleryItemAction(formData);
       setEditingItem(null);
+      router.refresh();
     } catch (err: unknown) {
       setSaveError(err instanceof Error ? err.message : 'Failed to save gallery photo');
     } finally {
@@ -53,8 +67,9 @@ export default function GalleryManager({ initialItems }: GalleryManagerProps) {
   };
 
   const handleDelete = async (id: string) => {
-    if (confirm('Are you sure you want to delete this gallery image?')) {
+    if (confirm('Are you sure you want to delete this gallery image? This will also remove the image file from Cloudinary to free up storage.')) {
       await deleteGalleryItemAction(id);
+      router.refresh();
     }
   };
 
@@ -63,13 +78,25 @@ export default function GalleryManager({ initialItems }: GalleryManagerProps) {
       
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h2 className="font-serif text-xl font-bold text-[#1B3B2B]">
-            Gallery Items ({initialItems.length})
-          </h2>
-          <p className="text-xs text-[#586962]">
-            Photos of the clinic atmosphere, treatment rooms, and therapeutic setup.
+          <div className="flex items-center gap-2">
+            <h2 className="font-serif text-xl font-bold text-[#1B3B2B]">
+              Gallery Items ({initialItems.length}/{MAX_IMAGES})
+            </h2>
+            <span
+              className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full ${
+                isLimitReached
+                  ? 'bg-amber-100 text-amber-900 border border-amber-300'
+                  : 'bg-[#FAF2EB] text-[#586962] border border-[#E6DFD3]'
+              }`}
+            >
+              {isLimitReached ? '12/12 Slots Full' : `${MAX_IMAGES - initialItems.length} slots available`}
+            </span>
+          </div>
+          <p className="text-xs text-[#586962] mt-0.5">
+            Photos of clinic atmosphere and treatment rooms (capped at 12 images to optimize storage).
           </p>
         </div>
+
         <div className="flex items-center gap-3">
           <a
             href="/gallery"
@@ -82,13 +109,35 @@ export default function GalleryManager({ initialItems }: GalleryManagerProps) {
           </a>
           <button
             onClick={startNewItem}
-            className="px-4 py-2 rounded-full bg-[#1B3B2B] text-white text-xs font-medium hover:bg-[#12291E] flex items-center gap-1.5 shadow-sm"
+            disabled={isLimitReached}
+            className={`px-4 py-2 rounded-full text-xs font-medium flex items-center gap-1.5 shadow-sm transition-all ${
+              isLimitReached
+                ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                : 'bg-[#1B3B2B] text-white hover:bg-[#12291E]'
+            }`}
+            title={
+              isLimitReached
+                ? 'Gallery limit of 12 images reached. Delete an older photo to add a new one.'
+                : 'Add a new photo'
+            }
           >
             <Plus className="w-4 h-4" />
-            <span>Add Gallery Photo</span>
+            <span>{isLimitReached ? 'Limit Reached (12/12)' : 'Add Gallery Photo'}</span>
           </button>
         </div>
       </div>
+
+      {/* Storage Alert Banner when 12 images reached */}
+      {isLimitReached && (
+        <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs leading-relaxed">
+          <div>
+            <span className="font-bold block text-sm mb-0.5">⚠️ Gallery Limit Reached (12 of 12 Images)</span>
+            <span>
+              To prevent Cloudinary and Supabase storage overflow, a maximum of 12 photos is allowed. To upload a 13th photo, please delete any older photo below.
+            </span>
+          </div>
+        </div>
+      )}
 
       {initialItems.length === 0 ? (
         <div className="p-8 text-center bg-[#EEE4D8] rounded-3xl border border-[#E6DFD3] text-sm text-[#586962]">
@@ -96,7 +145,7 @@ export default function GalleryManager({ initialItems }: GalleryManagerProps) {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {initialItems.map((item) => (
+          {initialItems.map((item, idx) => (
             <div
               key={item.id}
               className="bg-[#EEE4D8] rounded-2xl border border-[#E6DFD3] overflow-hidden flex flex-col justify-between shadow-sm"
@@ -116,11 +165,16 @@ export default function GalleryManager({ initialItems }: GalleryManagerProps) {
                   <span className="text-[10px] uppercase font-bold text-[#C5A059] bg-[#FAF2EB] px-2 py-0.5 rounded border border-[#E6DFD3]">
                     {item.category || 'Clinic'}
                   </span>
-                  {!item.is_published && (
-                    <span className="text-[10px] bg-gray-200 text-gray-700 px-2 py-0.5 rounded font-bold">
-                      Hidden
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[10px] font-mono text-[#586962] bg-[#FAF2EB] px-1.5 py-0.5 rounded border border-[#E6DFD3]">
+                      Slot {idx + 1}/{MAX_IMAGES}
                     </span>
-                  )}
+                    {!item.is_published && (
+                      <span className="text-[10px] bg-gray-200 text-gray-700 px-2 py-0.5 rounded font-bold">
+                        Hidden
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <h3 className="font-bold text-[#1B3B2B] text-sm">{item.title}</h3>
                 {item.image_alt && <p className="text-xs text-[#586962] italic">Alt: {item.image_alt}</p>}
@@ -131,13 +185,15 @@ export default function GalleryManager({ initialItems }: GalleryManagerProps) {
                   onClick={() => startEditItem(item)}
                   className="p-2 rounded-xl bg-[#EEE4D8] border border-[#E6DFD3] text-[#1B3B2B] hover:text-[#C5A059]"
                   aria-label="Edit Gallery Item"
+                  title="Edit details"
                 >
                   <Edit2 className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => handleDelete(item.id)}
-                  className="p-2 rounded-xl bg-[#EEE4D8] border border-[#E6DFD3] text-red-600 hover:bg-red-50"
+                  className="p-2 rounded-xl bg-[#EEE4D8] border border-[#E6DFD3] text-red-600 hover:bg-red-50 hover:border-red-200"
                   aria-label="Delete Gallery Item"
+                  title="Delete image (frees 1 slot & cleans Cloudinary storage)"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>

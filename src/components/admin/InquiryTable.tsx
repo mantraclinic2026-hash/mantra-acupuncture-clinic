@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState, useTransition } from 'react';
-import { Phone, Mail, Calendar, Save, Loader2, Check } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Phone, Mail, Calendar, Save, Loader2, Check, Trash2, AlertTriangle } from 'lucide-react';
 import { ConsultationInquiry, InquiryStatus } from '@/lib/types';
-import { updateInquiryStatusAction } from '@/lib/actions/admin';
+import { updateInquiryStatusAction, deleteInquiryAction } from '@/lib/actions/admin';
 
 interface InquiryTableProps {
   inquiries: ConsultationInquiry[];
@@ -12,12 +13,16 @@ interface InquiryTableProps {
 const STATUSES: InquiryStatus[] = ['new', 'contacted', 'scheduled', 'completed', 'cancelled', 'archived'];
 
 export default function InquiryTable({ inquiries }: InquiryTableProps) {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<string>('all');
   const [selectedInquiry, setSelectedInquiry] = useState<ConsultationInquiry | null>(null);
   const [adminNotes, setAdminNotes] = useState<string>('');
   const [selectedStatus, setSelectedStatus] = useState<InquiryStatus>('new');
   const [isPending, startTransition] = useTransition();
   const [savedSuccess, setSavedSuccess] = useState(false);
+  const [inquiryToDelete, setInquiryToDelete] = useState<ConsultationInquiry | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const filteredInquiries = inquiries.filter((inq) => {
     if (activeTab === 'all') return true;
@@ -37,10 +42,29 @@ export default function InquiryTable({ inquiries }: InquiryTableProps) {
     startTransition(async () => {
       await updateInquiryStatusAction(selectedInquiry.id, selectedStatus, adminNotes);
       setSavedSuccess(true);
+      router.refresh();
       setTimeout(() => {
         setSavedSuccess(false);
       }, 2000);
     });
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!inquiryToDelete) return;
+    setIsDeleting(true);
+    setDeleteError(null);
+    try {
+      await deleteInquiryAction(inquiryToDelete.id);
+      if (selectedInquiry?.id === inquiryToDelete.id) {
+        setSelectedInquiry(null);
+      }
+      setInquiryToDelete(null);
+      router.refresh();
+    } catch (err: unknown) {
+      setDeleteError(err instanceof Error ? err.message : 'Failed to delete inquiry');
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   return (
@@ -124,12 +148,22 @@ export default function InquiryTable({ inquiries }: InquiryTableProps) {
                       </span>
                     </td>
                     <td className="p-4 text-right">
-                      <button
-                        onClick={() => openManageModal(inq)}
-                        className="px-3.5 py-1.5 rounded-xl bg-[#1B3B2B] text-white text-xs font-medium hover:bg-[#12291E]"
-                      >
-                        Manage
-                      </button>
+                      <div className="flex items-center justify-end gap-2">
+                        <button
+                          onClick={() => openManageModal(inq)}
+                          className="px-3.5 py-1.5 rounded-xl bg-[#1B3B2B] text-white text-xs font-medium hover:bg-[#12291E] transition-colors"
+                        >
+                          Manage
+                        </button>
+                        <button
+                          onClick={() => setInquiryToDelete(inq)}
+                          title="Delete Inquiry"
+                          className="p-1.5 rounded-xl bg-[#EEE4D8] border border-[#E6DFD3] text-red-600 hover:bg-red-50 hover:border-red-200 transition-colors"
+                          aria-label={`Delete inquiry from ${inq.full_name}`}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -222,34 +256,102 @@ export default function InquiryTable({ inquiries }: InquiryTableProps) {
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-2">
-                {savedSuccess && (
-                  <span className="text-xs text-[#25D366] font-bold flex items-center gap-1">
-                    <Check className="w-4 h-4" />
-                    <span>Saved!</span>
-                  </span>
-                )}
-
+              <div className="flex items-center justify-between gap-3 pt-2">
                 <button
-                  onClick={handleUpdateStatus}
-                  disabled={isPending}
-                  className="px-5 py-2.5 rounded-full bg-[#1B3B2B] text-white text-xs font-medium hover:bg-[#12291E] flex items-center gap-2 disabled:opacity-60"
+                  type="button"
+                  onClick={() => setInquiryToDelete(selectedInquiry)}
+                  className="px-3 py-2 rounded-xl text-xs font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors flex items-center gap-1.5"
                 >
-                  {isPending ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>Updating...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Save className="w-4 h-4" />
-                      <span>Save Status & Notes</span>
-                    </>
-                  )}
+                  <Trash2 className="w-4 h-4" />
+                  <span>Delete Inquiry</span>
                 </button>
+
+                <div className="flex items-center gap-3">
+                  {savedSuccess && (
+                    <span className="text-xs text-[#25D366] font-bold flex items-center gap-1">
+                      <Check className="w-4 h-4" />
+                      <span>Saved!</span>
+                    </span>
+                  )}
+
+                  <button
+                    onClick={handleUpdateStatus}
+                    disabled={isPending}
+                    className="px-5 py-2.5 rounded-full bg-[#1B3B2B] text-white text-xs font-medium hover:bg-[#12291E] flex items-center gap-2 disabled:opacity-60"
+                  >
+                    {isPending ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <span>Updating...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Save className="w-4 h-4" />
+                        <span>Save Status & Notes</span>
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
 
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {inquiryToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#12291E]/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-[#FAF2EB] rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-[#E6DFD3] space-y-5">
+            <div className="w-12 h-12 rounded-full bg-red-100 border border-red-200 text-red-600 flex items-center justify-center mx-auto">
+              <AlertTriangle className="w-6 h-6" />
+            </div>
+
+            <div className="text-center space-y-2">
+              <h3 className="font-serif text-xl font-bold text-[#1B3B2B]">
+                Delete Patient Inquiry?
+              </h3>
+              <p className="text-xs sm:text-sm text-[#586962] leading-relaxed">
+                Are you sure you want to permanently delete the inquiry from{' '}
+                <span className="font-bold text-[#1B3B2B]">{inquiryToDelete.full_name}</span>
+                {inquiryToDelete.phone ? ` (${inquiryToDelete.phone})` : ''}? This action cannot be reversed.
+              </p>
+            </div>
+
+            {deleteError && (
+              <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-medium">
+                {deleteError}
+              </div>
+            )}
+
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setInquiryToDelete(null)}
+                disabled={isDeleting}
+                className="px-4 py-2.5 rounded-full border border-[#E6DFD3] text-xs font-semibold text-[#586962] hover:bg-[#EEE4D8] transition-colors disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmDelete}
+                disabled={isDeleting}
+                className="px-5 py-2.5 rounded-full bg-red-600 hover:bg-red-700 text-white text-xs font-semibold shadow-sm transition-colors flex items-center gap-1.5 disabled:opacity-50"
+              >
+                {isDeleting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Deleting...</span>
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="w-4 h-4" />
+                    <span>Yes, Delete</span>
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       )}

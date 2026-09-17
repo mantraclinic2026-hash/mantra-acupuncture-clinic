@@ -1,4 +1,4 @@
-import { createPublicSupabaseClient } from '@/lib/supabase/server';
+import { createPublicSupabaseClient, createPublicServiceClient } from '@/lib/supabase/server';
 import { unstable_cache } from 'next/cache';
 import {
   SiteSettings,
@@ -203,6 +203,49 @@ export const DEFAULT_PRACTITIONER: Practitioner = {
   display_order: 1,
   is_active: true,
 };
+
+export const DEFAULT_GALLERY: GalleryItem[] = [
+  {
+    id: 'default-gal-1',
+    title: 'Serene Treatment Sanctuary',
+    category: 'Treatment Rooms',
+    image_url: '/images/botanical-flowers.png',
+    image_public_id: null,
+    image_alt: 'Clean, peaceful acupuncture therapy room with soft ambient light',
+    display_order: 1,
+    is_published: true,
+  },
+  {
+    id: 'default-gal-2',
+    title: 'Sterile Therapeutic Care',
+    category: 'Clinical Care',
+    image_url: '/images/acupuncture.png',
+    image_public_id: null,
+    image_alt: 'Single-use sterile acupuncture needles and clinical supplies',
+    display_order: 2,
+    is_published: true,
+  },
+  {
+    id: 'default-gal-3',
+    title: 'Private Consultation Space',
+    category: 'Clinic Environment',
+    image_url: '/images/botanical-flowers1.png',
+    image_public_id: null,
+    image_alt: 'Quiet consultation corner for private patient evaluations',
+    display_order: 3,
+    is_published: true,
+  },
+  {
+    id: 'default-gal-4',
+    title: 'Holistic Healing Atmosphere',
+    category: 'Therapeutic Setup',
+    image_url: '/images/botanical-flower.png',
+    image_public_id: null,
+    image_alt: 'Relaxing clinic ambiance designed for stress reduction and recovery',
+    display_order: 4,
+    is_published: true,
+  },
+];
 
 // CACHED READ QUERIES WITH EXPLICIT SELECT COLUMNS
 
@@ -465,17 +508,19 @@ export const getPublishedFAQs = unstable_cache(
 export const getPublishedGallery = unstable_cache(
   async (): Promise<GalleryItem[]> => {
     try {
-      const supabase = createPublicSupabaseClient();
+      const supabase = createPublicServiceClient();
       const { data, error } = await supabase
         .from('gallery_items')
         .select('id, title, category, image_url, image_public_id, image_alt, display_order, is_published')
-        .eq('is_published', true)
+        .or('is_published.eq.true,is_published.is.null')
         .order('display_order', { ascending: true });
 
-      if (error || !data) return [];
+      if (error || !data || data.length === 0) {
+        return DEFAULT_GALLERY;
+      }
       return data as GalleryItem[];
     } catch {
-      return [];
+      return DEFAULT_GALLERY;
     }
   },
   ['published-gallery-cache'],
