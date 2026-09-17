@@ -1,6 +1,4 @@
 import React from 'react';
-import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
 import Header from '@/components/public/Header';
 import Footer from '@/components/public/Footer';
 import HeroSection from '@/components/public/HeroSection';
@@ -8,7 +6,6 @@ import ServicesGrid from '@/components/public/ServicesGrid';
 import ConditionsGrid from '@/components/public/ConditionsGrid';
 import AboutAndProcessSection from '@/components/public/AboutAndProcessSection';
 import PractitionerAndBookingSection from '@/components/public/PractitionerAndBookingSection';
-import GalleryShowcase from '@/components/public/GalleryShowcase';
 import PreFooterCTA from '@/components/public/PreFooterCTA';
 import FAQAccordion from '@/components/public/FAQAccordion';
 import MobileStickyActions from '@/components/public/MobileStickyActions';
@@ -23,7 +20,6 @@ import {
   getPractitioner,
   getTreatmentProcess,
   getPublishedFAQs,
-  getPublishedGallery,
 } from '@/lib/queries/site';
 import { generateSiteMetadata, buildClinicJsonLd } from '@/lib/seo/metadata';
 
@@ -45,7 +41,6 @@ export default async function HomePage() {
     practitioner,
     treatmentSteps,
     faqs,
-    galleryItems,
   ] = await Promise.all([
     getSiteSettings(),
     getHeroSection(),
@@ -55,7 +50,6 @@ export default async function HomePage() {
     getPractitioner(),
     getTreatmentProcess(),
     getPublishedFAQs(),
-    getPublishedGallery(),
   ]);
 
   const clinicJsonLd = buildClinicJsonLd(siteSettings);
@@ -107,30 +101,6 @@ export default async function HomePage() {
 
         {/* PRACTITIONER PROFILE + CONSULTATION BOOKING */}
         <PractitionerAndBookingSection practitioner={practitioner} siteSettings={siteSettings} />
-
-        {/* CLINIC ENVIRONMENT & GALLERY SHOWCASE */}
-        <section className="py-12 lg:py-16 bg-[#FAF2EB] border-t border-[#E6DFD3]">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-            <GalleryShowcase
-              items={galleryItems}
-              title="Our Healing Sanctuary"
-              subtitle="Step into Mantra Acupuncture Clinic in Changanacherry. We maintain a tranquil, hygienic, and restorative setting designed for peaceful therapeutic care."
-              badgeText="Clinic Atmosphere"
-              showViewToggle={false}
-              showGridBelow={false}
-              initialMode="slider"
-            />
-            <div className="text-center pt-2">
-              <Link
-                href="/gallery"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#1B3B2B] text-white text-xs sm:text-sm font-semibold hover:bg-[#12291E] shadow-sm transition-colors"
-              >
-                <span>View All Clinic Photos</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-          </div>
-        </section>
 
         {/* FAQ ACCORDION */}
         <FAQAccordion faqs={faqs} />
