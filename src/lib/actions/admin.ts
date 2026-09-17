@@ -1,9 +1,10 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, updateTag } from 'next/cache';
 import { requireAdmin } from '@/lib/supabase/admin-auth';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { InquiryStatus } from '@/lib/types';
+import { deleteCloudinaryImage } from '@/lib/cloudinary/client';
 
 function isValidUUID(val?: string | null): val is string {
   if (!val || val === 'default') return false;
@@ -418,6 +419,21 @@ export async function updateInquiryStatusAction(id: string, status: InquiryStatu
 
   if (error) throw new Error(`Failed to update inquiry status: ${error.message}`);
   revalidatePath('/admin/inquiries');
+  revalidatePath('/admin');
+}
+
+// DELETE INQUIRY
+export async function deleteInquiryAction(id: string): Promise<void> {
+  await requireAdmin();
+  const supabase = await createServerSupabaseClient();
+  const { error } = await supabase
+    .from('consultation_inquiries')
+    .delete()
+    .eq('id', id);
+
+  if (error) throw new Error(`Failed to delete inquiry: ${error.message}`);
+  revalidatePath('/admin/inquiries');
+  revalidatePath('/admin');
 }
 
 // 6. UPSERT FAQ
@@ -529,6 +545,23 @@ export async function upsertGalleryItemAction(formData: FormData): Promise<void>
     throw new Error('Image URL is required for gallery items');
   }
 
+  // Enforce 12 gallery images limit to conserve storage (Cloudinary & Supabase)
+  if (!id) {
+    const { count, error: countError } = await supabase
+      .from('gallery_items')
+      .select('*', { count: 'exact', head: true });
+
+    if (countError) {
+      throw new Error(`Failed to check gallery item limit: ${countError.message}`);
+    }
+
+    if ((count ?? 0) >= 12) {
+      throw new Error(
+        'Maximum limit of 12 gallery images reached. To add a new image, please delete an older image first.'
+      );
+    }
+  }
+
   let error;
   if (id) {
     ({ error } = await supabase.from('gallery_items').update(payload).eq('id', id));
@@ -539,16 +572,38 @@ export async function upsertGalleryItemAction(formData: FormData): Promise<void>
   if (error) throw new Error(`Failed to save gallery item: ${error.message}`);
   revalidatePath('/');
   revalidatePath('/about');
+  revalidatePath('/gallery');
+  revalidatePath('/admin/gallery');
+  updateTag('gallery');
 }
 
 // DELETE GALLERY ITEM
 export async function deleteGalleryItemAction(id: string): Promise<void> {
   await requireAdmin();
   const supabase = await createServerSupabaseClient();
-  const { error } = await supabase.from('gallery_items').delete().eq('id', id);
+
+  // Fetch the item to delete its image from Cloudinary to free storage
+  const { data: item } = await supabase
+    .from('gallery_items')
+    .select('image_public_id')
+    .eq('id', id)
+    .maybeSingle();
+
+  if (item?.image_public_id) {
+    await deleteCloudinaryImage(item.image_public_id);
+  }
+
+  const { error } = await supabase
+    .from('gallery_items')
+    .delete()
+    .eq('id', id);
+
   if (error) throw new Error(`Failed to delete gallery item: ${error.message}`);
   revalidatePath('/');
   revalidatePath('/about');
+  revalidatePath('/gallery');
+  revalidatePath('/admin/gallery');
+  updateTag('gallery');
 }
 
 

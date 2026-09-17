@@ -38,3 +38,17 @@ export function generateCloudinarySignature(folder: string = 'mantra_acupuncture
     folder,
   };
 }
+
+/**
+ * Server-only helper to delete an image asset from Cloudinary by public ID
+ */
+export async function deleteCloudinaryImage(publicId: string): Promise<boolean> {
+  try {
+    if (!publicId) return false;
+    const result = await cloudinary.uploader.destroy(publicId);
+    return result?.result === 'ok';
+  } catch (err) {
+    console.error('Failed to delete image from Cloudinary:', err);
+    return false;
+  }
+}
