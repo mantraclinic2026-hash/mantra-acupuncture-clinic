@@ -198,7 +198,7 @@ export const DEFAULT_PRACTITIONER: Practitioner = {
     'Master Degree in Acupuncture',
   ],
   bio: 'A patient-focused approach centered on understanding the individual, creating personalized treatment recommendations, and supporting overall well-being in a calm and comfortable environment.',
-  profile_image_url: null,
+  profile_image_url: '/images/dr-nikku-thomas.jpg',
   profile_image_alt: 'Dr. Nikku Thomas',
   display_order: 1,
   is_active: true,
@@ -413,37 +413,45 @@ export const getConditionBySlug = unstable_cache(
   { tags: ['conditions', 'global'] }
 );
 
-export const getPractitioner = unstable_cache(
-  async (): Promise<Practitioner> => {
+export const getPractitioners = unstable_cache(
+  async (): Promise<Practitioner[]> => {
     try {
       const supabase = createPublicSupabaseClient();
-      let { data, error } = await supabase
+      const { data, error } = await supabase
         .from('practitioners')
         .select('*')
         .eq('is_active', true)
         .order('display_order', { ascending: true })
-        .limit(1)
-        .maybeSingle();
+        .order('created_at', { ascending: true });
 
-      if (!data) {
-        const fallbackRes = await supabase
-          .from('practitioners')
-          .select('*')
-          .limit(1)
-          .maybeSingle();
-        if (fallbackRes.data) {
-          data = fallbackRes.data;
-        }
+      if (error || !data || data.length === 0) {
+        return [DEFAULT_PRACTITIONER];
       }
+      return data.map((item) => ({
+        ...DEFAULT_PRACTITIONER,
+        ...item,
+        profile_image_url: item.profile_image_url || (item.full_name?.toLowerCase().includes('nikku') ? DEFAULT_PRACTITIONER.profile_image_url : null),
+        is_active: item.is_active !== false,
+      })) as Practitioner[];
+    } catch {
+      return [DEFAULT_PRACTITIONER];
+    }
+  },
+  ['practitioners-all-cache'],
+  { tags: ['practitioners', 'practitioner', 'global'] }
+);
 
-      if (error || !data) return DEFAULT_PRACTITIONER;
-      return { ...DEFAULT_PRACTITIONER, ...data, is_active: true } as Practitioner;
+export const getPractitioner = unstable_cache(
+  async (): Promise<Practitioner> => {
+    try {
+      const practitioners = await getPractitioners();
+      return practitioners[0] || DEFAULT_PRACTITIONER;
     } catch {
       return DEFAULT_PRACTITIONER;
     }
   },
   ['practitioner-cache'],
-  { tags: ['practitioner', 'global'] }
+  { tags: ['practitioner', 'practitioners', 'global'] }
 );
 
 export const getTreatmentProcess = unstable_cache(

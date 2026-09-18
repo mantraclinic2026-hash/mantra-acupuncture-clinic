@@ -297,8 +297,13 @@ export default function ImageUploader({
             <input
               type="text"
               value={urlInput}
-              onChange={(e) => setUrlInput(e.target.value)}
-              placeholder="e.g. /images/acupuncture.png or https://..."
+              onChange={(e) => {
+                const val = e.target.value;
+                setUrlInput(val);
+                setPreview(val.trim() || null);
+                onUploadSuccess(val.trim());
+              }}
+              placeholder="e.g. /images/dr-nikku-thomas.jpg or https://..."
               className="flex-1 px-3 py-1.5 rounded-lg bg-[#EEE4D8] border border-[#E6DFD3] text-xs text-[#1B3B2B] font-mono"
             />
             <button

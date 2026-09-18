@@ -17,7 +17,7 @@ import {
   getAboutContent,
   getPublishedServices,
   getPublishedConditions,
-  getPractitioner,
+  getPractitioners,
   getTreatmentProcess,
   getPublishedFAQs,
 } from '@/lib/queries/site';
@@ -26,8 +26,9 @@ import { generateSiteMetadata, buildClinicJsonLd } from '@/lib/seo/metadata';
 export async function generateMetadata() {
   return generateSiteMetadata({
     route: '/',
-    fallbackTitle: 'Mantra Acupuncture Clinic | Heal • Balance • Thrive | Changanacherry',
-    fallbackDescription: 'Personalized, patient-focused acupuncture care in Changanacherry by Dr. Nikku Thomas. Supportive care for back pain, neck strain, sciatica, migraine, and stress.',
+    fallbackTitle: 'Mantra Acupuncture Clinic | Holistic Healing in Changanacherry',
+    fallbackDescription:
+      'Experience personalized, responsible acupuncture and naturopathy care for pain management, wellness, and vitality in Changanacherry, Kerala.',
   });
 }
 
@@ -38,7 +39,7 @@ export default async function HomePage() {
     about,
     services,
     conditions,
-    practitioner,
+    practitioners,
     treatmentSteps,
     faqs,
   ] = await Promise.all([
@@ -47,7 +48,7 @@ export default async function HomePage() {
     getAboutContent(),
     getPublishedServices(),
     getPublishedConditions(),
-    getPractitioner(),
+    getPractitioners(),
     getTreatmentProcess(),
     getPublishedFAQs(),
   ]);
@@ -100,7 +101,7 @@ export default async function HomePage() {
         <ConditionsGrid conditions={conditions} siteSettings={siteSettings} />
 
         {/* PRACTITIONER PROFILE + CONSULTATION BOOKING */}
-        <PractitionerAndBookingSection practitioner={practitioner} siteSettings={siteSettings} />
+        <PractitionerAndBookingSection practitioners={practitioners} siteSettings={siteSettings} />
 
         {/* FAQ ACCORDION */}
         <FAQAccordion faqs={faqs} />

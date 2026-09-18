@@ -3,7 +3,8 @@ import Header from '@/components/public/Header';
 import Footer from '@/components/public/Footer';
 import ConsultationForm from '@/components/public/ConsultationForm';
 import MobileStickyActions from '@/components/public/MobileStickyActions';
-import { getSiteSettings, getAboutContent, getPractitioner } from '@/lib/queries/site';
+import { User } from 'lucide-react';
+import { getSiteSettings, getAboutContent, getPractitioners } from '@/lib/queries/site';
 import { generateSiteMetadata } from '@/lib/seo/metadata';
 
 export async function generateMetadata() {
@@ -15,10 +16,10 @@ export async function generateMetadata() {
 }
 
 export default async function AboutPage() {
-  const [siteSettings, about, practitioner] = await Promise.all([
+  const [siteSettings, about, practitioners] = await Promise.all([
     getSiteSettings(),
     getAboutContent(),
-    getPractitioner(),
+    getPractitioners(),
   ]);
 
   return (
@@ -74,17 +75,73 @@ export default async function AboutPage() {
             ))}
           </div>
 
-          {/* Lead Practitioner Callout */}
-          <div className="bg-[#1B3B2B] text-white rounded-3xl p-8 sm:p-12 max-w-4xl mx-auto space-y-4 text-center">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#C5A059]">
-              Lead Practitioner
-            </span>
-            <h2 className="font-serif text-3xl font-bold">{practitioner.full_name}</h2>
-            <p className="text-sm text-[#C5A059] font-medium">{practitioner.title}</p>
-            <p className="text-sm sm:text-base text-[#EBF2EE]/90 max-w-2xl mx-auto leading-relaxed">
-              {practitioner.bio}
-            </p>
-          </div>
+          {/* Practitioners Display: Card-wise next to each other */}
+          {practitioners.length > 1 ? (
+            <div className="space-y-6 max-w-5xl mx-auto">
+              <div className="text-center space-y-1">
+                <span className="text-xs font-bold uppercase tracking-widest text-[#C5A059]">
+                  Our Practitioners
+                </span>
+                <h2 className="font-serif text-3xl font-bold text-[#1B3B2B]">
+                  Dedicated Clinical Specialists
+                </h2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+                {practitioners.map((p, idx) => (
+                  <div
+                    key={p.id || idx}
+                    className="bg-[#1B3B2B] text-white rounded-3xl p-8 space-y-5 text-center border border-[#C5A059]/30 flex flex-col justify-between shadow-xl"
+                  >
+                    <div className="space-y-3">
+                      <div className="w-24 h-24 rounded-full ring-3 ring-[#C5A059]/60 overflow-hidden mx-auto bg-[#12291E] shadow-md flex items-center justify-center">
+                        {p.profile_image_url ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={p.profile_image_url}
+                            alt={p.full_name}
+                            className="w-full h-full object-cover object-top"
+                          />
+                        ) : (
+                          <User className="w-10 h-10 text-[#C5A059]" />
+                        )}
+                      </div>
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-[#C5A059] block">
+                        {idx === 0 ? 'Lead Practitioner' : 'Associate Practitioner'}
+                      </span>
+                      <h3 className="font-serif text-2xl font-bold">{p.full_name}</h3>
+                      <p className="text-xs text-[#C5A059] font-medium">{p.title}</p>
+                      <p className="text-xs sm:text-sm text-[#EBF2EE]/90 leading-relaxed pt-1">
+                        {p.bio}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="bg-[#1B3B2B] text-white rounded-3xl p-8 sm:p-12 max-w-4xl mx-auto space-y-5 text-center">
+              <div className="w-28 h-28 rounded-full ring-4 ring-[#C5A059]/60 overflow-hidden mx-auto bg-[#12291E] shadow-md flex items-center justify-center">
+                {practitioners[0]?.profile_image_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={practitioners[0].profile_image_url}
+                    alt={practitioners[0]?.full_name || 'Dr. Nikku Thomas'}
+                    className="w-full h-full object-cover object-top"
+                  />
+                ) : (
+                  <User className="w-12 h-12 text-[#C5A059]" />
+                )}
+              </div>
+              <span className="text-xs font-bold uppercase tracking-widest text-[#C5A059] block">
+                Lead Practitioner
+              </span>
+              <h2 className="font-serif text-3xl font-bold">{practitioners[0]?.full_name}</h2>
+              <p className="text-sm text-[#C5A059] font-medium">{practitioners[0]?.title}</p>
+              <p className="text-sm sm:text-base text-[#EBF2EE]/90 max-w-2xl mx-auto leading-relaxed">
+                {practitioners[0]?.bio}
+              </p>
+            </div>
+          )}
 
           {/* Booking Form */}
           <ConsultationForm />
