@@ -37,7 +37,7 @@ export default function AdminSidebar() {
     { label: 'About & Process', href: '/admin/about', icon: BookOpen },
     { label: 'Services CMS', href: '/admin/services', icon: Activity },
     { label: 'Conditions CMS', href: '/admin/conditions', icon: Stethoscope },
-    { label: 'Practitioner', href: '/admin/practitioner', icon: UserCheck },
+    { label: 'Practitioners', href: '/admin/practitioner', icon: UserCheck },
     { label: 'FAQs CMS', href: '/admin/faqs', icon: HelpCircle },
     { label: 'Gallery CMS', href: '/admin/gallery', icon: ImageIcon },
   ];

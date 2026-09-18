@@ -3,7 +3,7 @@
 import { revalidatePath, updateTag } from 'next/cache';
 import { requireAdmin } from '@/lib/supabase/admin-auth';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
-import { InquiryStatus } from '@/lib/types';
+import { InquiryStatus, Practitioner } from '@/lib/types';
 import { deleteCloudinaryImage } from '@/lib/cloudinary/client';
 
 function isValidUUID(val?: string | null): val is string {
@@ -475,53 +475,79 @@ export async function deleteFAQAction(id: string): Promise<void> {
   revalidatePath('/faq');
 }
 
-// 7. UPSERT PRACTITIONER
-export async function updatePractitionerAction(formData: FormData): Promise<void> {
+// 7. UPSERT & DELETE PRACTITIONER
+export async function updatePractitionerAction(formData: FormData): Promise<{ success: boolean; practitioner: Practitioner }> {
   await requireAdmin();
   const supabase = await createServerSupabaseClient();
 
   const rawId = formData.get('id')?.toString();
-  let targetId = isValidUUID(rawId) ? rawId : null;
+  const targetId = isValidUUID(rawId) ? rawId : null;
   const qualifications = formData.get('qualifications')?.toString()
     ? JSON.parse(formData.get('qualifications')!.toString())
     : [];
+
+  const rawUrl = formData.get('profile_image_url')?.toString()?.trim() || null;
 
   const payload = {
     full_name: formData.get('full_name')?.toString() || 'Dr. Nikku Thomas',
     title: formData.get('title')?.toString() || 'Lead Naturopathy & Acupuncture Specialist',
     qualifications,
     bio: formData.get('bio')?.toString() || '',
-    profile_image_url: formData.get('profile_image_url')?.toString() || null,
-    profile_image_alt: formData.get('profile_image_alt')?.toString() || null,
+    profile_image_url: rawUrl,
+    profile_image_alt: formData.get('profile_image_alt')?.toString() || formData.get('full_name')?.toString() || null,
+    display_order: parseInt(formData.get('display_order')?.toString() || '0', 10) || 0,
     is_active: formData.get('is_active') === 'false' ? false : true,
   };
 
   let error;
-
-  if (!targetId) {
-    const { data: existing } = await supabase
-      .from('practitioners')
-      .select('id')
-      .limit(1)
-      .maybeSingle();
-    if (existing?.id) {
-      targetId = existing.id;
-    }
-  }
+  let savedData: any = null;
 
   if (targetId) {
-    ({ error } = await supabase.from('practitioners').update(payload).eq('id', targetId));
+    const res = await supabase.from('practitioners').update(payload).eq('id', targetId).select('*').single();
+    error = res.error;
+    savedData = res.data;
   } else {
-    ({ error } = await supabase.from('practitioners').insert(payload));
+    const res = await supabase.from('practitioners').insert(payload).select('*').single();
+    error = res.error;
+    savedData = res.data;
   }
 
-  if (error) throw new Error(`Failed to update practitioner: ${error.message}`);
+  if (error) throw new Error(`Failed to save practitioner: ${error.message}`);
 
+  try {
+    updateTag('practitioners');
+    updateTag('practitioner');
+    updateTag('global');
+  } catch {}
 
-  revalidatePath('/');
-  revalidatePath('/doctor');
-  revalidatePath('/about');
-  revalidatePath('/admin/practitioner');
+  revalidatePath('/', 'layout');
+  revalidatePath('/doctor', 'page');
+  revalidatePath('/about', 'page');
+  revalidatePath('/admin/practitioner', 'page');
+
+  return { success: true, practitioner: savedData as Practitioner };
+}
+
+export async function deletePractitionerAction(id: string): Promise<void> {
+  await requireAdmin();
+  const supabase = await createServerSupabaseClient();
+  const targetId = isValidUUID(id) ? id : null;
+
+  if (targetId) {
+    const { error } = await supabase.from('practitioners').delete().eq('id', targetId);
+    if (error) throw new Error(`Failed to delete practitioner: ${error.message}`);
+  }
+
+  try {
+    updateTag('practitioners');
+    updateTag('practitioner');
+    updateTag('global');
+  } catch {}
+
+  revalidatePath('/', 'layout');
+  revalidatePath('/doctor', 'page');
+  revalidatePath('/about', 'page');
+  revalidatePath('/admin/practitioner', 'page');
 }
 
 // 8. UPSERT GALLERY ITEM

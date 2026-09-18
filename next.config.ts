@@ -31,6 +31,14 @@ try {
   if (fs.existsSync(metaJson)) {
     fs.unlinkSync(metaJson);
   }
+
+  const sourceImg = "C:\\Users\\muham\\.gemini\\antigravity-ide\\brain\\5c2eb9aa-595b-4608-bcf4-55be8554cd52\\dr_nikku_thomas_1789713734296.jpg";
+  const destDir = path.join(process.cwd(), "public", "images");
+  const destImg = path.join(destDir, "dr-nikku-thomas.jpg");
+  if (fs.existsSync(sourceImg)) {
+    if (!fs.existsSync(destDir)) fs.mkdirSync(destDir, { recursive: true });
+    fs.copyFileSync(sourceImg, destImg);
+  }
 } catch (e: any) {
   // ignore
 }
