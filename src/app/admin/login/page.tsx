@@ -75,7 +75,7 @@ export default function AdminLoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@mantraacupuncture.com"
+                placeholder="admin@mantraacupunctureclinic.com"
                 className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#EEE4D8] border border-[#E6DFD3] text-sm text-[#2C3531] focus:outline-none focus:ring-2 focus:ring-[#C5A059]"
               />
             </div>

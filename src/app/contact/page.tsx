@@ -5,8 +5,9 @@ import Footer from '@/components/public/Footer';
 import ConsultationForm from '@/components/public/ConsultationForm';
 import { buildWhatsAppUrl } from '@/lib/whatsapp';
 import MobileStickyActions from '@/components/public/MobileStickyActions';
+import JsonLd from '@/components/public/JsonLd';
 import { getSiteSettings } from '@/lib/queries/site';
-import { generateSiteMetadata } from '@/lib/seo/metadata';
+import { generateSiteMetadata, buildBreadcrumbJsonLd } from '@/lib/seo/metadata';
 
 export async function generateMetadata() {
   return generateSiteMetadata({
@@ -21,8 +22,14 @@ export default async function ContactPage() {
   const cleanPhone = siteSettings.phone.replace(/[^0-9+]/g, '');
   const whatsappUrl = buildWhatsAppUrl(siteSettings.whatsapp_number, siteSettings.default_whatsapp_message);
 
+  const breadcrumbsJsonLd = buildBreadcrumbJsonLd([
+    { name: 'Home', url: '/' },
+    { name: 'Contact', url: '/contact' },
+  ]);
+
   return (
     <>
+      <JsonLd data={breadcrumbsJsonLd} />
       <Header
         siteName={siteSettings.site_name}
         tagline={siteSettings.tagline}

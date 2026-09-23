@@ -51,13 +51,13 @@ To set up the authorized administrator account:
 
 1. In Supabase Dashboard -> **Authentication** -> **Users**.
 2. Click **Add User** -> **Create User**.
-3. Enter administrator email (e.g., `admin@mantraacupuncture.com`) and a secure password.
+3. Enter administrator email (e.g., `admin@mantraacupunctureclinic.com`) and a secure password.
 4. Open the SQL Editor and assign the `admin` role claim to the user's `app_metadata`:
 
 ```sql
 UPDATE auth.users
 SET raw_app_meta_data = raw_app_meta_data || '{"role": "admin"}'::jsonb
-WHERE email = 'admin@mantraacupuncture.com';
+WHERE email = 'admin@mantraacupunctureclinic.com';
 ```
 
 5. Go to `http://localhost:3000/admin/login` and log in with your admin credentials.

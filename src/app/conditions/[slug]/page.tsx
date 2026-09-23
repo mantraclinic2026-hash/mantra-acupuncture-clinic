@@ -7,8 +7,9 @@ import Footer from '@/components/public/Footer';
 import ConsultationForm from '@/components/public/ConsultationForm';
 import ImageFallback from '@/components/public/ImageFallback';
 import MobileStickyActions from '@/components/public/MobileStickyActions';
+import JsonLd from '@/components/public/JsonLd';
 import { getSiteSettings, getConditionBySlug, getPublishedConditions } from '@/lib/queries/site';
-import { generateSiteMetadata } from '@/lib/seo/metadata';
+import { generateSiteMetadata, buildBreadcrumbJsonLd, buildMedicalConditionJsonLd } from '@/lib/seo/metadata';
 
 export async function generateStaticParams() {
   const conditions = await getPublishedConditions();
@@ -29,7 +30,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     route: `/conditions/${condition.slug}`,
     fallbackTitle: `${condition.seo_title || condition.title} | Mantra Acupuncture Clinic`,
     fallbackDescription: condition.seo_description || condition.short_description,
-    slug: condition.slug,
   });
 }
 
@@ -44,8 +44,17 @@ export default async function ConditionDetailPage({ params }: { params: Promise<
     notFound();
   }
 
+  const breadcrumbsJsonLd = buildBreadcrumbJsonLd([
+    { name: 'Home', url: '/' },
+    { name: 'Conditions', url: '/conditions' },
+    { name: condition.title, url: `/conditions/${condition.slug}` },
+  ]);
+  const conditionJsonLd = buildMedicalConditionJsonLd(condition);
+
   return (
     <>
+      <JsonLd data={breadcrumbsJsonLd} />
+      <JsonLd data={conditionJsonLd} />
       <Header
         siteName={siteSettings.site_name}
         tagline={siteSettings.tagline}
