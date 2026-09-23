@@ -3,9 +3,10 @@ import Header from '@/components/public/Header';
 import Footer from '@/components/public/Footer';
 import ConsultationForm from '@/components/public/ConsultationForm';
 import MobileStickyActions from '@/components/public/MobileStickyActions';
+import JsonLd from '@/components/public/JsonLd';
 import { User } from 'lucide-react';
 import { getSiteSettings, getAboutContent, getPractitioners } from '@/lib/queries/site';
-import { generateSiteMetadata } from '@/lib/seo/metadata';
+import { generateSiteMetadata, buildBreadcrumbJsonLd } from '@/lib/seo/metadata';
 
 export async function generateMetadata() {
   return generateSiteMetadata({
@@ -22,8 +23,14 @@ export default async function AboutPage() {
     getPractitioners(),
   ]);
 
+  const breadcrumbsJsonLd = buildBreadcrumbJsonLd([
+    { name: 'Home', url: '/' },
+    { name: 'About', url: '/about' },
+  ]);
+
   return (
     <>
+      <JsonLd data={breadcrumbsJsonLd} />
       <Header
         siteName={siteSettings.site_name}
         tagline={siteSettings.tagline}
