@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Plus_Jakarta_Sans, Cormorant_Garamond } from 'next/font/google';
 import './globals.css';
+import { getBaseUrl } from '@/lib/seo/metadata';
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -17,10 +18,48 @@ const cormorant = Cormorant_Garamond({
   display: 'swap',
 });
 
+const baseUrl = getBaseUrl();
+
 export const metadata: Metadata = {
+  metadataBase: new URL(baseUrl),
   title: 'Mantra Acupuncture Clinic | Heal • Balance • Thrive',
   description: 'Personalized, patient-focused acupuncture care in Changanacherry, Kerala by Dr. Nikku Thomas.',
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://mantraacupuncture.com'),
+  alternates: {
+    canonical: baseUrl,
+  },
+  openGraph: {
+    title: 'Mantra Acupuncture Clinic | Heal • Balance • Thrive',
+    description: 'Personalized, patient-focused acupuncture care in Changanacherry, Kerala by Dr. Nikku Thomas.',
+    url: baseUrl,
+    siteName: 'Mantra Acupuncture Clinic',
+    locale: 'en_IN',
+    type: 'website',
+    images: [
+      {
+        url: `${baseUrl}/og-image.jpg`,
+        width: 1200,
+        height: 630,
+        alt: 'Mantra Acupuncture Clinic - Changanacherry, Kerala',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Mantra Acupuncture Clinic | Heal • Balance • Thrive',
+    description: 'Personalized, patient-focused acupuncture care in Changanacherry, Kerala by Dr. Nikku Thomas.',
+    images: [`${baseUrl}/og-image.jpg`],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   icons: {
     icon: [
       { url: '/favicon.png?v=5' },
@@ -43,9 +82,6 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${plusJakarta.variable} ${cormorant.variable}`} suppressHydrationWarning>
       <head>
-        <link rel="icon" href="/favicon.png?v=5" type="image/png" sizes="any" />
-        <link rel="shortcut icon" href="/favicon.png?v=5" type="image/png" />
-        <link rel="apple-touch-icon" href="/favicon.png?v=5" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link

@@ -7,8 +7,9 @@ import Footer from '@/components/public/Footer';
 import ConsultationForm from '@/components/public/ConsultationForm';
 import ImageFallback from '@/components/public/ImageFallback';
 import MobileStickyActions from '@/components/public/MobileStickyActions';
+import JsonLd from '@/components/public/JsonLd';
 import { getSiteSettings, getServiceBySlug, getPublishedServices } from '@/lib/queries/site';
-import { generateSiteMetadata } from '@/lib/seo/metadata';
+import { generateSiteMetadata, buildBreadcrumbJsonLd, buildServiceJsonLd } from '@/lib/seo/metadata';
 
 export async function generateStaticParams() {
   const services = await getPublishedServices();
@@ -29,7 +30,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     route: `/treatments/${service.slug}`,
     fallbackTitle: `${service.seo_title || service.title} | Mantra Acupuncture Clinic`,
     fallbackDescription: service.seo_description || service.short_description,
-    slug: service.slug,
   });
 }
 
@@ -44,8 +44,17 @@ export default async function TreatmentDetailPage({ params }: { params: Promise<
     notFound();
   }
 
+  const breadcrumbsJsonLd = buildBreadcrumbJsonLd([
+    { name: 'Home', url: '/' },
+    { name: 'Treatments', url: '/treatments' },
+    { name: service.title, url: `/treatments/${service.slug}` },
+  ]);
+  const serviceJsonLd = buildServiceJsonLd(service);
+
   return (
     <>
+      <JsonLd data={breadcrumbsJsonLd} />
+      <JsonLd data={serviceJsonLd} />
       <Header
         siteName={siteSettings.site_name}
         tagline={siteSettings.tagline}

@@ -1,24 +1,20 @@
 import React from 'react';
-import { Metadata } from 'next';
 import Header from '@/components/public/Header';
 import Footer from '@/components/public/Footer';
 import MobileStickyActions from '@/components/public/MobileStickyActions';
 import GalleryShowcase from '@/components/public/GalleryShowcase';
-import { getPublishedGallery, getSiteSettings, getSEOMetadata } from '@/lib/queries/site';
+import JsonLd from '@/components/public/JsonLd';
+import { getPublishedGallery, getSiteSettings } from '@/lib/queries/site';
+import { generateSiteMetadata, buildBreadcrumbJsonLd } from '@/lib/seo/metadata';
 import Link from 'next/link';
 
-export async function generateMetadata(): Promise<Metadata> {
-  const seo = await getSEOMetadata('/gallery');
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
-  return {
-    title: seo?.title || 'Clinic Gallery | Mantra Acupuncture Clinic',
-    description:
-      seo?.description ||
+export async function generateMetadata() {
+  return generateSiteMetadata({
+    route: '/gallery',
+    fallbackTitle: 'Clinic Gallery | Mantra Acupuncture Clinic',
+    fallbackDescription:
       'Explore photos of Mantra Acupuncture Clinic in Changanacherry, Kerala. View our serene treatment rooms, clinical environment, and care facilities.',
-    alternates: {
-      canonical: seo?.canonical_url || (baseUrl ? `${baseUrl}/gallery` : '/gallery'),
-    },
-  };
+  });
 }
 
 export default async function GalleryPage() {
@@ -27,8 +23,14 @@ export default async function GalleryPage() {
     getPublishedGallery(),
   ]);
 
+  const breadcrumbsJsonLd = buildBreadcrumbJsonLd([
+    { name: 'Home', url: '/' },
+    { name: 'Gallery', url: '/gallery' },
+  ]);
+
   return (
     <>
+      <JsonLd data={breadcrumbsJsonLd} />
       <Header
         siteName={siteSettings.site_name}
         tagline={siteSettings.tagline}

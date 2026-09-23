@@ -4,8 +4,9 @@ import Footer from '@/components/public/Footer';
 import ConditionsGrid from '@/components/public/ConditionsGrid';
 import ConsultationForm from '@/components/public/ConsultationForm';
 import MobileStickyActions from '@/components/public/MobileStickyActions';
+import JsonLd from '@/components/public/JsonLd';
 import { getSiteSettings, getPublishedConditions } from '@/lib/queries/site';
-import { generateSiteMetadata } from '@/lib/seo/metadata';
+import { generateSiteMetadata, buildBreadcrumbJsonLd } from '@/lib/seo/metadata';
 
 export async function generateMetadata() {
   return generateSiteMetadata({
@@ -21,8 +22,14 @@ export default async function ConditionsPage() {
     getPublishedConditions(),
   ]);
 
+  const breadcrumbsJsonLd = buildBreadcrumbJsonLd([
+    { name: 'Home', url: '/' },
+    { name: 'Conditions', url: '/conditions' },
+  ]);
+
   return (
     <>
+      <JsonLd data={breadcrumbsJsonLd} />
       <Header
         siteName={siteSettings.site_name}
         tagline={siteSettings.tagline}

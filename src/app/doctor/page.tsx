@@ -4,8 +4,9 @@ import Footer from '@/components/public/Footer';
 import PractitionerSection from '@/components/public/PractitionerSection';
 import ConsultationForm from '@/components/public/ConsultationForm';
 import MobileStickyActions from '@/components/public/MobileStickyActions';
-import { getSiteSettings, getPractitioners } from '@/lib/queries/site';
-import { generateSiteMetadata } from '@/lib/seo/metadata';
+import JsonLd from '@/components/public/JsonLd';
+import { getSiteSettings, getPractitioners, DEFAULT_PRACTITIONER } from '@/lib/queries/site';
+import { generateSiteMetadata, buildBreadcrumbJsonLd, buildPhysicianJsonLd } from '@/lib/seo/metadata';
 
 export async function generateMetadata() {
   return generateSiteMetadata({
@@ -21,12 +22,21 @@ export default async function DoctorPage() {
     getPractitioners(),
   ]);
 
+  const primaryPractitioner = practitioners[0] || DEFAULT_PRACTITIONER;
+  const physicianJsonLd = buildPhysicianJsonLd(primaryPractitioner);
+  const breadcrumbsJsonLd = buildBreadcrumbJsonLd([
+    { name: 'Home', url: '/' },
+    { name: 'Doctor', url: '/doctor' },
+  ]);
+
   const consultationTitle = practitioners.length > 1
     ? 'Book a Consultation with Our Practitioners'
-    : `Book a Consultation with ${practitioners[0]?.full_name || 'Dr. Nikku Thomas'}`;
+    : `Book a Consultation with ${primaryPractitioner.full_name || 'Dr. Nikku Thomas'}`;
 
   return (
     <>
+      <JsonLd data={breadcrumbsJsonLd} />
+      <JsonLd data={physicianJsonLd} />
       <Header
         siteName={siteSettings.site_name}
         tagline={siteSettings.tagline}
