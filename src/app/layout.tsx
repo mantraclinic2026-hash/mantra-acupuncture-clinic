@@ -25,12 +25,12 @@ export const metadata: Metadata = {
   title: 'Mantra Acupuncture Clinic | Heal • Balance • Thrive',
   description: 'Personalized, patient-focused acupuncture care in Changanacherry, Kerala by Dr. Nikku Thomas.',
   alternates: {
-    canonical: baseUrl,
+    canonical: `${baseUrl}/`,
   },
   openGraph: {
     title: 'Mantra Acupuncture Clinic | Heal • Balance • Thrive',
     description: 'Personalized, patient-focused acupuncture care in Changanacherry, Kerala by Dr. Nikku Thomas.',
-    url: baseUrl,
+    url: `${baseUrl}/`,
     siteName: 'Mantra Acupuncture Clinic',
     locale: 'en_IN',
     type: 'website',
