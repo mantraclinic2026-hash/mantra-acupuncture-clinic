@@ -6,7 +6,7 @@ import ConsultationForm from '@/components/public/ConsultationForm';
 import MobileStickyActions from '@/components/public/MobileStickyActions';
 import JsonLd from '@/components/public/JsonLd';
 import { getSiteSettings, getPublishedFAQs } from '@/lib/queries/site';
-import { generateSiteMetadata, buildBreadcrumbJsonLd } from '@/lib/seo/metadata';
+import { generateSiteMetadata, buildBreadcrumbJsonLd, buildFAQPageJsonLd } from '@/lib/seo/metadata';
 
 export async function generateMetadata() {
   return generateSiteMetadata({
@@ -26,10 +26,12 @@ export default async function FAQPage() {
     { name: 'Home', url: '/' },
     { name: 'FAQ', url: '/faq' },
   ]);
+  const faqJsonLd = buildFAQPageJsonLd(faqs);
 
   return (
     <>
       <JsonLd data={breadcrumbsJsonLd} />
+      <JsonLd data={faqJsonLd} />
       <Header
         siteName={siteSettings.site_name}
         tagline={siteSettings.tagline}

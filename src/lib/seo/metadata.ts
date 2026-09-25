@@ -6,18 +6,39 @@ export const DEFAULT_SITE_URL = 'https://mantraacupunctureclinic.com';
 /**
  * Returns the sanitized base URL for the site.
  * Configurable via NEXT_PUBLIC_SITE_URL, with fallback to https://mantraacupunctureclinic.com.
- * Explicitly guards against using the incorrect domain mantraacupuncture.com.
+ * Strictly normalizes production domain to https://mantraacupunctureclinic.com (non-www).
  */
 export function getBaseUrl(): string {
-  const envUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  const envUrl = (process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_BASE_URL)?.trim();
+
   if (!envUrl) {
     return DEFAULT_SITE_URL;
   }
-  // Disallow the erroneous non-clinic domain anywhere in production or local
-  if (/^https?:\/\/(www\.)?mantraacupuncture\.com(\/.*)?$/i.test(envUrl)) {
+
+  let cleanUrl = envUrl.replace(/\/+$/, '');
+
+  // Keep localhost for local dev if explicitly configured
+  if (process.env.NODE_ENV === 'development' && (cleanUrl.includes('localhost') || cleanUrl.includes('127.0.0.1'))) {
+    return cleanUrl;
+  }
+
+  // Force HTTPS and non-www canonical production domain for all production / Vercel deployments
+  if (
+    cleanUrl.includes('mantraacupunctureclinic.com') ||
+    cleanUrl.includes('mantraacupuncture.com') ||
+    cleanUrl.includes('vercel.app') ||
+    process.env.NODE_ENV === 'production'
+  ) {
     return DEFAULT_SITE_URL;
   }
-  return envUrl.replace(/\/+$/, '');
+
+  if (cleanUrl.startsWith('http://www.') || cleanUrl.startsWith('https://www.')) {
+    cleanUrl = cleanUrl.replace(/^https?:\/\/www\./i, 'https://');
+  } else if (cleanUrl.startsWith('http://')) {
+    cleanUrl = cleanUrl.replace(/^http:\/\//i, 'https://');
+  }
+
+  return cleanUrl;
 }
 
 /**
@@ -27,11 +48,13 @@ export function buildCanonicalUrl(route: string, slug?: string, dbCanonical?: st
   const baseUrl = getBaseUrl();
 
   if (dbCanonical) {
-    // If DB has an old canonical URL pointing to the wrong domain, correct it
-    const corrected = dbCanonical
+    let corrected = dbCanonical.trim();
+    // Replace old or www domains with current baseUrl
+    corrected = corrected
       .replace(/^https?:\/\/(www\.)?mantraacupuncture\.com/i, baseUrl)
+      .replace(/^https?:\/\/(www\.)?mantraacupunctureclinic\.com/i, baseUrl)
       .replace(/\/+$/, '');
-    return corrected;
+    return corrected || `${baseUrl}/`;
   }
 
   let cleanRoute = route.startsWith('/') ? route : `/${route}`;
@@ -45,9 +68,9 @@ export function buildCanonicalUrl(route: string, slug?: string, dbCanonical?: st
     }
   }
 
-  // If root route
+  // Root homepage canonical
   if (!cleanRoute || cleanRoute === '/') {
-    return baseUrl;
+    return `${baseUrl}/`;
   }
 
   return `${baseUrl}${cleanRoute}`;
@@ -82,10 +105,13 @@ export async function generateSiteMetadata({
   } else if (ogImageUrl.startsWith('/')) {
     ogImageUrl = `${baseUrl}${ogImageUrl}`;
   } else {
-    ogImageUrl = ogImageUrl.replace(/^https?:\/\/(www\.)?mantraacupuncture\.com/i, baseUrl);
+    ogImageUrl = ogImageUrl
+      .replace(/^https?:\/\/(www\.)?mantraacupuncture\.com/i, baseUrl)
+      .replace(/^https?:\/\/(www\.)?mantraacupunctureclinic\.com/i, baseUrl);
   }
 
   return {
+    metadataBase: new URL(baseUrl),
     title,
     description,
     keywords: dbSeo?.keywords ? dbSeo.keywords.split(',').map((k) => k.trim()) : undefined,
@@ -349,3 +375,22 @@ export function buildPhysicianJsonLd(practitioner: {
     })),
   };
 }
+
+/**
+ * Builds FAQPage structured data for FAQ section/page.
+ */
+export function buildFAQPageJsonLd(faqs: Array<{ question: string; answer: string }>) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer,
+      },
+    })),
+  };
+}
+
