@@ -60,18 +60,6 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  icons: {
-    icon: [
-      { url: '/favicon.png?v=5' },
-      { url: '/favicon.png?v=5', sizes: '32x32', type: 'image/png' },
-      { url: '/favicon.png?v=5', sizes: '64x64', type: 'image/png' },
-      { url: '/mantra-favicon1.png?v=5', sizes: '512x512', type: 'image/png' },
-    ],
-    shortcut: '/favicon.png?v=5',
-    apple: [
-      { url: '/favicon.png?v=5', sizes: '180x180', type: 'image/png' },
-    ],
-  },
 };
 
 export default function RootLayout({
