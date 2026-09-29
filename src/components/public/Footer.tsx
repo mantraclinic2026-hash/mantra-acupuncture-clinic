@@ -199,8 +199,16 @@ export default function Footer({
         </div>
 
         {/* Copyright */}
-        <div className="pt-6 flex flex-col sm:flex-row items-center justify-center gap-4 text-xs text-[#EBF2EE]/50 text-center">
+        <div className="pt-6 flex flex-col items-center gap-2 text-xs text-[#EBF2EE]/50 text-center">
           <p suppressHydrationWarning>© {new Date().getFullYear()} {siteName}. All rights reserved.</p>
+          <a
+            href="https://www.ekodrix.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[10px] text-[#EBF2EE]/30 hover:text-[#C5A059]/60 transition-colors duration-200"
+          >
+            Crafted by Ekodrix
+          </a>
         </div>
 
       </div>
