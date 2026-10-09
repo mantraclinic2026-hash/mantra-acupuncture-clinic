@@ -55,36 +55,38 @@ export default function AdminPractitionerForm({
     if (typeof window === 'undefined') return;
 
     // Check if opened via URL query params on initial load
-    const params = new URLSearchParams(window.location.search);
-    const action = params.get('action');
-    const id = params.get('id');
+    const timer = setTimeout(() => {
+      const params = new URLSearchParams(window.location.search);
+      const action = params.get('action');
+      const id = params.get('id');
 
-    if (action === 'new') {
-      setIsNew(true);
-      setEditingPractitioner({
-        id: '',
-        full_name: '',
-        title: 'Acupuncture & Naturopathy Specialist',
-        qualifications: [],
-        bio: '',
-        profile_image_url: null,
-        profile_image_alt: '',
-        display_order: defaultList.length + 1,
-        is_active: true,
-      });
-      setProfileUrl(null);
-      setQualificationsText('');
-    } else if (action === 'edit' && id) {
-      const found = defaultList.find((p) => p.id === id);
-      if (found) {
-        setIsNew(false);
-        setEditingPractitioner(found);
-        setProfileUrl(found.profile_image_url || null);
-        setQualificationsText(
-          Array.isArray(found.qualifications) ? found.qualifications.join('\n') : ''
-        );
+      if (action === 'new') {
+        setIsNew(true);
+        setEditingPractitioner({
+          id: '',
+          full_name: '',
+          title: 'Acupuncture & Naturopathy Specialist',
+          qualifications: [],
+          bio: '',
+          profile_image_url: null,
+          profile_image_alt: '',
+          display_order: defaultList.length + 1,
+          is_active: true,
+        });
+        setProfileUrl(null);
+        setQualificationsText('');
+      } else if (action === 'edit' && id) {
+        const found = defaultList.find((p) => p.id === id);
+        if (found) {
+          setIsNew(false);
+          setEditingPractitioner(found);
+          setProfileUrl(found.profile_image_url || null);
+          setQualificationsText(
+            Array.isArray(found.qualifications) ? found.qualifications.join('\n') : ''
+          );
+        }
       }
-    }
+    }, 0);
 
     const handlePopState = () => {
       // Browser back button was pressed - close the form and return to practitioners list
@@ -93,6 +95,7 @@ export default function AdminPractitionerForm({
 
     window.addEventListener('popstate', handlePopState);
     return () => {
+      clearTimeout(timer);
       window.removeEventListener('popstate', handlePopState);
     };
   }, []);

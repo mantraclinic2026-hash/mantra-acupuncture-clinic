@@ -23,7 +23,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const condition = await getConditionBySlug(slug);
 
   if (!condition) {
-    return { title: 'Condition Not Found | Mantra Acupuncture Clinic' };
+    return {
+      title: 'Condition Not Found | Mantra Acupuncture Clinic',
+      robots: { index: false, follow: false },
+    };
   }
 
   return generateSiteMetadata({

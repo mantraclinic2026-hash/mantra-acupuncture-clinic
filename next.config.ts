@@ -1,47 +1,4 @@
 import type { NextConfig } from "next";
-import fs from "fs";
-import path from "path";
-
-try {
-  const sharp = require("sharp");
-  const pngPath = path.join(process.cwd(), "public", "mantra-favicon1.png");
-  if (fs.existsSync(pngPath)) {
-    const appDir = path.join(process.cwd(), "src", "app");
-    if (fs.existsSync(appDir)) {
-      sharp(pngPath)
-        .resize(512, 512)
-        .png()
-        .toFile(path.join(appDir, "icon.png"));
-      sharp(pngPath)
-        .resize(180, 180)
-        .png()
-        .toFile(path.join(appDir, "apple-icon.png"));
-      sharp(pngPath)
-        .resize(64, 64)
-        .png()
-        .toFile(path.join(process.cwd(), "public", "favicon.png"));
-
-      const oldFavicon = path.join(appDir, "favicon.ico");
-      if (fs.existsSync(oldFavicon)) {
-        fs.unlinkSync(oldFavicon);
-      }
-    }
-  }
-  const metaJson = path.join(process.cwd(), "public", "meta.json");
-  if (fs.existsSync(metaJson)) {
-    fs.unlinkSync(metaJson);
-  }
-
-  const sourceImg = "C:\\Users\\muham\\.gemini\\antigravity-ide\\brain\\5c2eb9aa-595b-4608-bcf4-55be8554cd52\\dr_nikku_thomas_1789713734296.jpg";
-  const destDir = path.join(process.cwd(), "public", "images");
-  const destImg = path.join(destDir, "dr-nikku-thomas.jpg");
-  if (fs.existsSync(sourceImg)) {
-    if (!fs.existsSync(destDir)) fs.mkdirSync(destDir, { recursive: true });
-    fs.copyFileSync(sourceImg, destImg);
-  }
-} catch (e: any) {
-  // ignore
-}
 
 const nextConfig: NextConfig = {
   images: {
@@ -72,6 +29,48 @@ const nextConfig: NextConfig = {
       {
         source: '/favicon.ico',
         destination: '/favicon.png',
+      },
+    ];
+  },
+  async headers() {
+    return [
+      {
+        // Protect all admin routes with X-Robots-Tag noindex header
+        source: '/admin/:path*',
+        headers: [
+          {
+            key: 'X-Robots-Tag',
+            value: 'noindex, nofollow, noarchive',
+          },
+        ],
+      },
+      {
+        // Protect internal API routes with X-Robots-Tag noindex header
+        source: '/api/:path*',
+        headers: [
+          {
+            key: 'X-Robots-Tag',
+            value: 'noindex, nofollow, noarchive',
+          },
+        ],
+      },
+      {
+        // Global security and standard response headers
+        source: '/:path*',
+        headers: [
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
+        ],
       },
     ];
   },

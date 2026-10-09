@@ -17,6 +17,8 @@ interface MobileNavProps {
   workingHours: string;
 }
 
+const emptySubscribe = () => () => {};
+
 export default function MobileNav({
   isOpen,
   onClose,
@@ -26,11 +28,11 @@ export default function MobileNav({
   workingHours,
 }: MobileNavProps) {
   const pathname = usePathname();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = React.useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
 
   // Lock body scroll when drawer is open
   useEffect(() => {
