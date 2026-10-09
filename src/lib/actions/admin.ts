@@ -90,7 +90,7 @@ export async function updateHeroAction(formData: FormData): Promise<void> {
   const hero_image_url = formData.get('hero_image_url')?.toString() || null;
   const hero_mobile_image_url = formData.get('hero_mobile_image_url')?.toString() || null;
 
-  const payload: Record<string, any> = {
+  const payload: Record<string, unknown> = {
     badge_text: formData.get('badge_text')?.toString() || null,
     headline: formData.get('headline')?.toString() || '',
     subheadline: formData.get('subheadline')?.toString() || '',
@@ -158,7 +158,7 @@ export async function updateHeroMobileBannerAction(mobileImageUrl: string | null
     .limit(1)
     .maybeSingle();
 
-  const payload: Record<string, any> = {
+  const payload: Record<string, unknown> = {
     hero_mobile_image_url: mobileImageUrl,
   };
 
@@ -500,7 +500,7 @@ export async function updatePractitionerAction(formData: FormData): Promise<{ su
   };
 
   let error;
-  let savedData: any = null;
+  let savedData: Practitioner | null = null;
 
   if (targetId) {
     const res = await supabase.from('practitioners').update(payload).eq('id', targetId).select('*').single();

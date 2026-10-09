@@ -64,11 +64,6 @@ export default function GalleryShowcase({
     return items.filter((item) => item.category?.trim().toLowerCase() === selectedCategory.toLowerCase());
   }, [items, selectedCategory]);
 
-  // Ensure currentIndex stays within bounds when filter changes
-  useEffect(() => {
-    setCurrentIndex(0);
-  }, [selectedCategory]);
-
   const total = filteredItems.length;
 
   // Next and Prev handlers
@@ -239,7 +234,10 @@ export default function GalleryShowcase({
           {categories.map((cat) => (
             <button
               key={cat}
-              onClick={() => setSelectedCategory(cat)}
+              onClick={() => {
+                setSelectedCategory(cat);
+                setCurrentIndex(0);
+              }}
               className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
                 selectedCategory.toLowerCase() === cat.toLowerCase()
                   ? 'bg-[#1B3B2B] text-white shadow-sm'

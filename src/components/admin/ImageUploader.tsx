@@ -19,6 +19,7 @@ export default function ImageUploader({
 }: ImageUploaderProps) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [prevUrl, setPrevUrl] = useState(currentUrl);
   const [preview, setPreview] = useState<string | null>(currentUrl || null);
   const [urlInput, setUrlInput] = useState<string>(currentUrl || '');
   const [showUrlInput, setShowUrlInput] = useState(false);
@@ -27,10 +28,11 @@ export default function ImageUploader({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dragCounterRef = useRef(0);
 
-  useEffect(() => {
+  if (currentUrl !== prevUrl) {
+    setPrevUrl(currentUrl);
     setPreview(currentUrl || null);
     setUrlInput(currentUrl || '');
-  }, [currentUrl]);
+  }
 
   const uploadFile = async (file: File) => {
     if (!file.type.startsWith('image/')) {
