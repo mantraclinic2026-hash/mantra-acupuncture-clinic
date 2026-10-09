@@ -132,60 +132,248 @@ export const DEFAULT_SERVICES: ServiceItem[] = [
     id: 'default-srv-1',
     title: 'Acupuncture Treatment',
     slug: 'acupuncture-treatment',
-    short_description: 'Personalized acupuncture care designed around your individual condition and wellness goals.',
-    full_description: 'Personalized acupuncture care designed around your individual condition and wellness goals.',
+    short_description: 'Personalized acupuncture care designed around your individual condition, functional balance, and wellness goals.',
+    full_description: `Acupuncture Treatment at Mantra Acupuncture Clinic involves the gentle insertion of ultra-fine, sterile, single-use needles into specific therapeutic points across the body. Rooted in traditional meridian principles and informed by modern physiological understanding, acupuncture helps promote neuromuscular relaxation, stimulate natural circulation, and assist the body's innate healing mechanisms.
+
+Every session begins with an individual consultation to review your health history and symptom patterns. Treatments are conducted in a peaceful, hygienic clinical setting designed to maximize comfort and reduce stress.`,
     icon_name: 'Activity',
     image_url: '/images/acupuncture.png',
-    image_alt: 'Acupuncture Treatment',
+    image_alt: 'Acupuncture Treatment at Mantra Clinic',
     display_order: 1,
     is_published: true,
-    seo_title: null,
-    seo_description: null,
+    seo_title: 'Personalized Acupuncture Treatment in Changanacherry',
+    seo_description: 'Experience gentle, sterile, patient-focused acupuncture care in Changanacherry, Kerala by Dr. Nikku Thomas for pain management and holistic wellness.',
   },
   {
     id: 'default-srv-2',
     title: 'Electro Acupuncture Treatment',
     slug: 'electro-acupuncture-treatment',
-    short_description: 'A treatment approach combining acupuncture with gentle electrical stimulation when appropriate.',
-    full_description: 'A treatment approach combining acupuncture with gentle electrical stimulation when appropriate.',
+    short_description: 'A specialized modality combining traditional acupuncture point selection with gentle micro-current stimulation for targeted relief.',
+    full_description: `Electro Acupuncture is an advanced therapeutic modality where a mild, controlled micro-current electrical impulse is applied to specific acupuncture needles. This gentle stimulation helps activate deeper muscular layers, soothe nerve pathways, and enhance localized circulation more continuously than manual needle retention alone.
+
+Electro acupuncture is frequently recommended for stubborn musculoskeletal stiffness, joint discomfort, chronic lumbar strain, and nerve-related tension such as sciatica. The current intensity is finely calibrated to each patient's individual comfort level.`,
     icon_name: 'Zap',
     image_url: null,
-    image_alt: 'Electro Acupuncture Treatment',
+    image_alt: 'Electro Acupuncture Treatment at Mantra Clinic',
     display_order: 2,
     is_published: true,
-    seo_title: null,
-    seo_description: null,
+    seo_title: 'Electro Acupuncture Therapy in Changanacherry',
+    seo_description: 'Gentle micro-current electro acupuncture for chronic muscle stiffness, joint mobility, and nerve pain support at Mantra Acupuncture Clinic.',
   },
   {
     id: 'default-srv-3',
     title: 'Cupping / Hijama',
     slug: 'cupping-hijama',
-    short_description: 'Supportive therapeutic techniques offered based on individual needs and professional assessment.',
-    full_description: 'Supportive therapeutic techniques offered based on individual needs and professional assessment.',
+    short_description: 'Traditional vacuum cupping therapy designed to relieve myofascial tightness, enhance circulation, and soothe sore muscles.',
+    full_description: `Cupping therapy (including dry cupping and Hijama protocols where indicated) utilizes specialized therapeutic cups placed on key areas of the back, neck, or shoulders. By creating gentle negative pressure (suction), cupping helps release tension in deep myofascial tissue, draw fresh blood flow to fatigued muscle groups, and encourage lymphatic drainage.
+
+This therapy is widely utilized as supportive care for neck and shoulder stiffness, back pain, and physical fatigue resulting from desk work or intense physical activity.`,
     icon_name: 'Feather',
     image_url: null,
-    image_alt: 'Cupping / Hijama',
+    image_alt: 'Cupping and Hijama Therapy at Mantra Clinic',
     display_order: 3,
     is_published: true,
-    seo_title: null,
-    seo_description: null,
+    seo_title: 'Cupping Therapy & Hijama in Changanacherry',
+    seo_description: 'Therapeutic cupping and Hijama treatments for muscle tension release, upper back stiffness, and circulation support in Changanacherry, Kerala.',
   },
 ];
 
 export const DEFAULT_CONDITIONS: ConditionItem[] = [
-  { id: 'c1', title: 'Low Back Pain', slug: 'low-back-pain', short_description: 'Supportive care for lower back strain and stiffness.', full_description: '', category: 'Pain', image_url: null, display_order: 1, is_published: true, seo_title: null, seo_description: null },
-  { id: 'c2', title: 'Neck Pain', slug: 'neck-pain', short_description: 'Relief for neck stiffness and chronic tension.', full_description: '', category: 'Pain', image_url: null, display_order: 2, is_published: true, seo_title: null, seo_description: null },
-  { id: 'c3', title: 'Knee Pain / Osteoarthritis', slug: 'knee-pain-osteoarthritis', short_description: 'Functional support for joint mobility and comfort.', full_description: '', category: 'Pain', image_url: null, display_order: 3, is_published: true, seo_title: null, seo_description: null },
-  { id: 'c4', title: 'Sciatica', slug: 'sciatica', short_description: 'Targeted care for radiating nerve discomfort.', full_description: '', category: 'Pain', image_url: null, display_order: 4, is_published: true, seo_title: null, seo_description: null },
-  { id: 'c5', title: 'Shoulder Pain', slug: 'shoulder-pain', short_description: 'Care for frozen shoulder and rotator cuff strain.', full_description: '', category: 'Pain', image_url: null, display_order: 5, is_published: true, seo_title: null, seo_description: null },
-  { id: 'c6', title: 'Tennis Elbow', slug: 'tennis-elbow', short_description: 'Support for lateral epicondyle elbow strain.', full_description: '', category: 'Pain', image_url: null, display_order: 6, is_published: true, seo_title: null, seo_description: null },
-  { id: 'c7', title: 'Carpal Tunnel Syndrome', slug: 'carpal-tunnel-syndrome', short_description: 'Gentle acupuncture for wrist and hand discomfort.', full_description: '', category: 'Pain', image_url: null, display_order: 7, is_published: true, seo_title: null, seo_description: null },
-  { id: 'c8', title: 'Fibromyalgia', slug: 'fibromyalgia', short_description: 'Support for widespread muscular discomfort and fatigue.', full_description: '', category: 'Pain', image_url: null, display_order: 8, is_published: true, seo_title: null, seo_description: null },
-  { id: 'c9', title: 'Migraine & Headache', slug: 'migraine-headache', short_description: 'Calming relief for tension headaches and migraines.', full_description: '', category: 'Pain', image_url: null, display_order: 9, is_published: true, seo_title: null, seo_description: null },
-  { id: 'c10', title: 'Stress & Sleep Problems', slug: 'stress-sleep-problems', short_description: 'Acupuncture therapy for nervous system relaxation and sleep support.', full_description: '', category: 'Stress', image_url: null, display_order: 10, is_published: true, seo_title: null, seo_description: null },
-  { id: 'c11', title: 'Digestive Issues / IBS Symptoms', slug: 'digestive-issues-ibs', short_description: 'Support for functional digestion and abdominal comfort.', full_description: '', category: 'Digestive', image_url: null, display_order: 11, is_published: true, seo_title: null, seo_description: null },
-  { id: 'c12', title: 'Sinusitis & Respiratory Allergies', slug: 'sinusitis-allergies', short_description: 'Supportive acupuncture for sinus relief, rhinitis, and respiratory ease.', full_description: '', category: 'Respiratory', image_url: null, display_order: 12, is_published: true, seo_title: null, seo_description: null },
-  { id: 'c13', title: 'Menstrual Pain & Cycle Health', slug: 'menstrual-pain', short_description: 'Supportive care for menstrual cramps and pelvic balance.', full_description: '', category: 'Women and Health', image_url: null, display_order: 13, is_published: true, seo_title: null, seo_description: null },
+  {
+    id: 'c1',
+    title: 'Low Back Pain',
+    slug: 'low-back-pain',
+    short_description: 'Supportive acupuncture care designed to relieve lumbar muscle strain, stiffness, and postural fatigue.',
+    full_description: `Low back pain is one of the most common musculoskeletal concerns, frequently arising from postural strain, prolonged sitting, muscle imbalances, or spinal disc stress. Acupuncture care targets specific lumbar and sacral points along with associated distal pathways to help relax hypertonic paraspinal muscles, improve localized blood flow, and reduce pain perception.
+
+At Mantra Acupuncture Clinic, each patient receives a focused physical assessment followed by a personalized treatment series tailored to support lumbar stability and comfortable daily mobility.`,
+    category: 'Pain',
+    image_url: null,
+    display_order: 1,
+    is_published: true,
+    seo_title: 'Acupuncture for Low Back Pain in Changanacherry',
+    seo_description: 'Supportive acupuncture care for lumbar muscle strain, spinal tension, and lower back stiffness at Mantra Acupuncture Clinic.',
+  },
+  {
+    id: 'c2',
+    title: 'Neck Pain',
+    slug: 'neck-pain',
+    short_description: 'Targeted point stimulation to ease cervical stiffness, shoulder tightness, and computer-posture tension.',
+    full_description: `Neck pain and cervical tightness often develop from prolonged desk work, poor ergonomic posture, or emotional stress. Acupuncture provides focused point stimulation along the trapezius, levator scapulae, and cervical spine meridians to release chronic muscular trigger points and relieve tension headaches.
+
+Individualized sessions help restore comfortable range of motion and reduce neck rigidity in a relaxing clinical environment.`,
+    category: 'Pain',
+    image_url: null,
+    display_order: 2,
+    is_published: true,
+    seo_title: 'Acupuncture for Neck Pain & Cervical Stiffness',
+    seo_description: 'Targeted acupuncture therapy for neck stiffness, shoulder tightness, and posture-related neck strain in Changanacherry.',
+  },
+  {
+    id: 'c3',
+    title: 'Knee Pain / Osteoarthritis',
+    slug: 'knee-pain-osteoarthritis',
+    short_description: 'Functional supportive care focused on easing knee joint stiffness, discomfort, and mobility limitations.',
+    full_description: `Knee discomfort associated with osteoarthritis, joint wear, or patellofemoral strain can significantly restrict walking and daily activities. Acupuncture is applied around key peri-articular acupuncture points to help reduce localized joint inflammation sensations, relax surrounding quadriceps and calf musculature, and encourage joint fluid circulation.
+
+Care is provided as a supportive, non-invasive option to maintain joint function and enhance everyday comfort.`,
+    category: 'Pain',
+    image_url: null,
+    display_order: 3,
+    is_published: true,
+    seo_title: 'Acupuncture for Knee Pain & Osteoarthritis',
+    seo_description: 'Supportive acupuncture care for knee joint comfort, stiffness reduction, and mobility enhancement in Changanacherry.',
+  },
+  {
+    id: 'c4',
+    title: 'Sciatica',
+    slug: 'sciatica',
+    short_description: 'Targeted acupuncture care for managing radiating leg discomfort, piriformis tension, and lower back nerve irritation.',
+    full_description: `Sciatica involves discomfort, tingling, or radiating soreness extending from the lower back through the buttock and down the leg along the sciatic nerve pathway. Acupuncture and gentle electro-acupuncture help relieve compressive muscular tension around the piriformis and lumbar muscles, promoting nerve relaxation and easing radiating discomfort.
+
+Sessions focus on both localized and distal point protocols to help restore ease of movement and sitting comfort.`,
+    category: 'Pain',
+    image_url: null,
+    display_order: 4,
+    is_published: true,
+    seo_title: 'Acupuncture for Sciatica & Leg Nerve Discomfort',
+    seo_description: 'Gentle acupuncture and electro-acupuncture for managing radiating sciatica nerve pain and piriformis tension in Changanacherry.',
+  },
+  {
+    id: 'c5',
+    title: 'Shoulder Pain',
+    slug: 'shoulder-pain',
+    short_description: 'Supportive care for rotator cuff strain, frozen shoulder stiffness, and scapular tightness.',
+    full_description: `Shoulder pain, impingement, and adhesive capsulitis (frozen shoulder) can severely limit arm elevation and sleep comfort. Acupuncture protocols target the anterior, lateral, and posterior shoulder meridians to soothe inflamed tendon sheaths, release deep peri-scapular trigger points, and support gradual range of motion restoration.
+
+Care is customized based on whether your condition is acute or chronic.`,
+    category: 'Pain',
+    image_url: null,
+    display_order: 5,
+    is_published: true,
+    seo_title: 'Acupuncture for Shoulder Pain & Frozen Shoulder',
+    seo_description: 'Therapeutic acupuncture for shoulder mobility, rotator cuff stiffness, and scapular pain relief in Changanacherry.',
+  },
+  {
+    id: 'c6',
+    title: 'Tennis Elbow',
+    slug: 'tennis-elbow',
+    short_description: 'Localized acupuncture care for lateral elbow tenderness, forearm stiffness, and grip soreness.',
+    full_description: `Tennis elbow (lateral epicondylitis) is an overuse strain affecting the tendon attachments of the forearm extensor muscles. Acupuncture stimulates localized circulation near the elbow crease and along the forearm to accelerate tissue healing, relieve tendon irritation, and reduce grip strain.
+
+Therapy is gentle and paired with practical ergonomics advice to prevent recurring strain.`,
+    category: 'Pain',
+    image_url: null,
+    display_order: 6,
+    is_published: true,
+    seo_title: 'Acupuncture for Tennis Elbow & Forearm Strain',
+    seo_description: 'Effective acupuncture care for lateral elbow tenderness, tendon strain, and grip discomfort at Mantra Acupuncture Clinic.',
+  },
+  {
+    id: 'c7',
+    title: 'Carpal Tunnel Syndrome',
+    slug: 'carpal-tunnel-syndrome',
+    short_description: 'Gentle acupuncture support for wrist strain, tingling, and hand discomfort.',
+    full_description: `Carpal tunnel discomfort is characterized by numbness, tingling, and aching sensations in the wrist and fingers due to median nerve irritation. Acupuncture helps reduce tissue swelling around the flexor retinaculum, improve forearm circulation, and calm nerve pathways without surgical invasiveness.
+
+Treatment is aimed at supporting comfortable typing, writing, and hand function during daily tasks.`,
+    category: 'Pain',
+    image_url: null,
+    display_order: 7,
+    is_published: true,
+    seo_title: 'Acupuncture for Carpal Tunnel Syndrome & Wrist Pain',
+    seo_description: 'Gentle acupuncture therapy for wrist numbness, tingling, and median nerve comfort in Changanacherry, Kerala.',
+  },
+  {
+    id: 'c8',
+    title: 'Fibromyalgia',
+    slug: 'fibromyalgia',
+    short_description: 'Whole-body gentle acupuncture targeting widespread muscular sensitivity, fatigue, and restless sleep.',
+    full_description: `Fibromyalgia involves widespread musculoskeletal discomfort, tender points, deep fatigue, and sleep difficulties. Acupuncture provides low-intensity, calming stimulation to help modulate central pain signaling, soothe the sympathetic nervous system, and encourage restorative deep sleep phases.
+
+Treatments at Mantra Acupuncture Clinic are paced gently according to each individual's sensitivity level.`,
+    category: 'Pain',
+    image_url: null,
+    display_order: 8,
+    is_published: true,
+    seo_title: 'Acupuncture for Fibromyalgia & Chronic Muscle Fatigue',
+    seo_description: 'Whole-body soothing acupuncture for managing fibromyalgia tender points, fatigue, and muscular comfort in Changanacherry.',
+  },
+  {
+    id: 'c9',
+    title: 'Migraine & Headache',
+    slug: 'migraine-headache',
+    short_description: 'Calming relief for tension headaches, migraine sensitivity, and temporal pressure.',
+    full_description: `Migraines and chronic tension headaches often involve a combination of cranial vascular reactivity, neck muscle spasms, and nervous system overstimulation. Acupuncture targets cranial, cervical, and distal points (such as on the hands and feet) to help regulate vascular tone, relax suboccipital muscles, and reduce the frequency and intensity of headache episodes.
+
+Sessions provide a calm sanctuary away from bright light and noise.`,
+    category: 'Pain',
+    image_url: null,
+    display_order: 9,
+    is_published: true,
+    seo_title: 'Acupuncture for Migraines & Tension Headaches',
+    seo_description: 'Calming acupuncture treatments for migraine prevention, tension headache relief, and stress reduction in Changanacherry.',
+  },
+  {
+    id: 'c10',
+    title: 'Stress & Sleep Problems',
+    slug: 'stress-sleep-problems',
+    short_description: 'Acupuncture therapy for nervous system relaxation, mental fatigue, and sleep support.',
+    full_description: `Chronic stress and persistent sleep disturbances disrupt autonomic nervous balance, leading to daytime exhaustion, mood fatigue, and heightened physical tension. Acupuncture encourages parasympathetic nervous activation (the body's natural rest-and-digest state), helping reduce cortisol response and facilitating deeper, more continuous sleep cycles.
+
+Sessions are designed to be tranquil and restorative, allowing the mind and body to unwind thoroughly.`,
+    category: 'Stress',
+    image_url: null,
+    display_order: 10,
+    is_published: true,
+    seo_title: 'Acupuncture for Stress Relief & Insomnia Support',
+    seo_description: 'Restorative acupuncture therapy to calm the nervous system, relieve mental stress, and support deep sleep in Changanacherry.',
+  },
+  {
+    id: 'c11',
+    title: 'Digestive Issues / IBS Symptoms',
+    slug: 'digestive-issues-ibs',
+    short_description: 'Support for functional digestion, abdominal bloating, and bowel comfort.',
+    full_description: `Functional gastrointestinal concerns, such as Irritable Bowel Syndrome (IBS), abdominal cramping, bloating, and irregular bowel motility, are closely linked to gut-brain axis communication. Acupuncture supports gastrointestinal smooth muscle regulation, eases abdominal cramping, and calms stress-induced gut sensitivity.
+
+Treatments are integrated with general lifestyle and relaxation guidance for holistic abdominal comfort.`,
+    category: 'Digestive',
+    image_url: null,
+    display_order: 11,
+    is_published: true,
+    seo_title: 'Acupuncture for Digestive Wellness & IBS Symptoms',
+    seo_description: 'Supportive acupuncture therapy for functional digestion, bloating relief, and abdominal comfort at Mantra Acupuncture Clinic.',
+  },
+  {
+    id: 'c12',
+    title: 'Sinusitis & Respiratory Allergies',
+    slug: 'sinusitis-allergies',
+    short_description: 'Supportive acupuncture for sinus relief, rhinitis, and respiratory ease.',
+    full_description: `Chronic sinusitis and allergic rhinitis cause persistent nasal blockage, facial heaviness, post-nasal drip, and breathing discomfort. Targeted acupuncture around peri-nasal and meridian points helps promote sinus drainage, reduce mucous membrane congestion, and soothe respiratory sensitivity.
+
+This gentle modality provides drug-free functional support during seasonal flare-ups and chronic congestion.`,
+    category: 'Respiratory',
+    image_url: null,
+    display_order: 12,
+    is_published: true,
+    seo_title: 'Acupuncture for Sinusitis & Respiratory Allergies',
+    seo_description: 'Targeted sinus drainage and allergy support through gentle facial acupuncture in Changanacherry, Kerala.',
+  },
+  {
+    id: 'c13',
+    title: 'Menstrual Pain & Cycle Health',
+    slug: 'menstrual-pain',
+    short_description: 'Supportive care for menstrual cramps, pelvic tension, and cycle balance.',
+    full_description: `Dysmenorrhea (menstrual cramping) and related lower back and pelvic tension frequently interfere with daily life. Acupuncture care helps relax pelvic musculature, enhance lower abdominal micro-circulation, and modulate inflammatory prostaglandins responsible for uterine spasms.
+
+Individualized care plans help support balanced menstrual cycles with minimal discomfort.`,
+    category: 'Women and Health',
+    image_url: null,
+    display_order: 13,
+    is_published: true,
+    seo_title: 'Acupuncture for Menstrual Pain & Women’s Health',
+    seo_description: 'Gentle acupuncture therapy for menstrual cramp relief, pelvic relaxation, and cycle health in Changanacherry, Kerala.',
+  },
 ];
 
 export const DEFAULT_PRACTITIONER: Practitioner = {
@@ -282,7 +470,7 @@ export const getHeroSection = unstable_cache(
       if (error || !data) return DEFAULT_HERO;
 
       // Extract mobile banner from column or fallback storage
-      let mobileImageUrl = (data as Record<string, any>).hero_mobile_image_url || null;
+      let mobileImageUrl = (data as Record<string, unknown>).hero_mobile_image_url as string | null || null;
       let cleanAlt = data.hero_image_alt || 'Mantra Acupuncture Clinic treatment environment';
       if (!mobileImageUrl && data.hero_image_alt && data.hero_image_alt.includes('__MOBILE_BANNER__:')) {
         const parts = data.hero_image_alt.split('__MOBILE_BANNER__:');

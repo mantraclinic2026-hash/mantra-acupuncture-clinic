@@ -69,13 +69,17 @@ function WomenHealthIcon({ className = 'w-5 h-5 text-[#1B3B2B]' }: { className?:
   );
 }
 
-// ─── CATEGORY CONFIGURATION MATCHING SCREENSHOT ──────────────────────────────
+interface CategoryItem {
+  title: string;
+  slug: string;
+}
+
 interface CategoryConfig {
   key: string;
   name: string;
   badgeBg: string;
   renderIcon: () => React.ReactNode;
-  defaultItems: string[];
+  defaultItems: CategoryItem[];
 }
 
 const CATEGORY_DEFS: CategoryConfig[] = [
@@ -84,35 +88,54 @@ const CATEGORY_DEFS: CategoryConfig[] = [
     name: 'PAIN',
     badgeBg: 'bg-[#E2ECE5]',
     renderIcon: () => <JointIcon className="w-5 h-5 text-[#1B3B2B]" />,
-    defaultItems: ['Neck Pain', 'Knee Pain / Osteoarthritis', 'Shoulder Pain', 'Tennis Elbow'],
+    defaultItems: [
+      { title: 'Low Back Pain', slug: 'low-back-pain' },
+      { title: 'Neck Pain', slug: 'neck-pain' },
+      { title: 'Knee Pain / Osteoarthritis', slug: 'knee-pain-osteoarthritis' },
+      { title: 'Sciatica', slug: 'sciatica' },
+      { title: 'Shoulder Pain', slug: 'shoulder-pain' },
+      { title: 'Tennis Elbow', slug: 'tennis-elbow' },
+      { title: 'Carpal Tunnel Syndrome', slug: 'carpal-tunnel-syndrome' },
+      { title: 'Fibromyalgia', slug: 'fibromyalgia' },
+      { title: 'Migraine & Headache', slug: 'migraine-headache' },
+    ],
   },
   {
     key: 'stress',
     name: 'STRESS',
     badgeBg: 'bg-[#F5EBE1]',
     renderIcon: () => <BrainIcon className="w-5 h-5 text-[#1B3B2B]" />,
-    defaultItems: ['Emotional Distress', 'Depression', 'Anxiety', 'Insomnia'],
+    defaultItems: [
+      { title: 'Stress & Sleep Problems', slug: 'stress-sleep-problems' },
+      { title: 'Migraine & Headache', slug: 'migraine-headache' },
+    ],
   },
   {
     key: 'digestive',
     name: 'DIGESTIVE',
     badgeBg: 'bg-[#E2ECE5]',
     renderIcon: () => <StomachIcon className="w-5 h-5 text-[#1B3B2B]" />,
-    defaultItems: ['Nausea', 'GEDRs', 'Gastrics', 'Constipation'],
+    defaultItems: [
+      { title: 'Digestive Issues / IBS Symptoms', slug: 'digestive-issues-ibs' },
+    ],
   },
   {
     key: 'respiratory',
     name: 'RESPIRATORY',
     badgeBg: 'bg-[#F5EBE1]',
     renderIcon: () => <LungsIcon className="w-5 h-5 text-[#1B3B2B]" />,
-    defaultItems: ['Asthma', 'Sore Throat', 'Cold/Flu', 'Headaches'],
+    defaultItems: [
+      { title: 'Sinusitis & Respiratory Allergies', slug: 'sinusitis-allergies' },
+    ],
   },
   {
     key: 'women and health',
     name: 'WOMEN AND HEALTH',
     badgeBg: 'bg-[#E2ECE5]',
     renderIcon: () => <WomenHealthIcon className="w-5 h-5 text-[#1B3B2B]" />,
-    defaultItems: ['Infertility', 'PMS', 'Menstrual Disorders', 'Menopause'],
+    defaultItems: [
+      { title: 'Menstrual Pain & Cycle Health', slug: 'menstrual-pain' },
+    ],
   },
 ];
 
@@ -137,14 +160,11 @@ export default function ConditionsGrid({ conditions, siteSettings }: ConditionsG
       return cat.includes(def.key);
     });
 
-    // Use DB items if present, or fallback to the screenshot items
+    // Use DB items if present, or fallback to real default items
     const items =
       dbMatches.length > 0
         ? dbMatches.map((m) => ({ title: m.title, slug: m.slug }))
-        : def.defaultItems.map((title) => ({
-            title,
-            slug: title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-          }));
+        : def.defaultItems;
 
     return {
       ...def,

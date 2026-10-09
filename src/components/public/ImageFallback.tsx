@@ -28,11 +28,8 @@ export default function ImageFallback({
   aspectRatio = 'auto',
   objectFit = 'cover',
 }: ImageFallbackProps) {
-  const [hasError, setHasError] = React.useState(false);
-
-  React.useEffect(() => {
-    setHasError(false);
-  }, [src]);
+  const [errorSrc, setErrorSrc] = React.useState<string | null>(null);
+  const hasError = errorSrc === src;
 
   const optimizedSrc = src ? getOptimizedImageUrl(src, { width, height, crop: 'fill' }) : null;
 
@@ -72,7 +69,7 @@ export default function ImageFallback({
         height={height}
         priority={priority}
         unoptimized={isCloudinary || optimizedSrc.startsWith('http') || optimizedSrc.startsWith('data:')}
-        onError={() => setHasError(true)}
+        onError={() => setErrorSrc(src || null)}
         className={`w-full h-full ${
           objectFit === 'contain' ? 'object-contain' : 'object-cover'
         } transition-transform duration-500 hover:scale-105 ${imgClassName}`}
